@@ -1,27 +1,29 @@
-import './App.css'
-
+// 스타일
 import { ThemeProvider } from 'styled-components';
-import { theme } from './constants/style/theme';
+import { theme } from '../styles/theme';
+import { GlobalStyle } from '../styles/GlobalStyle';
 
-import { Routes, Route } from "react-router-dom";
-import { ROUTES } from "./constants/routes";
+// 라우팅
+import { Routes, Route } from 'react-router-dom';
+import { ROUTES } from './routes';
 
 // 페이지 import
-import Signup1 from './pages/Signup1';
-import Signin from "./pages/Signin";
-import Main from "./pages/Main";
-import MyPage from "./pages/MyPage";
-import CommunityList from "./pages/Community";
-import CommunityDetail from "./pages/CommunityDetail";
-import CommunityPost from "./pages/CommunityPost";
-import Mentoring from "./pages/Mentoring";
-import Study from "./pages/Study";
-import StudyAdmin from "./pages/StudyAdmin";
-import Calendar from "./pages/Calendar";
+import Signup1 from '../pages/Signup1';
+import Signin from '../pages/Signin';
+import Main from '../pages/Main';
+import MyPage from '../pages/MyPage';
+import CommunityList from '../pages/Community';
+import CommunityDetail from '../pages/CommunityDetail';
+import CommunityPost from '../pages/CommunityPost';
+import Mentoring from '../pages/Mentoring';
+import Study from '../pages/Study';
+import StudyAdmin from '../pages/StudyAdmin';
+import Calendar from '../pages/Calendar';
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
+      <GlobalStyle />
       <Routes>
         {/* Auth / Public Pages */}
         <Route path={ROUTES.AUTH.SIGNUP} element={<Signup1 />} />
