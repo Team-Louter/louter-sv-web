@@ -1,24 +1,24 @@
 // 스타일
 import { ThemeProvider } from 'styled-components';
-import { theme } from '../styles/theme';
-import { GlobalStyle } from '../styles/GlobalStyle';
+import { theme } from '@/styles/Theme';
+import { GlobalStyle } from '@/styles/GlobalStyle';
 
 // 라우팅
 import { Routes, Route } from 'react-router-dom';
 import { ROUTES } from './routes';
 
 // 페이지 import
-import Signup1 from '../pages/Signup1';
-import Signin from '../pages/Signin';
-import Main from '../pages/Main';
-import MyPage from '../pages/MyPage';
-import CommunityList from '../pages/Community';
-import CommunityDetail from '../pages/CommunityDetail';
-import CommunityPost from '../pages/CommunityPost';
-import Mentoring from '../pages/Mentoring';
-import Study from '../pages/Study';
-import StudyAdmin from '../pages/StudyAdmin';
-import Calendar from '../pages/Calendar';
+import Signup1 from '@/pages/Signup1';
+import Signin from '@/pages/Signin';
+import Main from '@/pages/Main';
+import MyPage from '@/pages/MyPage';
+import CommunityList from '@/pages/Community';
+import CommunityDetail from '@/pages/CommunityDetail';
+import CommunityPost from '@/pages/CommunityPost';
+import Mentoring from '@/pages/Mentoring';
+import Study from '@/pages/Study';
+import StudyAdmin from '@/pages/StudyAdmin';
+import Calendar from '@/pages/Calendar';
 
 function App() {
   return (

@@ -1,4 +1,4 @@
-const Colors = {
+const colors = {
   main: {
     white: '#FFFFFF',
     black: '#000000',
@@ -71,7 +71,7 @@ const baseWeights = {
   bold: 700,
 } as const;
 
-const Typography = {
+const typography = {
   family: {
     system: "'Pretendard'",
   },
@@ -106,8 +106,8 @@ const shadow = {
 } as const;
 
 export const theme = {
-  colors: Colors,
-  typography: Typography,
+  colors: colors,
+  typography: typography,
   shadow: shadow,
 } as const;
 
