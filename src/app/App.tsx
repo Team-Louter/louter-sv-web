@@ -1,6 +1,6 @@
 // 스타일
 import { ThemeProvider } from 'styled-components';
-import { theme } from '@/styles/Themename';
+import { theme } from '@/styles/Theme';
 import { GlobalStyle } from '@/styles/GlobalStyle';
 
 // 라우팅
