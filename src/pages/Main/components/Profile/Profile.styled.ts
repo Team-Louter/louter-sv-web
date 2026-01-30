@@ -3,10 +3,10 @@ import * as token from "@/styles/values/token"
 
 export const ProfileContainer = styled.div`
     ${token.flexColumn};
-    height: 38%;
+    height: 35%;
     border: 1px solid ${token.colors.line.light};
     border-radius: ${token.shapes.xsmall};
-    ${token.elevation("black_3")};
+    ${token.elevation("black_2")};
 `
 export const ProfileInfoIn = styled.div`
     ${token.flexRow};
@@ -61,5 +61,5 @@ export const MyProfile = styled.button`
 
 export const MyPostTitle = styled.h2`
     ${token.typography("body", "md", "bold")};
-    margin: 20px 0px 20px 20px;
+    margin: 20px 0px 10px 20px;
 `

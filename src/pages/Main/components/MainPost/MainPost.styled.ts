@@ -12,7 +12,7 @@ export const PostContainer = styled.div`
     align-self: center;
     justify-content: space-evenly;
     padding-left: 20px;
-
+    margin-bottom: 10px;
 `
 
 export const Title = styled.h3`

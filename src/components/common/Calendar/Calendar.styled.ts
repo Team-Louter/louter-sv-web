@@ -10,7 +10,7 @@ export const CalendarWrapper = styled.div`
     font-family: ${token.fontFamily.system};
     border: 1px solid ${token.colors.line.light};
     border-radius: ${token.shapes.xsmall};
-    ${token.elevation('black_3')}
+    ${token.elevation('black_2')}
     background: ${token.colors.fill.white};
     height: 100%;
     ${token.flexColumn}

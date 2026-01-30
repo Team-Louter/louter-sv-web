@@ -7,12 +7,15 @@ export const dummyEvents: EventInput[] = [
   { title: '발표', date: '2026-02-15' }
 ];
 
-export const dummyPosts: Post[] = [
+export const dummyMyPosts: Post[] = [
     {
       id: 1,
       title: '전수안의 리액트 네이티브에서 생존하기',
       viewCount: 361_523
-    },
+    }
+];
+  
+export const dummyPopularPosts: Post[] = [
     {
       id: 2,
       title: '라우터에서 살아남는 법',

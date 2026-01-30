@@ -11,11 +11,12 @@ export const Container = styled.div`
 `
 
 export const CalendarDiv = styled.div`
-    height: 80%;
+    height: 88%;
     width: 60%;
 `
 
 export const ForColumn = styled.div`
     ${flexColumn};
     width: 25%;
+    gap: 4%
 `

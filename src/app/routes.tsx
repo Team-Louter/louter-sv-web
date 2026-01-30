@@ -28,7 +28,7 @@ const Router = () => {
 
         {/* Main / Private Pages */}
         <Route path={'/'} element={<Main />} />
-        <Route path={'/profile/:userId'} element={<Profile />} />
+        <Route path={'/me'} element={<Profile />} />
 
         {/* Community */}
         <Route path={'/community'} element={<CommunityList />} />
