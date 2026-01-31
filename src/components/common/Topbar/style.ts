@@ -31,11 +31,11 @@ export const ButtonGroup = styled.div`
 export const LoginButton = styled.button`
   padding: 0.6rem 1rem;
   min-width: 84px;
-  font-size: ${({ theme }) => theme.typography.body.S.size};
-  font-weight: ${({ theme }) => theme.typography.weight.bold};
+  font-size: ${({ theme }) => theme.typography.fontSize.body.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
   color: ${({ theme }) => theme.colors.text.dark};
   background-color: ${({ theme }) => theme.colors.fill.white};
-  border: 1px solid ${({ theme }) => theme.colors.border.light};
+  border: 1px solid ${({ theme }) => theme.colors.line.light};
   border-radius: 4px;
   transition: all 0.2s ease;
   cursor: pointer;
@@ -52,8 +52,8 @@ export const LoginButton = styled.button`
 export const SignupButton = styled.button`
   padding: 0.6rem 1rem;
   min-width: 84px;
-  font-size: ${({ theme }) => theme.typography.body.S.size};
-  font-weight: ${({ theme }) => theme.typography.weight.bold};
+  font-size: ${({ theme }) => theme.typography.fontSize.body.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
   color: ${({ theme }) => theme.colors.text.dark};
   background-color: ${({ theme }) => theme.colors.accent.primary};
   border: none;
