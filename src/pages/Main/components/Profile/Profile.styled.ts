@@ -1,0 +1,65 @@
+import styled from "styled-components";
+import * as token from "@/styles/values/token"
+
+export const ProfileContainer = styled.div`
+    ${token.flexColumn};
+    height: 38%;
+    border: 1px solid ${token.colors.line.light};
+    border-radius: ${token.shapes.xsmall};
+    ${token.elevation("black_3")};
+`
+export const ProfileInfoIn = styled.div`
+    ${token.flexRow};
+    align-items: center;
+    border-bottom: 2px solid ${token.colors.line.highlight};
+    height: 100%;
+    width: 90%;
+    justify-content: space-evenly;
+`
+
+export const ProfileInfoOut = styled.div`
+    height: 38%;
+    width: 100%;
+    ${token.flexCenter};
+`
+
+export const ForRow = styled.div`
+    ${token.flexRow};
+    height: 100%;
+    gap: 15px;
+    align-items: center;
+`
+
+export const ProfileImg = styled.div`
+    height: 60%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1px solid black;
+`
+
+export const BasicProfile = styled.div`
+    ${token.flexColumn};
+`
+
+export const Name = styled.h3`
+    ${token.typography("heading", "sm", "bold")};
+    color: ${token.colors.text.dark};
+`
+
+export const School = styled.h6`
+    ${token.typography("body", "sm", "medium")};
+    color: ${token.colors.text.dark};
+`
+
+export const MyProfile = styled.button`
+    background-color: ${token.colors.background.white};
+    border: 1px solid ${token.colors.text.lightGray};
+    padding: 10px 20px;
+    border-radius: 4px;
+    ${token.typography("body", "sm", "bold")};
+`
+
+export const MyPostTitle = styled.h2`
+    ${token.typography("body", "md", "bold")};
+    margin: 20px 0px 20px 20px;
+`
