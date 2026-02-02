@@ -1,8 +1,13 @@
 import styled from "styled-components";
 import * as token from "@/styles/values/token";
+import type { StatusType } from '../QuestionList.types';
 
 interface Props {
   $isClicked: boolean;
+}
+
+interface statusProps {
+  $status: StatusType;
 }
 
 export const container = styled.div<Props>`
@@ -46,7 +51,13 @@ export const statusText = styled.span`
   ${token.typography("body", "sm", "regular")}
 `
 
-export const statusBadge = styled.span`
+const statusColor = {
+  '답변 중' : token.colors.state.successSoft,
+  '답변 대기' : token.colors.state.warningSoft,
+  '답변 완료' : token.colors.state.infoSoft,
+} as const
+
+export const statusBadge = styled.span<statusProps>`
   ${token.typography("body", "md", "medium")}
-  color: ${token.colors.state.success};
+  color: ${({$status}) => statusColor[$status] || token.colors.text.disabled}
 `
