@@ -10,8 +10,8 @@ export const container = styled.div<Props>`
   width: 26.69rem;
   height: 4.125rem;
   background-color: ${({ $isClicked }) => 
-  $isClicked ? '#FEF9E0': '#ffffff'};
-  border: solid 1px #FFD600;
+  $isClicked ? token.colors.accent.assistive4: token.colors.main.white};
+  border: solid 1px ${token.colors.main.yellow};
   border-radius: 12px;
   padding: 0.6rem 1.25rem;
 `
@@ -32,7 +32,7 @@ export const questionTitle = styled.span`
 
 export const questionDate = styled.span`
   ${token.typography("body", "sm", "medium")};
-  color: #CACACA;
+  color: ${token.colors.text.disabled};
 `
 
 export const status= styled.div`
