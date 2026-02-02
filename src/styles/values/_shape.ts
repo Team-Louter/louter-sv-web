@@ -2,8 +2,8 @@
  * border-radius를 통일하기 위한 값들
  *
  * 예시:
- *   border-radius: ${shape.large};
- *   border-radius: ${shape.small};
+ *   border-radius: ${shapes.large};
+ *   border-radius: ${shapes.small};
  */
 
 export const shapes = {
