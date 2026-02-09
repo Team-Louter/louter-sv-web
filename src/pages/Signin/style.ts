@@ -127,3 +127,73 @@ export const Input = styled.input`
     background-color: ${({ theme }) => theme.colors.main.white};
   }
 `;
+
+export const LoginButton = styled.button`
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background-color: ${({ theme }) => theme.colors.main.yellow};
+  border: none;
+  border-radius: 50px;
+  font-size: ${({ theme }) => theme.typography.fontSize.body.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  color: ${({ theme }) => theme.colors.text.dark};
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.accent.secondary1};
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+`;
+
+export const FindAccountLink = styled.button`
+  background: none;
+  border: none;
+  font-size: ${({ theme }) => theme.typography.fontSize.caption.lg};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  color: ${({ theme }) => theme.colors.text.dark};
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.text.dark};
+    text-decoration: underline;
+  }
+`;
+
+export const SignupText = styled.p`
+  font-size: ${({ theme }) => theme.typography.fontSize.caption.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  color: ${({ theme }) => theme.colors.text.dark};
+`;
+
+export const SignupLink = styled.span`
+  color: ${({ theme }) => theme.colors.text.gold};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+export const PolicyText = styled.p`
+  font-size: ${({ theme }) => theme.typography.fontSize.caption.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  color: ${({ theme }) => theme.colors.text.dark};
+  text-align: center;
+`;
+
+export const PolicyLink = styled.a`
+  color: ${({ theme }) => theme.colors.text.gold};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
