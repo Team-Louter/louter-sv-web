@@ -1,13 +1,15 @@
 import styled from 'styled-components';
 import { elevation } from '@/styles/values/_elevation';
+import { flexCenter, flexColumn, flexColumnCenter } from '@/styles/values/_flex';
+import { shapes } from '@/styles/values/_shape';
+import { colors } from '@/styles/values/_foundation';
+import { fontSize, fontWeight } from '@/styles/values/_typography';
 import AuthMainImg from '@/assets/AuthImg/AuthMainImg.png';
 
 export const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${flexCenter}
   min-height: calc(100vh - 72px);
-  background-color: #ffffff;
+  background-color: ${colors.main.white};
   padding: 2rem;
 `;
 
@@ -16,17 +18,15 @@ export const LoginContainer = styled.div`
   justify-content: flex-end;
   width: 991px;
   height: auto;
-  background-color: ${({ theme }) => theme.colors.main.white};
-  border-radius: 20px;
+  background-color: ${colors.main.white};
+  border-radius: ${shapes.xlarge};
   ${elevation('black_3')}
   overflow: hidden;
 `;
 
 export const AuthMainImgContainer = styled.div`
   width: 62%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${flexCenter}
   background-image: url(${AuthMainImg});
   background-size: cover;
   background-position: center;
@@ -34,8 +34,7 @@ export const AuthMainImgContainer = styled.div`
 `;
 
 export const AuthContent = styled.div`
-  display: flex;
-  flex-direction: column;
+  ${flexColumn}
   /* justify-content: center; */
   align-items: center;
   width: 38%;
@@ -45,10 +44,7 @@ export const AuthContent = styled.div`
 `;
 
 export const GoogleContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  ${flexColumnCenter}
   width: 100%;
   gap: 0.6rem;
 `;
@@ -60,25 +56,23 @@ export const LogoImg = styled.img`
 `;
 
 export const SocialTitle = styled.h2`
-  font-size: ${({ theme }) => theme.typography.fontSize.body.sm};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  color: ${({ theme }) => theme.colors.text.dark};
+  font-size: ${fontSize.body.sm};
+  font-weight: ${fontWeight.medium};
+  color: ${colors.text.dark};
 `;
 
 export const GoogleButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  ${flexCenter}
   gap: 0.75rem;
   width: 100%;
   height: auto;
   padding: 0.75rem 1rem;
-  background-color: ${({ theme }) => theme.colors.main.white};
-  border: 1px solid ${({ theme }) => theme.colors.line.light};
+  background-color: ${colors.main.white};
+  border: 1px solid ${colors.line.light};
   border-radius: 50px;
-  font-size: ${({ theme }) => theme.typography.fontSize.body.sm};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
-  color: ${({ theme }) => theme.colors.text.dark};
+  font-size: ${fontSize.body.sm};
+  font-weight: ${fontWeight.semibold};
+  color: ${colors.text.dark};
   cursor: pointer;
   transition: all 0.2s ease;
 
@@ -94,12 +88,11 @@ export const GoogleIcon = styled.img`
 
 export const Line = styled.div`
   width: 100%;
-  border: 0.5px solid ${({ theme }) => theme.colors.line.light};
+  border: 0.5px solid ${colors.line.light};
 `;
 
 export const LoginForm = styled.form`
-  display: flex;
-  flex-direction: column;
+  ${flexColumn}
   gap: 0.875rem;
   width: 100%;
 `;
@@ -107,41 +100,41 @@ export const LoginForm = styled.form`
 export const Input = styled.input`
   width: 100%;
   padding: 0.8rem 1rem;
-  background-color: ${({ theme }) => theme.colors.background.white};
+  background-color: ${colors.background.white};
   align-items: flex-start;
   justify-content: center;
-  border: 1px solid ${({ theme }) => theme.colors.line.light};
+  border: 1px solid ${colors.line.light};
   border-radius: 4px;
-  font-size: ${({ theme }) => theme.typography.fontSize.body.sm};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
-  color: ${({ theme }) => theme.colors.text.dark};
+  font-size: ${fontSize.body.sm};
+  font-weight: ${fontWeight.semibold};
+  color: ${colors.text.dark};
   transition: all 0.2s ease;
 
   &::placeholder {
-    color: ${({ theme }) => theme.colors.text.coolGray};
+    color: ${colors.text.coolGray};
   }
 
   &:focus {
     outline: none;
-    border-color: ${({ theme }) => theme.colors.main.black};
-    background-color: ${({ theme }) => theme.colors.main.white};
+    border-color: ${colors.main.black};
+    background-color: ${colors.main.white};
   }
 `;
 
 export const LoginButton = styled.button`
   width: 100%;
   padding: 0.8rem 1rem;
-  background-color: ${({ theme }) => theme.colors.main.yellow};
+  background-color: ${colors.main.yellow};
   border: none;
   border-radius: 50px;
-  font-size: ${({ theme }) => theme.typography.fontSize.body.sm};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
-  color: ${({ theme }) => theme.colors.text.dark};
+  font-size: ${fontSize.body.sm};
+  font-weight: ${fontWeight.bold};
+  color: ${colors.text.dark};
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.accent.secondary1};
+    background-color: ${colors.accent.secondary1};
   }
 
   &:active {
@@ -152,28 +145,28 @@ export const LoginButton = styled.button`
 export const FindAccountLink = styled.button`
   background: none;
   border: none;
-  font-size: ${({ theme }) => theme.typography.fontSize.caption.lg};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  color: ${({ theme }) => theme.colors.text.dark};
+  font-size: ${fontSize.caption.lg};
+  font-weight: ${fontWeight.medium};
+  color: ${colors.text.dark};
   cursor: pointer;
   text-decoration: none;
   transition: color 0.2s ease;
 
   &:hover {
-    color: ${({ theme }) => theme.colors.text.dark};
+    color: ${colors.text.dark};
     text-decoration: underline;
   }
 `;
 
 export const SignupText = styled.p`
-  font-size: ${({ theme }) => theme.typography.fontSize.caption.md};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  color: ${({ theme }) => theme.colors.text.dark};
+  font-size: ${fontSize.caption.md};
+  font-weight: ${fontWeight.medium};
+  color: ${colors.text.dark};
 `;
 
 export const SignupLink = styled.span`
-  color: ${({ theme }) => theme.colors.text.gold};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  color: ${colors.text.gold};
+  font-weight: ${fontWeight.semibold};
   cursor: pointer;
 
   &:hover {
@@ -182,15 +175,15 @@ export const SignupLink = styled.span`
 `;
 
 export const PolicyText = styled.p`
-  font-size: ${({ theme }) => theme.typography.fontSize.caption.md};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  color: ${({ theme }) => theme.colors.text.dark};
+  font-size: ${fontSize.caption.md};
+  font-weight: ${fontWeight.medium};
+  color: ${colors.text.dark};
   text-align: center;
 `;
 
 export const PolicyLink = styled.a`
-  color: ${({ theme }) => theme.colors.text.gold};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  color: ${colors.text.gold};
+  font-weight: ${fontWeight.semibold};
   cursor: pointer;
 
   &:hover {
