@@ -96,3 +96,34 @@ export const Line = styled.div`
   width: 100%;
   border: 0.5px solid ${({ theme }) => theme.colors.line.light};
 `;
+
+export const LoginForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  width: 100%;
+`;
+
+export const Input = styled.input`
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background-color: ${({ theme }) => theme.colors.background.white};
+  align-items: flex-start;
+  justify-content: center;
+  border: 1px solid ${({ theme }) => theme.colors.line.light};
+  border-radius: 4px;
+  font-size: ${({ theme }) => theme.typography.fontSize.body.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  color: ${({ theme }) => theme.colors.text.dark};
+  transition: all 0.2s ease;
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.text.coolGray};
+  }
+
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.colors.main.black};
+    background-color: ${({ theme }) => theme.colors.main.white};
+  }
+`;
