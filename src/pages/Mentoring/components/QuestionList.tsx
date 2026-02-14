@@ -1,14 +1,16 @@
-import * as S from './styles'; 
-import { useState } from 'react';
-import type { QuestionListProps } from './QuestionList.types';
+import * as S from "./styles/QuestionList.styled";
+import { useState } from "react";
+import type { QuestionListProps } from "./types/QuestionList.types";
 
-
-export default function QuestionList({question}: QuestionListProps) {
+export default function QuestionList({ question }: QuestionListProps) {
   const [isClicked, setIsClicked] = useState(false);
 
-  return(
+  return (
     <>
-      <S.container $isClicked={isClicked} onClick={() => setIsClicked(!isClicked)}>
+      <S.container
+        $isClicked={isClicked}
+        onClick={() => setIsClicked(!isClicked)}
+      >
         <S.questionItem>
           <S.questionHeader>
             <S.questionTitle>{question.title}</S.questionTitle>
@@ -17,7 +19,9 @@ export default function QuestionList({question}: QuestionListProps) {
 
           <S.status>
             <S.statusText>상태</S.statusText>
-            <S.statusBadge $status={question.status}>{question.status}</S.statusBadge>
+            <S.statusBadge $status={question.status}>
+              {question.status}
+            </S.statusBadge>
           </S.status>
         </S.questionItem>
       </S.container>
