@@ -4,6 +4,7 @@ import Profile from "./components/Profile/Profile.tsx";
 import { dummyMembers } from "@/constants/dummy.ts";
 import { getGenerations } from "@/utils/FormatFilters.ts";
 import { useState } from "react";
+import Member from "./components/Member/Member.tsx";
 
 export default function Main() {
     const [selectedGen, setSelectedGen] = useState<string>("전체");
@@ -32,7 +33,20 @@ export default function Main() {
                                 $isSelected={selectedGen === gen}>{gen}</S.GenFilter>
                         ))}
                     </S.FilterContainer>
+                    <S.MemberScroll>
+                        {dummyMembers
+                            .filter((member) => 
+                                selectedGen === '전체' || selectedGen === `${member.generation}기`
+                            )
+                            .map((member) => (
+                                <Member key={member.id} memberInfo={member}/>
+                            ))}
+                    </S.MemberScroll>
                 </S.MemberContainer>
+                <S.Footer>
+                    <S.Louter>Louter(라우터) / 대구소프트에어마이스터고</S.Louter>
+                    <S.Github>Github</S.Github>
+                </S.Footer>
             </S.Container>
         </>
     )

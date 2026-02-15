@@ -35,18 +35,18 @@ export const dummyPopularPosts: Post[] = [
   ];
   
 export const dummyMembers: Member[] = [
-  { name: "정민성", generation: 1, role: "LEADER", major: ["Frontend", "Design"] },
-  { name: "김승우", generation: 2, role: "MENTEE", major: ["Backend"] },
-  { name: "김용진", generation: 1, role: "MENTOR", major: ["Frontend"] },
-  { name: "김민준", generation: 1, role: "MENTOR", major: ["Backend"] },
-  { name: "서진교", generation: 1, role: "LEADER", major: ["Frontend", "Design"] },
-  { name: "오정민", generation: 1, role: "MENTOR", major: ["Frontend", "Design"] },
-  { name: "유을", generation: 1, role: "MENTOR", major: ["Frontend"] },
-  { name: "이다연", generation: 2, role: "MENTOR", major: ["Backend"] },
-  { name: "이도연", generation: 2, role: "LEADER", major: ["Backend"] },
-  { name: "이동휘", generation: 1, role: "MENTOR", major: ["Backend"] },
-  { name: "이윤지", generation: 2, role: "MENTOR", major: ["Frontend", "Design"] },
-  { name: "전수안", generation: 2, role: "LEADER", major: ["Frontend"] },
-  { name: "최현수", generation: 2, role: "MENTOR", major: ["Frontend", "Design"] },
-  { name: "홍지율", generation: 1, role: "MENTOR", major: ["Frontend"] }
+  { id: 1, name: "정민성", generation: 1, role: "LEADER", major: ["Frontend", "Design"] },
+  { id: 2, name: "김승우", generation: 2, role: "MENTEE", major: ["Backend"] },
+  { id: 3, name: "김용진", generation: 1, role: "MENTOR", major: ["Frontend"] },
+  { id: 4, name: "김민준", generation: 1, role: "MENTOR", major: ["Backend"] },
+  { id: 5, name: "서진교", generation: 1, role: "LEADER", major: ["Frontend", "Design"] },
+  { id: 6, name: "오정민", generation: 1, role: "MENTOR", major: ["Frontend", "Design"] },
+  { id: 7, name: "유을", generation: 1, role: "MENTOR", major: ["Frontend"] },
+  { id: 8, name: "이다연", generation: 2, role: "MENTOR", major: ["Backend"] },
+  { id: 9, name: "이도연", generation: 2, role: "LEADER", major: ["Backend"] },
+  { id: 10, name: "이동휘", generation: 1, role: "MENTOR", major: ["Backend"] },
+  { id: 11, name: "이윤지", generation: 2, role: "MENTOR", major: ["Frontend", "Design"] },
+  { id: 12, name: "전수안", generation: 2, role: "LEADER", major: ["Frontend"] },
+  { id: 13, name: "최현수", generation: 2, role: "MENTOR", major: ["Frontend", "Design"] },
+  { id: 14, name: "홍지율", generation: 1, role: "MENTOR", major: ["Frontend"] }
 ];
