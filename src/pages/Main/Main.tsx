@@ -44,8 +44,8 @@ export default function Main() {
                     </S.MemberScroll>
                 </S.MemberContainer>
                 <S.Footer>
-                    <S.Louter>Louter(라우터) / 대구소프트에어마이스터고</S.Louter>
-                    <S.Github>Github</S.Github>
+                    <S.Louter>Louter(라우터) / 대구소프트웨어마이스터고</S.Louter>
+                    <S.Github><a href="https://github.com/Team-Louter" target="_blank" rel="noopener noreferrer">Github</a></S.Github>
                 </S.Footer>
             </S.Container>
         </>
