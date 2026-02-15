@@ -3,9 +3,69 @@ import type { Post } from '@/types/post';
 import type { EventInput } from '@fullcalendar/core';
 
 export const dummyEvents: EventInput[] = [
-  { title: '회의', date: '2026-02-05' },
-  { title: '점심약속', date: '2026-02-10' },
-  { title: '발표', date: '2026-02-15' }
+  { 
+    title: '1차 디자인 시작',
+    start: '2026-02-01',
+    end: '2026-02-01',
+    extendedProps: {
+      assignees: ['김디자', '이디자', '박디자'],
+      description: '1차 디자인 작업을 시작합니다.'
+    }
+  },
+  { 
+    title: '1차 디자인 마감',
+    start: '2026-02-08',
+    end: '2026-02-09',
+    extendedProps: {
+      assignees: ['이름지', '최담당'],
+      description: '오늘까지 1차 디자인을 마감해주세요.'
+    }
+  },
+  { 
+    title: '1차 피드백',
+    start: '2026-02-08',
+    end: '2026-02-08',
+    extendedProps: {
+      assignees: ['박피드'],
+      description: '1차 디자인에 대한 피드백을 진행합니다.'
+    }
+  },
+  { 
+    title: '2차 디자인 마감',
+    start: '2026-02-12',
+    end: '2026-02-13',
+    extendedProps: {
+      assignees: ['김디자', '이디자', '박디자', '최디자'],
+      description: '2차 디자인 수정 작업을 완료해주세요.'
+    }
+  },
+  { 
+    title: '2차 피드백',
+    start: '2026-02-13',
+    end: '2026-02-13',
+    extendedProps: {
+      assignees: ['최리뷰'],
+      description: '최종 디자인 검토 및 피드백'
+    }
+  },
+  { 
+    title: '프론트 개발',
+    start: '2026-02-18',
+    end: '2026-02-25',
+    extendedProps: {
+      assignees: ['정프론', '김프론', '이프론'],
+      description: '프론트엔드 개발 진행'
+    }
+  },
+  { 
+    title: '프론트 개발',
+    start: '2026-02-25',
+    end: '2026-02-28',
+    extendedProps: {
+      assignees: ['정프론', '김프론', '이프론'],
+      description: '프론트엔드 개발 마무리'
+    }
+  }
 ];
 
 export const dummyMyPosts: Post[] = [

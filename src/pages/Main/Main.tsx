@@ -13,7 +13,7 @@ export default function Main() {
             <S.Container>
                 <S.Scroll>
                     <S.CalendarDiv>
-                        <Calendar/>
+                        <Calendar readOnly={true}/>
                     </S.CalendarDiv>
 
                     <S.ForColumn>
