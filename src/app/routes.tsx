@@ -5,7 +5,7 @@ import SignupCheck from '@/pages/SignupCheck';
 import Signup from '@/pages/Signup';
 import SignupGoogle from '@/pages/SignupGoogle';
 import Signin from '@/pages/Signin';
-import Main from '@/pages/Main';
+import Main from '@/pages/Main/Main';
 import Profile from '@/pages/Profile';
 import CommunityList from '@/pages/Community';
 import CommunityDetail from '@/pages/CommunityDetail';
@@ -28,7 +28,7 @@ const Router = () => {
 
         {/* Main / Private Pages */}
         <Route path={'/'} element={<Main />} />
-        <Route path={'/profile/:userId'} element={<Profile />} />
+        <Route path={'/me'} element={<Profile />} />
 
         {/* Community */}
         <Route path={'/community'} element={<CommunityList />} />
