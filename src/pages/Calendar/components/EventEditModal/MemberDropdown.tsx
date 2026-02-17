@@ -5,23 +5,20 @@ import type { Member } from "@/types/member";
 import { IoIosArrowBack } from "react-icons/io";
 import { getGenerations } from "@/utils/FormatFilters";
 import { formatAssignees } from "@/utils/FormatAssignee";
-
-interface MemberDropdownProps {
-    selectedMemberIds: number[];
-    onSelectChange: (memberIds: number[]) => void;
-}
+import type { MemberDropdownProps } from "@/types/fullCalendar";
 
 export default function MemberDropdown({ selectedMemberIds, onSelectChange }: MemberDropdownProps) {
-    const [isOpen, setIsOpen] = useState(false);
-    const [expandedGenerations, setExpandedGenerations] = useState<Set<number | 'all'>>(new Set());
+    const [isOpen, setIsOpen] = useState(false); // 담당자 선택 드롭다운 열림 여부
+    const [expandedGenerations, setExpandedGenerations] = useState<Set<number | 'all'>>(new Set()); // 기수별 드롭다운 열림 여부
     const dropdownRef = useRef<HTMLDivElement>(null);
 
-    const generationLabels = getGenerations(dummyMembers);
+    const generationLabels = getGenerations(dummyMembers); // 기수 뽑아내기
 
-    const getGenKey = (label: string): number | 'all' =>
+    const getGenKey = (label: string): number | 'all' => // map 사용 시 키로 사용하기 위한 변형
         label === '전체' ? 'all' : parseInt(label);
 
     useEffect(() => {
+        // 드롭다운 밖을 클릭 시 전체 드롭다운 닫기
         function handleClickOutside(event: MouseEvent) {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
                 setIsOpen(false);
@@ -31,16 +28,19 @@ export default function MemberDropdown({ selectedMemberIds, onSelectChange }: Me
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
+    // 기수별 학생 배열 생성
     const getMembersByGeneration = (gen: number | 'all'): Member[] => {
         if (gen === 'all') return dummyMembers;
         return dummyMembers.filter(m => m.generation === gen);
     };
 
+    // 특정 기수 선택 시 해당하는 학생이 전부 선택되었는지 확인
     const isGenerationFullySelected = (gen: number | 'all'): boolean => {
         const members = getMembersByGeneration(gen);
         return members.length > 0 && members.every(m => selectedMemberIds.includes(m.id));
     };
 
+    // 특정 기수 선택 시 해당 기수 학생 전체 선택 / 해제
     const toggleGeneration = (gen: number | 'all') => {
         const members = getMembersByGeneration(gen);
         const memberIds = members.map(m => m.id);
@@ -54,6 +54,7 @@ export default function MemberDropdown({ selectedMemberIds, onSelectChange }: Me
         }
     };
 
+    // 개별 학생 선택 시 해당 학생 선택 / 해제
     const toggleMember = (memberId: number) => {
         if (selectedMemberIds.includes(memberId)) {
             onSelectChange(selectedMemberIds.filter(id => id !== memberId));
@@ -62,6 +63,7 @@ export default function MemberDropdown({ selectedMemberIds, onSelectChange }: Me
         }
     };
 
+    // 화살표 클릭 시 해당 기수 열기 / 접기
     const toggleExpand = (gen: number | 'all') => {
         const newExpanded = new Set(expandedGenerations);
         if (newExpanded.has(gen)) {
@@ -72,6 +74,7 @@ export default function MemberDropdown({ selectedMemberIds, onSelectChange }: Me
         setExpandedGenerations(newExpanded);
     };
 
+    // 선택된 학생 목록을 가공해 표시
     const getDisplayText = (): string => {
         if (selectedMemberIds.length === 0) return '담당자 선택';
 
@@ -82,39 +85,40 @@ export default function MemberDropdown({ selectedMemberIds, onSelectChange }: Me
         return formatAssignees(selectedNames);
     };
 
-    const renderGenerationGroup = (gen: number | 'all', label: string) => (
-        <div key={gen}>
-            <S.GenerationHeader $selected={isGenerationFullySelected(gen)}>
-                <S.GenerationLeft onClick={() => toggleGeneration(gen)}>
-                    <S.Label $selected={isGenerationFullySelected(gen)}>
-                        {label}
-                    </S.Label>
-                </S.GenerationLeft>
-                <S.ArrowIcon
-                    $isOpen={expandedGenerations.has(gen)}
-                    onClick={() => toggleExpand(gen)}
-                >
-                    <IoIosArrowBack />
-                </S.ArrowIcon>
-            </S.GenerationHeader>
-
-            {expandedGenerations.has(gen) && (
-                <S.MemberList>
-                    {getMembersByGeneration(gen).map(member => (
-                        <S.MemberItem
-                            key={member.id}
-                            onClick={() => toggleMember(member.id)}
-                            $selected={selectedMemberIds.includes(member.id)}
-                        >
-                            <S.Label $selected={selectedMemberIds.includes(member.id)}>
-                                {member.name}
-                            </S.Label>
-                        </S.MemberItem>
-                    ))}
-                </S.MemberList>
-            )}
-        </div>
-    );
+    // 기수 하나 (헤더 + 학생) 렌더링
+    const renderGenerationGroup = (gen: number | 'all', label: string) => {
+        const isSelected = isGenerationFullySelected(gen);
+    
+        return (
+            <div key={gen}>
+                <S.GenerationHeader $selected={isSelected}>
+                    <S.GenerationLeft onClick={() => toggleGeneration(gen)}>
+                        <S.Label $selected={isSelected}>{label}</S.Label>
+                    </S.GenerationLeft>
+                    <S.ArrowIcon $isOpen={expandedGenerations.has(gen)} onClick={() => toggleExpand(gen)}>
+                        <IoIosArrowBack />
+                    </S.ArrowIcon>
+                </S.GenerationHeader>
+    
+                {expandedGenerations.has(gen) && (
+                    <S.MemberList>
+                        {getMembersByGeneration(gen).map(member => {
+                            const isMemberSelected = selectedMemberIds.includes(member.id);
+                            return (
+                                <S.MemberItem
+                                    key={member.id}
+                                    onClick={() => toggleMember(member.id)}
+                                    $selected={isMemberSelected}
+                                >
+                                    <S.Label $selected={isMemberSelected}>{member.name}</S.Label>
+                                </S.MemberItem>
+                            );
+                        })}
+                    </S.MemberList>
+                )}
+            </div>
+        );
+    };
 
     return (
         <S.Container ref={dropdownRef}>

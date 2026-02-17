@@ -90,3 +90,8 @@ export interface TextInputFieldProps {
   showLetterCount?: number;
   maxLength?: number;
 }
+
+export interface MemberDropdownProps {
+  selectedMemberIds: number[];
+  onSelectChange: (memberIds: number[]) => void;
+}
