@@ -114,7 +114,8 @@ export default function EventEditModal({ selectedDate, setIsModalOpen, modalMode
                 />
 
                 <S.Buttons>
-                    <S.DeleteButton>삭제</S.DeleteButton>
+                    {modalMode === '편집'
+                    ? <S.DeleteButton>삭제</S.DeleteButton> : <></> }
                     <S.CancelButton onClick={() => setIsModalOpen(false)}>취소</S.CancelButton>
                     <S.ConfirmButton>저장</S.ConfirmButton>
                 </S.Buttons>
