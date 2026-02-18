@@ -1,10 +1,12 @@
-import { useState } from "react";
 import * as S from "./CommunitySidebar.styled";
 import { CATEGORIES } from "@/constants/Community";
 
-export default function CommunitySidebar() {
-    const [selectedCategory, setSelectedCategory] = useState("전체");
+interface CommunitySidebarProps {
+    selectedCategory: string;
+    onCategoryChange: (category: string) => void;
+}
 
+export default function CommunitySidebar({ selectedCategory, onCategoryChange }: CommunitySidebarProps) {
     return (
         <S.Container>
             <S.Title>카테고리</S.Title>
@@ -12,7 +14,7 @@ export default function CommunitySidebar() {
                 <S.Category
                     key={category}
                     $isSelected={selectedCategory === category}
-                    onClick={() => setSelectedCategory(category)}
+                    onClick={() => onCategoryChange(category)}
                 >
                     {category}
                 </S.Category>
