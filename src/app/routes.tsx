@@ -7,7 +7,7 @@ import SignupGoogle from '@/pages/SignupGoogle';
 import Signin from '@/pages/Signin';
 import Main from '@/pages/Main/Main';
 import Profile from '@/pages/Profile';
-import CommunityList from '@/pages/Community/CommunityMain/Community';
+import CommunityList from '@/pages/Community/CommunityMain/CommunityMain';
 import CommunityDetail from '@/pages/Community/CommunityDetail/CommunityDetail';
 import CommunityPost from '@/pages/Community/CommunityPost/CommunityPost';
 import Mentoring from '@/pages/Mentoring/Mentoring';
