@@ -26,3 +26,15 @@ export const PostContainer = styled.div`
     gap: 20px;
     overflow-y: scroll;
 `
+
+export const WriteButton = styled.button`
+    width: 120px;
+    height: 55px;
+    background-color: ${token.colors.background.yellow};
+    border-radius: ${token.shapes.xlarge};
+    ${token.typography('body', 'md', 'semibold')};
+    color: ${token.colors.text.white};
+    position: fixed;
+    right: 50px;
+    bottom: 70px;
+`

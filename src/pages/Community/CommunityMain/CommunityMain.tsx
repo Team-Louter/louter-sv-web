@@ -24,6 +24,7 @@ export default function Community() {
                     ))}
                 </S.PostContainer>
             </S.ForCenter>
+            <S.WriteButton>게시글 작성</S.WriteButton>
         </S.Container>
     );
 }
