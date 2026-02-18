@@ -91,7 +91,7 @@ export default function EventEditModal({ selectedDate, setIsModalOpen, modalMode
                 />
 
                 <S.ForRow>
-                    <S.Name>색상</S.Name>
+                    <S.Name style={{paddingTop: 0}}>색상</S.Name>
                     <S.ColorContainer>
                         {calendarHighlight.map(color => (
                             <S.Color

@@ -8,7 +8,8 @@ export const Container = styled.div`
 
 export const DropdownButton = styled.button<{ $isOpen: boolean; $hasSelection: boolean }>`
     width: 100%;
-    padding: 10px 16px;
+    height: 35px;
+    padding: 5px 12px;
     border: 1px solid ${token.colors.line.light};
     border-radius: 5px;
     background-color: ${token.colors.background.white};

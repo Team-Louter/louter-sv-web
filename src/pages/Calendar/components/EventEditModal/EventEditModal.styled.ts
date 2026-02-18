@@ -14,11 +14,11 @@ export const Background = styled.div`
 
 export const Container = styled.div`
     width: 37%;
-    height: 68%;
+    height: 69%;
     background-color: ${token.colors.background.white};
     border-radius: ${token.shapes.large};
     padding: 40px;
-    gap: 10px;
+    gap: 13px;
     ${token.flexColumn};
 `
 
@@ -60,6 +60,10 @@ export const Input = styled.input`
 
     &:focus {
         outline-color: ${token.colors.line.highlight}
+    }
+
+    &::placeholder {
+        color: ${token.colors.text.coolGray}
     }
 `
 
@@ -133,6 +137,10 @@ export const TextArea = styled.textarea`
 
     &:focus {
         outline-color: ${token.colors.line.highlight}
+    }
+
+    &::placeholder {
+        color: ${token.colors.text.coolGray}
     }
 `
 
