@@ -1,5 +1,5 @@
 import type { Member } from '@/types/member';
-import type { Post } from '@/types/post';
+import type { MainPost, Post } from '@/types/post';
 import type { EventInput } from '@fullcalendar/core';
 
 export const dummyEvents: EventInput[] = [
@@ -92,7 +92,7 @@ export const dummyEvents: EventInput[] = [
   }
 ];
 
-export const dummyMyPosts: Post[] = [
+export const dummyMyPosts: MainPost[] = [
     {
       id: 1,
       title: '전수안의 리액트 네이티브에서 생존하기',
@@ -100,7 +100,7 @@ export const dummyMyPosts: Post[] = [
     }
 ];
   
-export const dummyPopularPosts: Post[] = [
+export const dummyPopularPosts: MainPost[] = [
     {
       id: 2,
       title: '라우터에서 살아남는 법',
@@ -133,4 +133,91 @@ export const dummyMembers: Member[] = [
   { id: 12, name: "전수안", generation: 2, role: "LEADER", major: ["Frontend"] },
   { id: 13, name: "최현수", generation: 2, role: "MENTOR", major: ["Frontend", "Design"] },
   { id: 14, name: "홍지율", generation: 1, role: "MENTOR", major: ["Frontend"] }
+];
+
+export const dummyPosts: Post[] = [
+  {
+    id: 1,
+    category: "공지사항",
+    tag: "",
+    title: "커뮤니티 이용 규칙 안내",
+    content: "깨끗한 커뮤니티 환경을 위해 공지사항을 반드시 숙지해 주세요.",
+    views: 1250,
+    likes: 85,
+    comments: 0,
+    author: "관리자",
+    createdAt: "2026-02-18T16:57:36.911Z",
+    isPinned: true,
+    isHearted: false
+  },
+  {
+    id: 2,
+    category: "정보 공유",
+    tag: "프론트엔드",
+    title: "2026년 프론트엔드 학습 로드맵 공유",
+    content: "최신 트렌드를 반영한 프론트엔드 공부 순서입니다.",
+    views: 450,
+    likes: 120,
+    comments: 15,
+    author: "데브마스터",
+    createdAt: "2026-02-19T02:15:20.123Z",
+    isPinned: false,
+    isHearted: true
+  },
+  {
+    id: 3,
+    category: "질문",
+    tag: "백엔드 질문",
+    title: "Spring Boot DB 연결 에러 해결 방법?",
+    content: "datasource 설정 시 자꾸 에러가 나는데 원인을 모르겠어요.",
+    views: 89,
+    likes: 3,
+    comments: 4,
+    author: "코린이1호",
+    createdAt: "2026-02-19T05:10:45.555Z",
+    isPinned: false,
+    isHearted: false
+  },
+  {
+    id: 4,
+    category: "대회",
+    tag: "알고리즘",
+    title: "백준 골드 달성 기념 문제 추천",
+    content: "구현 위주의 문제들인데 같이 풀어봐요.",
+    views: 890,
+    likes: 210,
+    comments: 45,
+    author: "알고킹",
+    createdAt: "2026-02-19T08:00:00.000Z",
+    isPinned: false,
+    isHearted: true
+  },
+  {
+    id: 5,
+    category: "로드맵",
+    tag: "기타 전공",
+    title: "비전공자를 위한 데이터 분석 입문 가이드",
+    content: "비전공자도 충분히 할 수 있습니다. 이 로드맵을 따라오세요.",
+    views: 320,
+    likes: 55,
+    comments: 12,
+    author: "데이터왕",
+    createdAt: "2026-02-19T10:45:12.999Z",
+    isPinned: false,
+    isHearted: false
+  },
+  {
+    id: 6,
+    category: "자유게시판",
+    tag: "",
+    title: "오늘 점심 메뉴 추천받아요",
+    content: "결정장애가 왔습니다.. 맛있는 거 추천해주세요!",
+    views: 120,
+    likes: 5,
+    comments: 22,
+    author: "배고픈개발자",
+    createdAt: "2026-02-19T11:30:12.888Z",
+    isPinned: false,
+    isHearted: false
+  }
 ];
