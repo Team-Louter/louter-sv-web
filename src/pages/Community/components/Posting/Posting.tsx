@@ -7,8 +7,8 @@ import type { postProps } from "@/types/post";
 import { formatDateTime } from "@/utils/FormatDate";
 import { useNavigate } from "react-router-dom";
 
-export default function Posting({ post, selectedCategory }: postProps) {
-    const [isLiked, setIsLiked] = useState<boolean>(post.isHearted || false);
+export default function Posting({ post, selectedCategory }: postProps) { 
+    const [isLiked, setIsLiked] = useState<boolean>(post.isHearted || false); // 좋아요 누름 여부
     const navigate = useNavigate();
 
     return (

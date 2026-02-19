@@ -8,16 +8,18 @@ import { MdPushPin } from "react-icons/md";
 import { colors } from "@/styles/values/_foundation";
 
 export default function Community() {
-    const location = useLocation();
-    const [selectedCategory, setSelectedCategory] = useState(
+    const location = useLocation(); // 게시글 세부 페이지에서 선텍한 카테고리 받아오기 (사이드바로 넘겨주기 위함)
+    const [selectedCategory, setSelectedCategory] = useState( // 선택한 카테고리
         location.state?.selectedCategory ?? "전체"
     );
     const navigate = useNavigate();
 
+    // 카테고리별 게시글 필터링
     const filteredPosts = selectedCategory === "전체"
         ? dummyPosts
         : dummyPosts.filter((post) => post.category === selectedCategory);
 
+    // 고정된 게시글과 고정되지 않은 게시글 분리
     const pinnedPosts = filteredPosts.filter((post) => post.isPinned);
     const normalPosts = filteredPosts.filter((post) => !post.isPinned);
 
