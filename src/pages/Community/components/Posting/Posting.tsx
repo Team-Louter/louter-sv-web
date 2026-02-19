@@ -7,12 +7,15 @@ import type { postProps } from "@/types/post";
 import { formatDateTime } from "@/utils/FormatDate";
 import { useNavigate } from "react-router-dom";
 
-export default function Posting ({post}:postProps) {
-    const [isLiked, setIsLiked] = useState<boolean>(post.isHearted||false); // 좋아요 눌림 여부
+export default function Posting({ post, selectedCategory }: postProps) {
+    const [isLiked, setIsLiked] = useState<boolean>(post.isHearted || false);
     const navigate = useNavigate();
 
     return (
-        <S.Container $isPinned={post.isPinned} onClick={() => navigate(`/community/${post.id}`)}>
+        <S.Container
+            $isPinned={post.isPinned}
+            onClick={() => navigate(`/community/${post.id}`, { state: { selectedCategory } })}
+        >
             <S.ForColumn>
                 <S.ForRow>
                     <S.Category>{post.category}</S.Category>
@@ -21,7 +24,7 @@ export default function Posting ({post}:postProps) {
                         {post.title}
                     </S.Title>
                     <S.Div>
-                        <MdRemoveRedEye size={22} color={colors.fill.yellow}/>
+                        <MdRemoveRedEye size={22} color={colors.fill.yellow} />
                         <S.ViewCount>{post.views}</S.ViewCount>
                     </S.Div>
                 </S.ForRow>
@@ -30,7 +33,7 @@ export default function Posting ({post}:postProps) {
                 </S.ForRow>
                 <S.ForRow>
                     <S.Div>
-                        <S.ProfileImg/>
+                        <S.ProfileImg />
                         <S.Name>{post.author}</S.Name>
                     </S.Div>
                     <S.UploadTime>{formatDateTime(post.createdAt)}</S.UploadTime>
@@ -38,20 +41,20 @@ export default function Posting ({post}:postProps) {
                         {isLiked
                             ? <FaHeart color="#FF3535"
                                 onClick={(e) => { e.stopPropagation(); setIsLiked(false); }}
-                                style={{ cursor: "pointer" }}/>
+                                style={{ cursor: "pointer" }} />
                             : <FaRegHeart color="#FF3535"
                                 onClick={(e) => { e.stopPropagation(); setIsLiked(true); }}
-                                style={{ cursor: "pointer" }}/>
+                                style={{ cursor: "pointer" }} />
                         }
                         <S.LikeCount>{post.likes}</S.LikeCount>
                     </S.Div>
                     <S.Div>
-                        <FaRegComment color={colors.fill.yellow}/>
+                        <FaRegComment color={colors.fill.yellow} />
                         <S.CommentCount>{post.comments}</S.CommentCount>
                     </S.Div>
                 </S.ForRow>
             </S.ForColumn>
-            <S.Img/>
+            <S.Img />
         </S.Container>
-    )
+    );
 }

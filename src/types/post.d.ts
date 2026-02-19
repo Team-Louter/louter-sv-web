@@ -19,6 +19,7 @@ export type Post = {
   isHearted: boolean;
 }
 
-interface postProps {
-    post: Post;
+export interface postProps {
+  post: Post;
+  selectedCategory: string;
 }
