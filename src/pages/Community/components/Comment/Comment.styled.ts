@@ -5,6 +5,10 @@ import { GoKebabHorizontal } from "react-icons/go";
 export const Container = styled.div`
     width: 100%;
     min-height: 70px;
+    ${token.flexColumn};
+`
+
+export const ForRow = styled.div`
     ${token.flexBetween};
 `
 

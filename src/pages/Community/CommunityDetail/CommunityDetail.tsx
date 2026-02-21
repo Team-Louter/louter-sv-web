@@ -10,6 +10,7 @@ import { dummyPosts } from "@/constants/dummy";
 import { formatDateTime } from "@/utils/FormatDate";
 import Comment from "../components/Comment/Comment";
 import { dummyComments } from "@/constants/dummy";
+import CommentWrite from "../components/CommentWrite/CommentWrite";
 
 export default function CommunityDetail() {
     const location = useLocation();
@@ -83,24 +84,7 @@ export default function CommunityDetail() {
                     </S.ForRow>
                     <S.Divider />
                     <S.CommentContainer>
-                        <S.CommentWrite>
-                            <S.CommentContent placeholder="댓글을 남겨보세요." />
-                            <S.ForRow style={{justifyContent: 'space-between'}}>
-                                <S.Div style={{gap: 10}}>
-                                    <S.Div style={{ marginLeft: 10 }}>
-                                        <S.ProfileImg />
-                                        <S.Name>이도연</S.Name>
-                                    </S.Div>
-                                    <S.Div>
-                                        <S.CheckboxLabel>
-                                            <input type="checkbox" />
-                                        </S.CheckboxLabel>
-                                        <S.Label>익명으로 등록</S.Label>
-                                    </S.Div>
-                                </S.Div>
-                                <S.Confirm>등록</S.Confirm>
-                            </S.ForRow>
-                        </S.CommentWrite>
+                        <CommentWrite/>
                         {postComment.length > 0
                             ? postComment.map((comment) => (
                             <Comment comment={comment} key={comment.id}/>))

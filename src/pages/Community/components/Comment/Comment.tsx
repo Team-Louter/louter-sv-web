@@ -1,22 +1,35 @@
-import type { Comment, commentProps } from "@/types/post";
+import { useState } from "react";
+import type { commentProps } from "@/types/post";
 import * as S from "./Comment.styled";
 import { formatDateTime } from "@/utils/FormatDate";
+import CommentWrite from "../CommentWrite/CommentWrite";
 
-export default function Comment({comment}:commentProps) {
+export default function Comment({ comment }: commentProps) {
+    const [showReply, setShowReply] = useState(false);
+
     return (
         <S.Container>
-            <S.Div>
-                <S.ProfileImg/>
-                <S.ForColumn>
-                    <S.Name>{comment.author}</S.Name>
-                    <S.CommentContent>{comment.content}</S.CommentContent>
-                    <S.Div>
-                        <S.UploadTime>{formatDateTime(comment.createdAt)}</S.UploadTime>
-                        <S.WriteButton>답글쓰기</S.WriteButton>
-                    </S.Div>
-                </S.ForColumn>
-            </S.Div>
-            <S.KebabIcon/>
+            <S.ForRow>
+                <S.Div>
+                    <S.ProfileImg />
+                    <S.ForColumn>
+                        <S.Name>{comment.author}</S.Name>
+                        <S.CommentContent>{comment.content}</S.CommentContent>
+                        <S.Div>
+                            <S.UploadTime>{formatDateTime(comment.createdAt)}</S.UploadTime>
+                            <S.WriteButton onClick={() => setShowReply((prev) => !prev)}>
+                                {showReply ? "취소" : "답글쓰기"}
+                            </S.WriteButton>
+                        </S.Div>
+                    </S.ForColumn>
+                </S.Div>
+                <S.KebabIcon />
+            </S.ForRow>
+            {showReply && (
+                <div style={{ marginLeft: 40, marginTop: 8 }}>
+                    <CommentWrite onClose={() => setShowReply(false)} />
+                </div>
+            )}
         </S.Container>
-    )
+    );
 }
