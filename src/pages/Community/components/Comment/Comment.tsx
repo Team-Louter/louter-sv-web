@@ -4,10 +4,11 @@ import * as S from "./Comment.styled";
 import { formatDateTime } from "@/utils/FormatDate";
 import CommentWrite from "../CommentWrite/CommentWrite";
 import KebabMenu from "../KebabMenu/KebabMenu";
+import { useKebab } from "@/hooks/useKebab";
 
 export default function Comment({ comment }: commentProps) {
     const [showReply, setShowReply] = useState(false);
-    const [isKebabOpen, setIsKebabOpen] = useState(false);
+    const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab();
 
     return (
         <S.Container>
@@ -25,7 +26,7 @@ export default function Comment({ comment }: commentProps) {
                         </S.Div>
                     </S.ForColumn>
                 </S.Div>
-                <S.KebabWrapper>
+                <S.KebabWrapper ref={kebabRef}>
                     <S.KebabIcon onClick={() => setIsKebabOpen(prev => !prev)} />
                     {isKebabOpen && <KebabMenu items={["수정하기", "삭제하기"]} />}
                 </S.KebabWrapper>

@@ -12,6 +12,7 @@ import Comment from "../components/Comment/Comment";
 import { dummyComments } from "@/constants/dummy";
 import CommentWrite from "../components/CommentWrite/CommentWrite";
 import KebabMenu from "../components/KebabMenu/KebabMenu";
+import { useKebab } from "@/hooks/useKebab";
 
 export default function CommunityDetail() {
     const location = useLocation();
@@ -21,7 +22,7 @@ export default function CommunityDetail() {
 
     const post = dummyPosts.find((p) => p.id === Number(postId));
     const [isLiked, setIsLiked] = useState<boolean>(post?.isHearted ?? false);
-    const [isKebabOpen, setIsKebabOpen] = useState(false);
+    const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab();
     const postComment = dummyComments.filter((e) => e.postId === Number(postId));
 
     if (!post) {
@@ -55,7 +56,7 @@ export default function CommunityDetail() {
                                     <S.ViewCount>{post.views}</S.ViewCount>
                                 </S.Div>
                             </S.Div>
-                            <S.KebabWrapper>
+                            <S.KebabWrapper ref={kebabRef}>
                                 <S.KebabIcon
                                     size={23}
                                     color={colors.fill.slate}
