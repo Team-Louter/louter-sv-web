@@ -10,6 +10,17 @@ export default function Comment({ comment }: commentProps) {
     const [showReply, setShowReply] = useState(false);
     const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab();
 
+    const kebabItems = [
+        {
+            label: "수정하기",
+            onClick: () => setIsKebabOpen(false),
+        },
+        {
+            label: "삭제하기",
+            onClick: () => setIsKebabOpen(false),
+        },
+    ];
+
     return (
         <S.Container>
             <S.ForRow>
@@ -28,7 +39,7 @@ export default function Comment({ comment }: commentProps) {
                 </S.Div>
                 <S.KebabWrapper ref={kebabRef}>
                     <S.KebabIcon onClick={() => setIsKebabOpen(prev => !prev)} />
-                    {isKebabOpen && <KebabMenu items={["수정하기", "삭제하기"]} />}
+                    {isKebabOpen && <KebabMenu items={kebabItems} />}
                 </S.KebabWrapper>
             </S.ForRow>
             {showReply && (

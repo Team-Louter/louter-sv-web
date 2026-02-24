@@ -13,6 +13,7 @@ import { dummyComments } from "@/constants/dummy";
 import CommentWrite from "../components/CommentWrite/CommentWrite";
 import KebabMenu from "../components/KebabMenu/KebabMenu";
 import { useKebab } from "@/hooks/useKebab";
+import { MdPushPin } from "react-icons/md";
 
 export default function CommunityDetail() {
     const location = useLocation();
@@ -22,6 +23,7 @@ export default function CommunityDetail() {
 
     const post = dummyPosts.find((p) => p.id === Number(postId));
     const [isLiked, setIsLiked] = useState<boolean>(post?.isHearted ?? false);
+    const [isPinned, setIsPinned] = useState<boolean>(false);
     const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab();
     const postComment = dummyComments.filter((e) => e.postId === Number(postId));
 
@@ -32,6 +34,24 @@ export default function CommunityDetail() {
     const handleCategoryChange = (category: string) => {
         navigate("/community", { state: { selectedCategory: category } });
     };
+
+    const kebabItems = [
+        {
+            label: isPinned ? "고정 해제" : "고정하기",
+            onClick: () => {
+                setIsPinned(prev => !prev);
+                setIsKebabOpen(false);
+            },
+        },
+        {
+            label: "수정하기",
+            onClick: () => setIsKebabOpen(false),
+        },
+        {
+            label: "삭제하기",
+            onClick: () => setIsKebabOpen(false),
+        },
+    ];
 
     return (
         <S.Container>
@@ -50,6 +70,7 @@ export default function CommunityDetail() {
                         </S.ForRow>
                         <S.ForRow style={{ justifyContent: "space-between" }}>
                             <S.Div>
+                                {isPinned && <MdPushPin size={30} color={colors.fill.yellow} />}
                                 <S.Title>{post.title}</S.Title>
                                 <S.Div>
                                     <MdRemoveRedEye size={22} color={colors.fill.yellow} />
@@ -62,7 +83,7 @@ export default function CommunityDetail() {
                                     color={colors.fill.slate}
                                     onClick={() => setIsKebabOpen(prev => !prev)}
                                 />
-                                {isKebabOpen && <KebabMenu items={["고정하기", "수정하기", "삭제하기"]} />}
+                                {isKebabOpen && <KebabMenu items={kebabItems} />}
                             </S.KebabWrapper>
                         </S.ForRow>
                         <S.ForRow>

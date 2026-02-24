@@ -1,15 +1,12 @@
+import type { KebabMenuProps } from "@/types/community";
 import * as S from "./KebabMenu.styled";
-
-interface KebabMenuProps {
-    items: string[];
-}
 
 export default function KebabMenu({ items }: KebabMenuProps) {
     return (
         <S.Container>
             {items.map((item) => (
-                <S.Label key={item}>{item}</S.Label>
+                <S.Label key={item.label} onClick={item.onClick}>{item.label}</S.Label>
             ))}
         </S.Container>
-    )
+    );
 }
