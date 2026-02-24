@@ -31,3 +31,8 @@ export interface MarkdownProps {
 export type KebabMenuProps = {
     items: { label: string; onClick: () => void }[];
 };
+
+export interface CommentWriteProps {
+    onClose?: () => void;
+    initialValue?: string;
+}

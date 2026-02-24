@@ -8,18 +8,31 @@ import { useKebab } from "@/hooks/useKebab";
 
 export default function Comment({ comment }: commentProps) {
     const [showReply, setShowReply] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
     const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab();
 
     const kebabItems = [
         {
             label: "수정하기",
-            onClick: () => setIsKebabOpen(false),
+            onClick: () => {
+                setIsEditing(true);
+                setIsKebabOpen(false);
+            },
         },
         {
             label: "삭제하기",
             onClick: () => setIsKebabOpen(false),
         },
     ];
+
+    if (isEditing) {
+        return (
+            <CommentWrite
+                initialValue={comment.content}
+                onClose={() => setIsEditing(false)}
+            />
+        );
+    }
 
     return (
         <S.Container>
@@ -31,8 +44,8 @@ export default function Comment({ comment }: commentProps) {
                         <S.CommentContent>{comment.content}</S.CommentContent>
                         <S.Div>
                             <S.UploadTime>{formatDateTime(comment.createdAt)}</S.UploadTime>
-                            <S.WriteButton onClick={() => setShowReply((prev) => !prev)}>
-                                {showReply ? "취소" : "답글쓰기"}
+                            <S.WriteButton onClick={() => setShowReply(true)}>
+                                답글쓰기
                             </S.WriteButton>
                         </S.Div>
                     </S.ForColumn>

@@ -93,6 +93,18 @@ export const Label = styled.span`
     color: ${token.colors.text.normal};
 `
 
+export const Cancel = styled.button`
+    color: ${token.colors.text.goldLight};
+    ${token.typography('body', 'md', 'semibold')};
+    ${token.flexCenter};
+    width: 50px;
+    height: 30px;
+    background-color: ${token.colors.background.white};
+    border: 1px solid ${token.colors.line.highlight};
+    border-radius: ${token.shapes.small};
+    margin-right: 3px;
+`
+
 export const Confirm = styled.button`
     color: ${token.colors.text.white};
     ${token.typography('body', 'md', 'semibold')};

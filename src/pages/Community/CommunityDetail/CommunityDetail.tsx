@@ -71,7 +71,10 @@ export default function CommunityDetail() {
                         <S.ForRow style={{ justifyContent: "space-between" }}>
                             <S.Div>
                                 {isPinned && <MdPushPin size={30} color={colors.fill.yellow} />}
-                                <S.Title>{post.title}</S.Title>
+                                <S.Title>
+                                    {post.tag && `[${post.tag}] `}
+                                    {post.title}
+                                </S.Title>
                                 <S.Div>
                                     <MdRemoveRedEye size={22} color={colors.fill.yellow} />
                                     <S.ViewCount>{post.views}</S.ViewCount>
