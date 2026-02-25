@@ -51,7 +51,7 @@ export default function Profile () {
                     </S.ProfileInfoIn>
                 </S.ProfileInfoOut>
                 <S.MyPostTitle>내가 최근에 쓴 글</S.MyPostTitle>
-                <MainPost title={myPost?.content[0].postTitle ?? "Untitled"} viewCount={myPost?.content[0].viewers ?? 0}/>
+                <MainPost title={myPost?.content[0].postTitle ?? "Untitled"} viewCount={myPost?.content[0].viewers ?? 0} id={myPost?.content[0].postId}/>
             </S.ProfileContainer>
             <PopularPost/>
         </>

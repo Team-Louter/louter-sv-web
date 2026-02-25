@@ -24,7 +24,7 @@ export default function PopularPost () {
         <S.PopularContainer>
             <S.PopularTitle>실시간 인기글</S.PopularTitle>
             {hotPosts?.map(post => (
-                <MainPost title={post.postTitle} viewCount={post.viewers} key={post.postId}/>
+                <MainPost title={post.postTitle} viewCount={post.viewers} key={post.postId} id={post.postId}/>
             ))}
         </S.PopularContainer>
     )

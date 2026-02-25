@@ -70,7 +70,8 @@ export interface HotPost {
 
 export type mainProps = {
   title: string,
-  viewCount: number
+  viewCount: number,
+  id: number|undefined
 }
 
 export type dPost = {

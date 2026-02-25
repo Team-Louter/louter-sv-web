@@ -13,6 +13,7 @@ export const PostContainer = styled.div`
     justify-content: space-evenly;
     padding-left: 20px;
     margin-bottom: 10px;
+    cursor: pointer;
 `
 
 export const Title = styled.h3`
