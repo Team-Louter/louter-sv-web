@@ -1,13 +1,9 @@
 import * as S from "./MainPost.styled";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { formatNumberWithComma } from "@/utils/FormatNumbers";
+import type { mainProps } from "@/types/post";
 
-type props = {
-    title: string,
-    viewCount: number
-}
-
-export default function MainPost ({ title, viewCount }:props) {
+export default function MainPost ({ title, viewCount }:mainProps) {
     return (
         <>
             <S.PostContainer>

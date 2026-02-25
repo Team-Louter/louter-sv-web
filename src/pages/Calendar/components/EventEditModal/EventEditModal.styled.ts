@@ -156,7 +156,7 @@ export const CancelButton = styled.button`
     height: 35px;
     width: 100px;
     background-color: ${token.colors.background.white};
-    border: 1px solid ${token.colors.line.light};
+    border: 1px solid ${token.colors.line.normal};
     border-radius: 4px;
     ${token.typography('body', 'sm', 'bold')};
     color: ${token.colors.text.dark};

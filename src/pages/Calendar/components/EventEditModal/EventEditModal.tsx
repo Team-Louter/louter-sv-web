@@ -8,11 +8,13 @@ import { calendarHighlight } from "@/constants/CalendarHighlight";
 import MemberDropdown from "./MemberDropdown";
 
 export default function EventEditModal({ selectedDate, setIsModalOpen, modalMode, event }: EventEditModalProps) {
+    // 시작 날짜 기본값 설정 
     const getInitialStartDate = () => {
         if (event?.start) return getLocalDateString(event.start);
         return selectedDate ? getLocalDateString(selectedDate) : getLocalDateString(new Date());
     };
 
+    // 종료 날짜 기본값 설정
     const getInitialEndDate = () => {
         if (event?.end) {
             const eventEndDate = new Date(event.end);
@@ -22,19 +24,20 @@ export default function EventEditModal({ selectedDate, setIsModalOpen, modalMode
         return selectedDate ? getLocalDateString(selectedDate) : getLocalDateString(new Date());
     };
 
-    const [title, setTitle] = useState<string>(event?.title || '');
-    const [content, setContent] = useState<string>(event?.extendedProps?.description || '');
+    const [title, setTitle] = useState<string>(event?.title || ''); // 일정 제목
+    const [content, setContent] = useState<string>(event?.extendedProps?.description || ''); // 일정 내용
     const [selectedMemberIds, setSelectedMemberIds] = useState<number[]>(
         event?.extendedProps?.assignees?.map((a: { id: number }) => a.id) || []
-    );
-    const [startDate, setStartDate] = useState<string>(getInitialStartDate());
-    const [endDate, setEndDate] = useState<string>(getInitialEndDate());
-    const [dateError, setDateError] = useState<string>('');
+    ); // 일정 담당자
+    const [startDate, setStartDate] = useState<string>(getInitialStartDate()); // 시작 날짜
+    const [endDate, setEndDate] = useState<string>(getInitialEndDate()); // 종료 날짜
+    const [dateError, setDateError] = useState<string>(''); // 종료 날짜가 시작 날짜보다 빠른 경우 에러 메세지
     const [selectedColor, setSelectedColor] = useState<string>(
         event?.backgroundColor || calendarHighlight[2]
-    );
+    ); // 일정 색상
 
     useEffect(() => {
+        // 종료 날짜가 시작 날짜보다 빠른지 확인
         if (startDate && endDate) {
             const start = new Date(startDate);
             const end = new Date(endDate);
@@ -46,6 +49,7 @@ export default function EventEditModal({ selectedDate, setIsModalOpen, modalMode
         }
     }, [startDate, endDate]);
 
+    // 모든 폼이 설정되었는지 확인
     const isFormValid =
         title.trim() !== '' &&
         selectedMemberIds.length > 0 &&

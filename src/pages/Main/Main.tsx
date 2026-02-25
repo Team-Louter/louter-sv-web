@@ -7,7 +7,8 @@ import { useState } from "react";
 import Member from "./components/Member/Member.tsx";
 
 export default function Main() {
-    const [selectedGen, setSelectedGen] = useState<string>("전체");
+    const [selectedGen, setSelectedGen] = useState<string>("전체"); // 선택된 기수
+
     return (
         <>
             <S.Container>

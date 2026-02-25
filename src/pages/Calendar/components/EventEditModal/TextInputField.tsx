@@ -1,6 +1,7 @@
 import type { TextInputFieldProps } from "@/types/fullCalendar";
 import * as S from "./EventEditModal.styled";
 
+// 한 줄 입력 필드
 export function TextInputField({ 
     label, 
     value, 
@@ -34,6 +35,7 @@ export function TextInputField({
     );
 }
 
+// 여러 줄 입력 필드
 export function TextAreaField({ 
     label, 
     value, 
