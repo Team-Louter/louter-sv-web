@@ -1,13 +1,30 @@
-import { dummyPopularPosts } from "@/constants/dummy";
+import { useEffect, useState } from "react";
 import MainPost from "../MainPost/MainPost";
 import * as S from "./PopularPost.styled";
+import { getHotPost } from "@/api/post";
+import type { HotPost } from "@/types/post";
 
 export default function PopularPost () {
+    const [hotPosts, setHotPosts] = useState<HotPost[]|null>(null);
+
+    const getHotPostInfo = async () => {
+        try{
+            const data = await getHotPost();
+            setHotPosts(data);
+        } catch(err) {
+            console.error(err);
+        }
+    };
+
+    useEffect(() => {
+        getHotPostInfo();
+    }, [])
+
     return (
         <S.PopularContainer>
             <S.PopularTitle>실시간 인기글</S.PopularTitle>
-            {dummyPopularPosts.map(post => (
-                <MainPost title={post.title} viewCount={post.viewCount} key={post.id}/>
+            {hotPosts?.map(post => (
+                <MainPost title={post.postTitle} viewCount={post.viewers} key={post.postId}/>
             ))}
         </S.PopularContainer>
     )
