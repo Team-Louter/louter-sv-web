@@ -9,7 +9,7 @@ export default function Member ({memberInfo}: MemberProps) {
             <S.ProfileImg />
             <S.ForColumn>
                 <S.Position $position={memberInfo.role}>{memberInfo.generation}기 {memberInfo.role === 'LEADER' ? '부장' : '부원'}</S.Position>
-                <S.StudentName>{memberInfo.name} ({memberInfo.major} Developer)</S.StudentName>
+                <S.StudentName>{memberInfo.userName} ({memberInfo.majors} Developer)</S.StudentName>
                 <S.SocialMedia>
                     <FaGithub size={18}/>
                     <FaLinkedin size={18}/>

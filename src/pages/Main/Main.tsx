@@ -1,13 +1,29 @@
 import Calendar from "@/components/common/Calendar/Calendar";
 import * as S from "./Main.styled.ts"
 import Profile from "./components/Profile/Profile.tsx";
-import { dummyMembers } from "@/constants/dummy.ts";
 import { getGenerations } from "@/utils/FormatFilters.ts";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Member from "./components/Member/Member.tsx";
+import type { Member as MemberType } from "@/types/member.js";
+import { getMember } from "@/api/Member.ts";
 
 export default function Main() {
     const [selectedGen, setSelectedGen] = useState<string>("전체"); // 선택된 기수
+    const [members, setMembers] = useState<MemberType[]|null>(null);
+    
+    const getMemberInfo = async () => {
+        try{
+            const data = await getMember(selectedGen);
+            setMembers(data);
+            console.log(data);
+        } catch(err) {
+            console.error(err);
+        }
+    };
+
+    useEffect(() => {
+        getMemberInfo();
+    }, [selectedGen])
 
     return (
         <>
@@ -27,7 +43,7 @@ export default function Main() {
                 <S.MemberContainer>
                     <S.Title>Louter Member</S.Title>
                     <S.FilterContainer>
-                        {getGenerations(dummyMembers).map((gen) => (
+                        {getGenerations(members).map((gen) => (
                             <S.GenFilter
                                 key={gen}
                                 onClick={() => setSelectedGen(gen)}
@@ -35,12 +51,9 @@ export default function Main() {
                         ))}
                     </S.FilterContainer>
                     <S.MemberScroll>
-                        {dummyMembers
-                            .filter((member) => 
-                                selectedGen === '전체' || selectedGen === `${member.generation}기`
-                            )
-                            .map((member) => (
-                                <Member key={member.id} memberInfo={member}/>
+                        {members
+                            ?.map((member) => (
+                                <Member key={member.userId} memberInfo={member}/>
                             ))}
                     </S.MemberScroll>
                 </S.MemberContainer>

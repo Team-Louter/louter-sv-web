@@ -35,7 +35,8 @@ export const Line = styled.div`
 
 export const MemberContainer = styled.div`
     width: 100%;
-    height: 140%;
+    heught: content-fit;
+    max-height: 140%;
     ${token.flexColumn};
     align-items: center;
     flex-shrink: 0;

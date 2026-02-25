@@ -72,3 +72,26 @@ export type mainProps = {
   title: string,
   viewCount: number
 }
+
+export type dPost = {
+  id: number;
+  category: string;
+  tag: string;
+  title: string;
+  content: string;
+  views: number;
+  likes: number;
+  comments: number;
+  author: string;
+  createdAt: string;
+  isPinned: boolean;
+  isHearted: boolean;
+}
+
+export interface Comment {
+  id: number;
+  postId: number;
+  author: string; 
+  content: string;
+  createdAt: string;
+}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import MainPost from "../MainPost/MainPost";
 import * as S from "./PopularPost.styled";
-import { getHotPost } from "@/api/post";
+import { getHotPost } from "@/api/Post";
 import type { HotPost } from "@/types/post";
 
 export default function PopularPost () {

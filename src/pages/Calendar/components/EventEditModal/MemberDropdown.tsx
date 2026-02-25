@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from "react";
 import * as S from "./MemberDropdown.styled";
-import { dummyMembers } from "@/constants/dummy";
 import type { Member } from "@/types/member";
 import { IoIosArrowBack } from "react-icons/io";
 import { getGenerations } from "@/utils/FormatFilters";
@@ -11,6 +10,22 @@ export default function MemberDropdown({ selectedMemberIds, onSelectChange }: Me
     const [isOpen, setIsOpen] = useState(false); // 담당자 선택 드롭다운 열림 여부
     const [expandedGenerations, setExpandedGenerations] = useState<Set<number | 'all'>>(new Set()); // 기수별 드롭다운 열림 여부
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const dummyMembers = [
+        { "name": "정민성", "generation": 1, "role": "LEADER", "major": ["Frontend", "Design"] },
+        { "name": "김승우", "generation": 2, "role": "MENTEE", "major": ["Backend"] },
+        { "name": "김용진", "generation": 1, "role": "MENTOR", "major": ["Frontend"] },
+        { "name": "김민준", "generation": 1, "role": "MENTOR", "major": ["Backend"] },
+        { "name": "서진교", "generation": 1, "role": "LEADER", "major": ["Frontend", "Design"] },
+        { "name": "오정민", "generation": 1, "role": "MENTOR", "major": ["Frontend", "Design"] },
+        { "name": "유을", "generation": 1, "role": "MENTOR", "major": ["Frontend"] },
+        { "name": "이다연", "generation": 2, "role": "MENTOR", "major": ["Backend"] },
+        { "name": "이도연", "generation": 2, "role": "LEADER", "major": ["Backend"] },
+        { "name": "이동휘", "generation": 1, "role": "MENTOR", "major": ["Backend"] },
+        { "name": "이윤지", "generation": 2, "role": "MENTOR", "major": ["Frontend", "Design"] },
+        { "name": "전수안", "generation": 2, "role": "LEADER", "major": ["Frontend"] },
+        { "name": "최현수", "generation": 2, "role": "MENTOR", "major": ["Frontend", "Design"] },
+        { "name": "홍지율", "generation": 1, "role": "MENTOR", "major": ["Frontend"] }
+      ]
 
     const generationLabels = getGenerations(dummyMembers); // 기수 뽑아내기
 

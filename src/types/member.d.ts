@@ -1,11 +1,14 @@
-export interface Member {
-    id: number;
-    name: string;
-    generation: number;
-    role: string;
-    major: string[];
-}
-
 interface MemberProps {
     memberInfo: Member;
   }
+
+export type Member = {
+    "userId": number,
+    "userName": string,
+    "profileImageUrl": string,
+    "majors": string[],
+    "role": string,
+    "generation": number,
+    "githubUrl": string,
+    "linkedinUrl": string
+}
