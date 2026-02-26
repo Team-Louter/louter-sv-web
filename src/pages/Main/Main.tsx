@@ -4,8 +4,8 @@ import Profile from "./components/Profile/Profile.tsx";
 import { getGenerations } from "@/utils/FormatFilters.ts";
 import { useEffect, useState } from "react";
 import Member from "./components/Member/Member.tsx";
-import type { Member as MemberType } from "@/types/member.js";
 import { getMember } from "@/api/Member.ts";
+import type { Member as MemberType } from "@/types/member.js";
 
 export default function Main() {
     const [selectedGen, setSelectedGen] = useState<string>("전체"); // 선택된 기수
@@ -13,9 +13,8 @@ export default function Main() {
     
     const getMemberInfo = async () => {
         try{
-            const data = await getMember(selectedGen);
+            const data = await getMember(selectedGen, null);
             setMembers(data);
-            console.log(data);
         } catch(err) {
             console.error(err);
         }
