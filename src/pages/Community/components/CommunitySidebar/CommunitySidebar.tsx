@@ -6,7 +6,7 @@ export default function CommunitySidebar({ selectedCategory, onCategoryChange }:
     return (
         <S.Container>
             <S.Title>카테고리</S.Title>
-            {CATEGORIES.map((category) => (
+            {Object.keys(CATEGORIES).map((category) => (
                 <S.Category
                     key={category}
                     $isSelected={selectedCategory === category}

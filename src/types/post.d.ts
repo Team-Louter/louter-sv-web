@@ -1,5 +1,6 @@
+// 메인 타입
 // 게시글 하나 타입
-export interface Post {
+export interface MainPost {
   commentCount: number;
   createdAt: string;
   likeCount: number;
@@ -28,7 +29,7 @@ export interface Pageable {
 
 // 전체 응답 타입
 export interface MyPost {
-  content: Post[];
+  content: MainPost[];
   empty: boolean;
   first: boolean;
   last: boolean;
@@ -74,6 +75,12 @@ export type mainProps = {
   id: number|undefined
 }
 
+export type postProps = {
+  post: Post,
+  selectedCategory: string
+}
+
+// 더미 타입
 export type dPost = {
   id: number;
   category: string;
@@ -96,3 +103,36 @@ export interface Comment {
   content: string;
   createdAt: string;
 }
+
+// 게시글 타입
+export type Post = {
+  postId: number;
+  userName: string;
+  userProfileImageUrl: string;
+  postTitle: string;
+  postContent: string;
+  category: string;
+  createdAt: string;
+  isAnonymous: boolean;
+  viewers: number;
+  likeCount: number;
+  commentCount: number;
+  isHearted: boolean;
+  pinned: boolean;
+  tag: string;
+  files: PostFile[];
+};
+
+export type PostList = {
+  totalElements: number;
+  totalPages: number;
+  pageable: Pageable;
+  numberOfElements: number;
+  first: boolean;
+  last: boolean;
+  size: number;
+  content: Post[];
+  number: number;
+  sort: Sort;
+  empty: boolean;
+};

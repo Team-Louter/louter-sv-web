@@ -4,15 +4,21 @@ import { MdHorizontalRule } from "react-icons/md";
 import { GoLink, GoFileDirectoryFill } from "react-icons/go";
 import type { Markdown } from "@/types/community";
 
-export const CATEGORIES = [
-    "전체", 
-    "공지사항", 
-    "자유게시판", 
-    "정보 공유", 
-    "로드맵", 
-    "대회", 
-    "Q&A"
-];
+export const CATEGORIES: Record<string, string> = {
+    "전체": "ALL",
+    "공지사항": "NOTICE",
+    "자유게시판": "FREE",
+    "정보 공유": "INFORMATION",
+    "로드맵": "ROADMAP",
+    "대회": "CONTEST",
+    "Q&A": "QNA",
+};
+
+// 역방향 객체 생성
+export const CATEGORY_REVERSED = Object.fromEntries(
+    Object.entries(CATEGORIES).map(([label, value]) => [value, label])
+);
+  
 
 export const CATEGORY_TAGS: Record<string, string[]> = {
     "공지사항": [],

@@ -6,6 +6,7 @@ import { useState } from "react";
 import type { postProps } from "@/types/post";
 import { formatDateTime } from "@/utils/FormatDate";
 import { useNavigate } from "react-router-dom";
+import { CATEGORY_REVERSED } from "@/constants/Community";
 
 export default function Posting({ post, selectedCategory }: postProps) { 
     const [isLiked, setIsLiked] = useState<boolean>(post.isHearted || false); // 좋아요 누름 여부
@@ -13,28 +14,28 @@ export default function Posting({ post, selectedCategory }: postProps) {
 
     return (
         <S.Container
-            $isPinned={post.isPinned}
-            onClick={() => navigate(`/community/${post.id}`, { state: { selectedCategory } })}
+            $isPinned={post.pinned}
+            onClick={() => navigate(`/community/${post.postId}`, { state: { selectedCategory } })}
         >
             <S.ForColumn>
                 <S.ForRow>
-                    <S.Category>{post.category}</S.Category>
+                    <S.Category>{CATEGORY_REVERSED[post.category]}</S.Category>
                     <S.Title>
                         {post.tag && <span>[{post.tag}] </span>}
-                        {post.title}
+                        {post.postTitle}
                     </S.Title>
                     <S.Div>
                         <MdRemoveRedEye size={22} color={colors.fill.yellow} />
-                        <S.ViewCount>{post.views}</S.ViewCount>
+                        <S.ViewCount>{post.viewers}</S.ViewCount>
                     </S.Div>
                 </S.ForRow>
                 <S.ForRow>
-                    <S.Content>{post.content}</S.Content>
+                    <S.Content>{post.postContent}</S.Content>
                 </S.ForRow>
                 <S.ForRow>
                     <S.Div>
                         <S.ProfileImg />
-                        <S.Name>{post.author}</S.Name>
+                        <S.Name>{post.userName}</S.Name>
                     </S.Div>
                     <S.UploadTime>{formatDateTime(post.createdAt)}</S.UploadTime>
                     <S.Div>
@@ -46,11 +47,11 @@ export default function Posting({ post, selectedCategory }: postProps) {
                                 onClick={(e) => { e.stopPropagation(); setIsLiked(true); }}
                                 style={{ cursor: "pointer" }} />
                         }
-                        <S.LikeCount>{post.likes}</S.LikeCount>
+                        <S.LikeCount>{post.likeCount}</S.LikeCount>
                     </S.Div>
                     <S.Div>
                         <FaRegComment color={colors.fill.yellow} />
-                        <S.CommentCount>{post.comments}</S.CommentCount>
+                        <S.CommentCount>{post.commentCount}</S.CommentCount>
                     </S.Div>
                 </S.ForRow>
             </S.ForColumn>
