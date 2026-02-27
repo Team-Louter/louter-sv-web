@@ -92,5 +92,4 @@ export const Img = styled.div`
     height: 100%;
     aspect-ratio: 1;
     border-radius: ${token.shapes.small};
-    border: 1px solid black;
 `
