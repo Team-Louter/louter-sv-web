@@ -9,13 +9,14 @@ import type { CalendarProps } from '@/types/fullCalendar';
 import EventDetailCard from './EventDetailCard';
 import EventEditModal from '@/pages/Calendar/components/EventEditModal/EventEditModal';
 import { getEvent } from '@/api/Event';
-import { formatEvents } from '@/utils/FormatDate';
+import { formatApiEvents, formatEvents } from '@/utils/formatEvent';
 
 const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
-  const [selectedEvent, setSelectedEvent] = useState<EventApi | null>(null); // 선택된 일정
+  const [selectedEvent, setSelectedEvent] = useState<EventInput | null>(null); // 선택된 일정
   const [cardPosition, setCardPosition] = useState({ x: 0, y: 0 }); // 메인에서 일정 클릭 시 나오는 카드 위치
   const [isModalOpen, setIsModalOpen] = useState(false); // 일정 추가/편집 모달 출력 여부
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null); // 선택한 날짜칸
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null); // 선택한 날짜칸 시작일
+  const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null); // 선택한 날짜칸 종료일
   const [modalMode, setModalMode] = useState<string>(''); // 일정 추가 or 편집
   const [eventsInfo, setEventsInfo] = useState<EventInput[]>([]);
 
@@ -48,7 +49,13 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
   // 날짜칸 선택 시
   const handleDateSelect = (selectInfo: DateSelectArg) => {
     if (readOnly) return;
+
+    // end는 exclusive이므로 하루 빼기
+    const endDate = new Date(selectInfo.end);
+    endDate.setDate(endDate.getDate() - 1);
+
     setSelectedDate(selectInfo.start);
+    setSelectedEndDate(endDate);
     setSelectedEvent(null);
     setIsModalOpen(true);
     setModalMode('추가');
@@ -62,11 +69,13 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
         x: rect.right + 10,
         y: rect.top
       });
-      setSelectedEvent(clickInfo.event);
+      setSelectedEvent(formatApiEvents(clickInfo.event));
       return;
     }
 
-    setSelectedEvent(clickInfo.event);
+    setSelectedDate(null);   
+    setSelectedEndDate(null);
+    setSelectedEvent(formatApiEvents(clickInfo.event));
     setIsModalOpen(true);
     setModalMode('편집');
   };
@@ -123,6 +132,7 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
       {isModalOpen && (
         <EventEditModal
           selectedDate={selectedDate}
+          selectedEndDate={selectedEndDate} // 추가
           setIsModalOpen={setIsModalOpen}
           modalMode={modalMode}
           event={selectedEvent}

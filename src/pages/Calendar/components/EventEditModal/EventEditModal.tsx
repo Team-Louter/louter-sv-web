@@ -7,8 +7,8 @@ import { TextAreaField, TextInputField } from "./TextInputField";
 import { calendarHighlight } from "@/constants/CalendarHighlight";
 import MemberDropdown from "./MemberDropdown";
 
-export default function EventEditModal({ selectedDate, setIsModalOpen, modalMode, event }: EventEditModalProps) {
-    // 시작 날짜 기본값 설정 
+export default function EventEditModal({ selectedDate, selectedEndDate, setIsModalOpen, modalMode, event }: EventEditModalProps) {
+    // 시작 날짜 기본값 설정
     const getInitialStartDate = () => {
         if (event?.start) return getLocalDateString(event.start);
         return selectedDate ? getLocalDateString(selectedDate) : getLocalDateString(new Date());
@@ -16,18 +16,21 @@ export default function EventEditModal({ selectedDate, setIsModalOpen, modalMode
 
     // 종료 날짜 기본값 설정
     const getInitialEndDate = () => {
+        console.log(event)
         if (event?.end) {
             const eventEndDate = new Date(event.end);
-            eventEndDate.setDate(eventEndDate.getDate() - 1);
+            eventEndDate.setDate(eventEndDate.getDate());
             return getLocalDateString(eventEndDate);
         }
+        // selectedEndDate가 있으면 사용, 없으면 selectedDate fallback
+        if (selectedEndDate) return getLocalDateString(selectedEndDate);
         return selectedDate ? getLocalDateString(selectedDate) : getLocalDateString(new Date());
     };
 
     const [title, setTitle] = useState<string>(event?.title || ''); // 일정 제목
     const [content, setContent] = useState<string>(event?.extendedProps?.description || ''); // 일정 내용
     const [selectedMemberIds, setSelectedMemberIds] = useState<number[]>(
-        event?.extendedProps?.assignees?.map((a: { id: number }) => a.id) || []
+        event?.extendedProps?.assignees?.map((a: { userId: number }) => a.userId) || []
     ); // 일정 담당자
     const [startDate, setStartDate] = useState<string>(getInitialStartDate()); // 시작 날짜
     const [endDate, setEndDate] = useState<string>(getInitialEndDate()); // 종료 날짜
@@ -62,7 +65,7 @@ export default function EventEditModal({ selectedDate, setIsModalOpen, modalMode
         <S.Background>
             <S.Container>
                 <S.ModalTitle>동아리 일정 {modalMode}하기</S.ModalTitle>
-                
+
                 <TextInputField
                     label="제목"
                     value={title}

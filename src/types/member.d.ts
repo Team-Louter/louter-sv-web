@@ -10,5 +10,10 @@ export type Member = {
     "role": string,
     "generation": number,
     "githubUrl": string,
-    "linkedinUrl": string
+    "linkedinUrl": string,
+    "hakbun": number,
+    "grade": number,
+    "classRoom": number,
+    "number": number,
+    "userEmail": string
 }

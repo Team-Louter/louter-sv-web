@@ -14,7 +14,7 @@ export const Background = styled.div`
 
 export const Container = styled.div`
     width: 37%;
-    height: 69%;
+    height: content-fit;
     background-color: ${token.colors.background.white};
     border-radius: ${token.shapes.large};
     padding: 40px;

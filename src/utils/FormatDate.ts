@@ -1,27 +1,31 @@
-export const getLocalDateString = (date: Date | null | undefined): string => {
+export const getLocalDateString = (date: Date | string | null | undefined): string => {
   if (!date) return '';
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  const year = dateObj.getFullYear();
+  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const day = String(dateObj.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 };
 
-export const formatDate = (date: Date | null | undefined): string => {
+export const formatDate = (date: Date | string | null | undefined): string => {
   if (!date) return '';
   
-  return date.toLocaleDateString('ko-KR', {
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  
+  return dateObj.toLocaleDateString('ko-KR', {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit'
   }).replace(/\. /g, '-').replace(/\.$/, '');
 };
 
-export const getDateRange = (start: Date | null, end: Date | null): string => {
+export const getDateRange = (start: Date | string | null, end: Date | string | null): string => {
   const startDate = formatDate(start);
   
   if (!end) return `${startDate} ~ ${startDate}`;
   
-  const endDate = formatDate(new Date(end.getTime() - 86400000)); // 24 * 60 * 60 * 1000
+  const endObj = typeof end === 'string' ? new Date(end) : end;
+  const endDate = formatDate(new Date(endObj.getTime() - 86400000));
   
   return `${startDate} ~ ${endDate}`;
 };
