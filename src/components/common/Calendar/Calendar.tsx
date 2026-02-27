@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import type { DateSelectArg, EventClickArg, EventApi, EventContentArg, EventInput } from '@fullcalendar/core';
+import type { DateSelectArg, EventClickArg, EventContentArg, EventInput } from '@fullcalendar/core';
 import { FaFlag } from "react-icons/fa6";
 import * as S from './Calendar.styled';
 import type { CalendarProps } from '@/types/fullCalendar';
@@ -132,10 +132,11 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
       {isModalOpen && (
         <EventEditModal
           selectedDate={selectedDate}
-          selectedEndDate={selectedEndDate} // 추가
+          selectedEndDate={selectedEndDate} 
           setIsModalOpen={setIsModalOpen}
           modalMode={modalMode}
           event={selectedEvent}
+          setEvents={setEventsInfo}
         />
       )}
     </>

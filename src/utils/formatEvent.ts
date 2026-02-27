@@ -7,6 +7,7 @@ export const formatEvents = (events: Event[]): EventInput[] => {
       start: event.startDate,
       end: event.endDate,
       color: event.color,
+      scheduleId: event.scheduleId,
       extendedProps: {
         description: event.content,
         assignees: event.users,
@@ -20,6 +21,7 @@ export const formatApiEvents = (event: EventApi): EventInput => {
         start: event.start?.toISOString() ?? undefined,
         end: event.end?.toISOString() ?? event.start?.toISOString(),
         color: event.backgroundColor,
+        scheduleId: event.extendedProps.scheduleId,
         extendedProps: {
             description: event.extendedProps.description,
             assignees: event.extendedProps.assignees,

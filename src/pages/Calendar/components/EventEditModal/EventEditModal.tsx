@@ -6,8 +6,10 @@ import DateInputField from "./DateInputField";
 import { TextAreaField, TextInputField } from "./TextInputField";
 import { calendarHighlight } from "@/constants/CalendarHighlight";
 import MemberDropdown from "./MemberDropdown";
+import { deleteEvent, getEvent } from "@/api/Event";
+import { formatEvents } from "@/utils/formatEvent";
 
-export default function EventEditModal({ selectedDate, selectedEndDate, setIsModalOpen, modalMode, event }: EventEditModalProps) {
+export default function EventEditModal({ selectedDate, selectedEndDate, setIsModalOpen, modalMode, event, setEvents }: EventEditModalProps) {
     // 시작 날짜 기본값 설정
     const getInitialStartDate = () => {
         if (event?.start) return getLocalDateString(event.start);
@@ -16,7 +18,6 @@ export default function EventEditModal({ selectedDate, selectedEndDate, setIsMod
 
     // 종료 날짜 기본값 설정
     const getInitialEndDate = () => {
-        console.log(event)
         if (event?.end) {
             const eventEndDate = new Date(event.end);
             eventEndDate.setDate(eventEndDate.getDate());
@@ -38,6 +39,20 @@ export default function EventEditModal({ selectedDate, selectedEndDate, setIsMod
     const [selectedColor, setSelectedColor] = useState<string>(
         event?.backgroundColor || calendarHighlight[2]
     ); // 일정 색상
+
+    const delEvent = async (scheduleId: number) => {
+        try {
+            await deleteEvent(scheduleId);
+            console.log('삭제 성공');
+
+            setIsModalOpen(false);
+
+            const data = await getEvent(); 
+            setEvents(formatEvents(data)); 
+        } catch (err) {
+            console.error('삭제 실패', err);
+        }
+    }
 
     useEffect(() => {
         // 종료 날짜가 시작 날짜보다 빠른지 확인
@@ -123,7 +138,7 @@ export default function EventEditModal({ selectedDate, selectedEndDate, setIsMod
                 />
 
                 <S.Buttons>
-                    {modalMode === '편집' ? <S.DeleteButton>삭제</S.DeleteButton> : <></>}
+                    {modalMode === '편집' ? <S.DeleteButton onClick={() => delEvent(event.scheduleId)}>삭제</S.DeleteButton> : <></>}
                     <S.CancelButton onClick={() => setIsModalOpen(false)}>취소</S.CancelButton>
                     <S.ConfirmButton $isValid={isFormValid} disabled={!isFormValid}>
                         저장

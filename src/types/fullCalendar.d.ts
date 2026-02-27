@@ -53,6 +53,7 @@ declare module '@fullcalendar/core' {
     title: string;
     date?: string;
     start?: string;
+    scheduleId: number;
     end?: string;
     color: string;
     allDay?: boolean;
@@ -80,6 +81,7 @@ export interface EventEditModalProps {
   selectedEndDate?: Date | null;
   modalMode: string;
   event: EventInput | null;
+  setEvents: React.Dispatch<React.SetStateAction<EventInput[]>>;
 }
 
 export interface DateInputFieldProps {
@@ -109,6 +111,7 @@ export type Event = {
   "content": string,
   "startDate": string,
   "endDate": string,
+  "scheduleId": number,
   "color": string,
   "users": {
       "userId": number,
