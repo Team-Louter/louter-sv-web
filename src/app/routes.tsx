@@ -22,7 +22,7 @@ const Router = () => {
       <Route element={<Layout />}>
         {/* Auth / Public Pages */}
         <Route path={'/auth/signup/check'} element={<SignupCheck />} />
-        <Route path={'/auth/signup/signup'} element={<Signup />} />
+        <Route path={'/auth/signup'} element={<Signup />} />
         <Route path={'/auth/signup/google'} element={<SignupGoogle />} />
         <Route path={'/auth/signin'} element={<Signin />} />
 
