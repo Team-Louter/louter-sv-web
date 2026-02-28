@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as S from './style';
 import LogoSvg from '@/assets/AuthImg/AuthLogo.svg';
+import { PRIVACY_POLICY } from '@/constants/policy';
 
 function SignupCheck() {
   const navigate = useNavigate();
@@ -52,40 +53,8 @@ function SignupCheck() {
           </S.AgreementList>
 
           <S.PolicyBox>
-            <S.PolicyBoxTitle>개인정보 수집·이용 동의서</S.PolicyBoxTitle>
-            <S.PolicyBoxText>
-              본 커뮤니티는 학교 동아리 내 신입생 멘토링 및 커뮤니티 운영을
-              목적으로 개인정보를 수집·이용합니다.
-              <br />
-              <br />
-              1. 수집하는 개인정보 항목
-              <br />
-              성명, 학번, 이메일 주소, 소속 학과
-              <br />
-              <br />
-              2. 개인정보 수집·이용 목적
-              <br />
-              회원 식별 및 본인 확인
-              <br />
-              동아리 멘토링 커뮤니티 서비스 제공
-              <br />
-              멘토링 참여 및 커뮤니티 운영 관리
-              <br />
-              <br />
-              3. 보유 및 이용 기간
-              <br />
-              회원 탈퇴 시 즉시 파기
-              <br />
-              <br />
-              4. 동의 거부 권리 및 불이익
-              <br />
-              개인정보 수집·이용에 대한 동의를 거부할 권리가 있습니다.
-              다만, 필수 정보 수집에 동의하지 않을 경우 회원가입 및 서비스 이용이 제한될 수 있습니다.
-              <br />
-              <br />
-              본인은 위 내용을 충분히 이해하였으며, 개인정보 수집·이용에
-              동의합니다.
-            </S.PolicyBoxText>
+            <S.PolicyBoxTitle>{PRIVACY_POLICY.title}</S.PolicyBoxTitle>
+            <S.PolicyBoxText>{PRIVACY_POLICY.text}</S.PolicyBoxText>
           </S.PolicyBox>
 
           <S.SigninButton

@@ -113,6 +113,7 @@ export const PolicyBoxText = styled.p`
   font-weight: ${fontWeight.regular};
   color: ${colors.text.dark};
   line-height: 1.6;
+  white-space: pre-line;
 `;
 
 export const GoogleContent = styled.div`
