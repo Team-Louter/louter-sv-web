@@ -2,13 +2,13 @@ import * as S from "./CommunityPost.styled";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useRef, useState } from "react";
-import { CATEGORIES, CATEGORY_REVERSED, CATEGORY_TAGS } from "@/constants/Community";
+import { CATEGORIES, CATEGORY_REVERSED, CATEGORY_TAGS, CATEGORY_TAGS_REVERSED } from "@/constants/Community";
 import CategoryDropdown from "../components/CategoryDropdown/CategoryDropdown";
 import Markdown from "../components/Markdown/Markdown";
 import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
 import { renderMarkdown } from "@/utils/Markdown/MarkdownConfig";
 import { MAX_LENGTH, insertAtCursor, processListEnter } from "@/utils/Markdown/Editor";
-import { createPost, uploadFile } from "@/api/Post";
+import { createPostInfo, editPostInfo, uploadFile } from "@/api/Post";
 import type { ServerFile } from "@/types/post";
 
 export default function CommunityPost() {
@@ -16,13 +16,13 @@ export default function CommunityPost() {
     const location = useLocation();
     const editPost = location.state?.post;
 
-    const [selectedCategory, setSelectedCategory] = useState(CATEGORIES[editPost?.category] ?? "");
-    const [selectedTag, setSelectedTag] = useState(editPost?.tag ?? "");
-    const [content, setContent] = useState(editPost?.content ?? "");
-    const [title, setTitle] = useState(editPost?.title ?? "");
+    const [selectedCategory, setSelectedCategory] = useState(editPost?.category ?? "");
+    const [selectedTag, setSelectedTag] = useState(CATEGORY_TAGS_REVERSED[selectedCategory][editPost?.tag] ?? "");
+    const [content, setContent] = useState(editPost?.postContent ?? "");
+    const [title, setTitle] = useState(editPost?.postTitle ?? "");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
-    const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
+    const [isAnonymous, setIsAnonymous] = useState<boolean>(editPost?.isAnonymous ?? false);
     const [attachedFiles, setAttachedFiles] = useState<ServerFile[]>([]);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const isComposingRef = useRef(false);
@@ -128,18 +128,36 @@ export default function CommunityPost() {
     };
 
     const handleSubmit = async () => {
-        try {
-            await createPost({
-                title,
-                content,
-                isAnonymous,
-                category: selectedCategory,
-                tag: CATEGORY_TAGS[selectedCategory]?.[selectedTag] ?? "",
-                files: attachedFiles,
-            });
-            navigate(-1);
-        } catch (err) {
-            console.error('생성 실패', err);
+        if (editPost) {
+            try {
+                await editPostInfo(editPost.postId, {
+                    title,
+                    content,
+                    isAnonymous,
+                    category: selectedCategory,
+                    tag: CATEGORY_TAGS[selectedCategory]?.[selectedTag] ?? "",
+                    files: attachedFiles,
+                });
+
+                navigate(-1);
+            } catch (err) {
+                console.error('수정 실패', err);
+            }
+        } else {
+            try {
+                await createPostInfo({
+                    title,
+                    content,
+                    isAnonymous,
+                    category: selectedCategory,
+                    tag: CATEGORY_TAGS[selectedCategory]?.[selectedTag] ?? "",
+                    files: attachedFiles,
+                });
+
+                navigate(-1);
+            } catch (err) {
+                console.error('생성 실패', err);
+            }
         }
     };
 

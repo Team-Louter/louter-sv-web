@@ -29,7 +29,6 @@ export default function CommunityDetail() {
         try {
             const data = await getPostDetail(postId);
             setPost(data);
-            console.log(data);
         } catch (err) {
             console.error(err);
         }
@@ -75,8 +74,6 @@ export default function CommunityDetail() {
             onClick: () => setIsKebabOpen(false),
         },
     ];
-
-    console.log(renderMarkdown(post.postContent));
 
     return (
         <S.Container>

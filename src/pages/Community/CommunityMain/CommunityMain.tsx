@@ -21,7 +21,6 @@ export default function Community() {
         try {
             const data = await getAllPost();
             setPosts(data.content);
-            console.log(data.content);
         } catch (err) {
             console.error(err);
         }
@@ -31,7 +30,6 @@ export default function Community() {
         try {
             const data = await getCategoryPost(category);
             setPosts(data.content);
-            console.log(data.content);
         } catch (err) {
             console.error(err);
         }

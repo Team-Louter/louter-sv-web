@@ -26,7 +26,7 @@ export const getPostDetail = async (postId: number): Promise<Post> => {
 }
 
 // 게시글 생성하기
-export const createPost = async (event: ServerPost): Promise<void> => {
+export const createPostInfo = async (event: ServerPost): Promise<void> => {
     console.log(event);
     await instance.post<void>("/posts", event);
 }
@@ -40,4 +40,10 @@ export const uploadFile = async (file:File): Promise<{url: string}> => {
     });
     console.log(response.data);
     return response.data;
+}
+
+
+// 게시글 수정하기
+export const editPostInfo = async (postId: number|null, event: ServerPost): Promise<void> => {
+    await instance.put<void>(`/posts/${postId}`, event);
 }
