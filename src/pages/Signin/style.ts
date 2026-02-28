@@ -121,6 +121,11 @@ export const Input = styled.input`
   }
 `;
 
+export const Inputgap = styled.div`
+  width: 100%;
+  height: 0px;
+`;
+
 export const SigninButton = styled.button`
   width: 100%;
   padding: 0.8rem 1rem;
