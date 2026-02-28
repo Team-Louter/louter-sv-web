@@ -13,7 +13,7 @@ import CommentWrite from "../components/CommentWrite/CommentWrite";
 import KebabMenu from "../components/KebabMenu/KebabMenu";
 import { useKebab } from "@/hooks/useKebab";
 import { MdPushPin } from "react-icons/md";
-import { deletePost, getPostDetail } from "@/api/Post";
+import { deletePost, getPostDetail, togglePin } from "@/api/Post";
 import type { Post } from "@/types/post";
 import { CATEGORY_REVERSED } from "@/constants/Community";
 import { renderMarkdown } from "@/utils/Markdown/MarkdownConfig";
@@ -40,7 +40,7 @@ export default function CommunityDetail() {
     }, [])
 
     const [isLiked, setIsLiked] = useState<boolean>(post?.isHearted ?? false); // 좋아요를 눌렀는지 여부
-    const [isPinned, setIsPinned] = useState<boolean>(false); // 고정된 게시글인지 여부
+    const [isPinned, setIsPinned] = useState<boolean>(post?.pinned ?? false); // 고정된 게시글인지 여부
     const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab(); // 케밥 메뉴 관련 커스텀 훅
     const [isCancelModalOpen, setIsCancelModalOpen] = useState<boolean>(false);
     const postComment = dummyComments.filter((e) => e.postId === Number(postId)); // 해당 게시글에 달린 댓글만 가져오기
@@ -63,12 +63,25 @@ export default function CommunityDetail() {
         }
     }
 
+    const togglePinPost = async (newPinned: boolean) => {
+        try {
+            await togglePin(post.postId, newPinned);
+
+            const data = await getPostDetail(post.postId);
+            setPost(data);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     // 케밥 아이콘 내용물
     const kebabItems = [
         {
             label: isPinned ? "고정 해제" : "고정하기",
             onClick: () => {
-                setIsPinned(prev => !prev);
+                const newPinned = !isPinned;
+                setIsPinned(newPinned);
+                togglePinPost(newPinned); 
                 setIsKebabOpen(false);
             },
         },
@@ -105,7 +118,7 @@ export default function CommunityDetail() {
                         </S.ForRow>
                         <S.ForRow style={{ justifyContent: "space-between" }}>
                             <S.Div>
-                                {isPinned && <MdPushPin size={30} color={colors.fill.yellow} />}
+                                {post.pinned && <MdPushPin size={30} color={colors.fill.yellow} />}
                                 <S.Title>
                                     {post.tag && `[${post.tag}] `}
                                     {post.postTitle}

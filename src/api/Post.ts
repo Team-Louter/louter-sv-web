@@ -52,3 +52,12 @@ export const editPostInfo = async (postId: number|null, event: ServerPost): Prom
 export const deletePost = async (postId: number): Promise<void> => {
     await instance.delete<void>(`/posts/${postId}`);
 }
+
+// 게시글 고정/해제하기
+export const togglePin = async (postId: number, pinned: boolean): Promise<void> => {
+    await instance.put<void>(`/posts/${postId}/pin`, null, {
+        params: {
+            pinned: pinned
+        }
+    });
+}
