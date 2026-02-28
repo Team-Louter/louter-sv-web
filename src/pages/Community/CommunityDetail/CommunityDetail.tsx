@@ -17,6 +17,7 @@ import { deletePost, getPostDetail } from "@/api/Post";
 import type { Post } from "@/types/post";
 import { CATEGORY_REVERSED } from "@/constants/Community";
 import { renderMarkdown } from "@/utils/Markdown/MarkdownConfig";
+import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
 
 export default function CommunityDetail() {
     const location = useLocation();
@@ -41,6 +42,7 @@ export default function CommunityDetail() {
     const [isLiked, setIsLiked] = useState<boolean>(post?.isHearted ?? false); // 좋아요를 눌렀는지 여부
     const [isPinned, setIsPinned] = useState<boolean>(false); // 고정된 게시글인지 여부
     const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab(); // 케밥 메뉴 관련 커스텀 훅
+    const [isCancelModalOpen, setIsCancelModalOpen] = useState<boolean>(false);
     const postComment = dummyComments.filter((e) => e.postId === Number(postId)); // 해당 게시글에 달린 댓글만 가져오기
 
     // 게시글이 없을 때
@@ -80,8 +82,8 @@ export default function CommunityDetail() {
         {
             label: "삭제하기",
             onClick: () => {
-                deletePostInfo();
-                navigate("/community")
+                setIsCancelModalOpen(true);
+                setIsKebabOpen(false);
             }
         },
     ];
@@ -160,6 +162,19 @@ export default function CommunityDetail() {
                     </S.CommentContainer>
                 </S.PostContainer>
             </S.ForCenter>
+
+            <ConfirmModal
+                open={isCancelModalOpen}
+                message={"게시글을 삭제하시겠어요?"}
+                onCancel={() => setIsCancelModalOpen(false)}
+                onConfirm={() => {
+                    deletePostInfo();
+                    navigate("/community");
+                }}
+                confirmLabel="삭제"
+                confirmColor="#e05c5c"
+                confirmLabelColor='white'
+            />
         </S.Container>
     );
 }
