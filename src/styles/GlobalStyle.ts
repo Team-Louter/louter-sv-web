@@ -18,6 +18,7 @@ export const GlobalStyle = createGlobalStyle`
     color: ${token.colors.text.black};
     background-color: ${token.colors.background.white};
     line-height: 1.5;
+    overflow: hidden;
 
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const Container = styled.header`
+export const Container = styled.header<{ $hidden?: boolean }>`
   position: fixed;
   display: flex;
   top: 0;
@@ -10,6 +10,9 @@ export const Container = styled.header`
   background-color: ${({ theme }) => theme.colors.background.white};
   width: 100%;
   min-height: 60px;
+  transform: translateY(${({ $hidden }) => ($hidden ? '-100%' : '0')});
+  transition: transform 0.3s ease;
+  z-index: 100;
 `;
 
 export const LogoWrapper = styled.div`
@@ -36,7 +39,7 @@ export const LoginButton = styled.button`
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
   color: ${({ theme }) => theme.colors.text.dark};
   background-color: ${({ theme }) => theme.colors.fill.white};
-  border: 1px solid ${({ theme }) => theme.colors.line.light};
+  border: 1px solid ${({ theme }) => theme.colors.line.normal};
   border-radius: 4px;
   transition: all 0.2s ease;
   cursor: pointer;
