@@ -47,3 +47,8 @@ export const uploadFile = async (file:File): Promise<{url: string}> => {
 export const editPostInfo = async (postId: number|null, event: ServerPost): Promise<void> => {
     await instance.put<void>(`/posts/${postId}`, event);
 }
+
+// 게시글 삭제하기
+export const deletePost = async (postId: number): Promise<void> => {
+    await instance.delete<void>(`/posts/${postId}`);
+}

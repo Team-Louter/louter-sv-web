@@ -13,7 +13,7 @@ import CommentWrite from "../components/CommentWrite/CommentWrite";
 import KebabMenu from "../components/KebabMenu/KebabMenu";
 import { useKebab } from "@/hooks/useKebab";
 import { MdPushPin } from "react-icons/md";
-import { getPostDetail } from "@/api/Post";
+import { deletePost, getPostDetail } from "@/api/Post";
 import type { Post } from "@/types/post";
 import { CATEGORY_REVERSED } from "@/constants/Community";
 import { renderMarkdown } from "@/utils/Markdown/MarkdownConfig";
@@ -53,6 +53,14 @@ export default function CommunityDetail() {
         navigate("/community", { state: { selectedCategory: category } });
     };
 
+    const deletePostInfo = async () => {
+        try {
+            await deletePost(post.postId);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     // 케밥 아이콘 내용물
     const kebabItems = [
         {
@@ -71,7 +79,10 @@ export default function CommunityDetail() {
         },
         {
             label: "삭제하기",
-            onClick: () => setIsKebabOpen(false),
+            onClick: () => {
+                deletePostInfo();
+                navigate("/community")
+            }
         },
     ];
 
