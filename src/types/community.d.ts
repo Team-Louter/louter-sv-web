@@ -20,12 +20,15 @@ export interface Markdown {
     before: string;
     after: string;
     block: boolean;
+    type?: string;
 }
 
 export interface MarkdownProps {
     textareaRef: RefObject<HTMLTextAreaElement | null>;
     content: string;
     setContent: (value: string) => void;
+    onImageClick?: () => void;
+    onFileClick?: () => void;
 }
 
 export type KebabMenuProps = {

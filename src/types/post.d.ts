@@ -136,3 +136,12 @@ export type PostList = {
   sort: Sort;
   empty: boolean;
 };
+
+export type ServerPost = {
+  "title": string,
+  "content": string,
+  "isAnonymous": true,
+  "category": string,
+  "tag": string,
+  "files": PostFile[]
+}

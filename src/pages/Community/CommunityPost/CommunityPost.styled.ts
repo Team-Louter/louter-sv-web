@@ -244,4 +244,11 @@ export const Preview = styled.div`
         color: ${token.colors.text.gold};
         text-decoration: underline;
     }
+
+    img {
+        max-width: 100%;
+        max-height: 300px;
+        object-fit: contain;
+        border-radius: 8px;
+    }
 `

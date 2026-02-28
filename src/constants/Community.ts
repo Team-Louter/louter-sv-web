@@ -30,16 +30,16 @@ export const CATEGORY_TAGS: Record<string, string[]> = {
 };
 
 export const MARKDOWN_TOOLS: Markdown[] = [
-    { label: "제목 1",   icon: BsTypeH1,           before: "# ",        after: "",        block: true  },
-    { label: "제목 2",   icon: BsTypeH2,           before: "## ",       after: "",        block: true  },
-    { label: "굵게",     icon: BsTypeBold,          before: "**",        after: "**",      block: false },
-    { label: "기울이기", icon: BsSlash, size: 25,   before: "*",         after: "*",       block: false },
-    { label: "리스트",   icon: FaListOl,            before: "1. ",       after: "",        block: true  },
-    { label: "리스트",   icon: FaListUl,            before: "- ",        after: "",        block: true  },
-    { label: "코드블록", icon: FaCode,              before: "```\n",     after: "\n```",   block: false },
-    { label: "인용",     icon: FaComment,           before: "> ",        after: "",        block: true  },
-    { label: "구분선",   icon: MdHorizontalRule,    before: "\n---\n",   after: "",        block: false },
-    { label: "링크",     icon: GoLink,              before: "[",         after: "](url)",  block: false },
-    { label: "사진",     icon: FaRegImage,          before: "![](",      after: ")",       block: false },
-    { label: "파일",     icon: GoFileDirectoryFill, before: "[파일명](", after: ")",       block: false },
+    { label: "제목 1",   icon: BsTypeH1,           before: "# ",        after: "",        block: true,  type: "default" },
+    { label: "제목 2",   icon: BsTypeH2,            before: "## ",       after: "",        block: true,  type: "default" },
+    { label: "굵게",     icon: BsTypeBold,          before: "**",        after: "**",      block: false, type: "default" },
+    { label: "기울이기", icon: BsSlash, size: 25,   before: "*",         after: "*",       block: false, type: "default" },
+    { label: "리스트",   icon: FaListOl,            before: "1. ",       after: "",        block: true,  type: "default" },
+    { label: "리스트",   icon: FaListUl,            before: "- ",        after: "",        block: true,  type: "default" },
+    { label: "코드블록", icon: FaCode,              before: "```\n",     after: "\n```",   block: false, type: "default" },
+    { label: "인용",     icon: FaComment,           before: "> ",        after: "",        block: true,  type: "default" },
+    { label: "구분선",   icon: MdHorizontalRule,    before: "\n---\n",   after: "",        block: false, type: "default" },
+    { label: "링크",     icon: GoLink,              before: "[",         after: "](url)",  block: false, type: "default" },
+    { label: "사진",     icon: FaRegImage,          before: "",          after: "",        block: false, type: "image"   },
+    { label: "파일",     icon: GoFileDirectoryFill, before: "",          after: "",        block: false, type: "file"    },
 ];
