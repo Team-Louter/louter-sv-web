@@ -61,3 +61,8 @@ export const togglePin = async (postId: number, pinned: boolean): Promise<void> 
         }
     });
 }
+
+// 게시글 좋아요/해제하기
+export const toggleLike = async (postId: number): Promise<void> => {
+    await instance.post<void>(`/posts/${postId}/heart`);
+}

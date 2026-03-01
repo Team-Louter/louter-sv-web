@@ -13,7 +13,7 @@ import CommentWrite from "../components/CommentWrite/CommentWrite";
 import KebabMenu from "../components/KebabMenu/KebabMenu";
 import { useKebab } from "@/hooks/useKebab";
 import { MdPushPin } from "react-icons/md";
-import { deletePost, getPostDetail, togglePin } from "@/api/Post";
+import { deletePost, getPostDetail, toggleLike, togglePin } from "@/api/Post";
 import type { Post } from "@/types/post";
 import { CATEGORY_REVERSED, CATEGORY_TAGS_REVERSED } from "@/constants/Community";
 import { renderMarkdown } from "@/utils/Markdown/MarkdownConfig";
@@ -38,6 +38,12 @@ export default function CommunityDetail() {
     useEffect(() => {
         getPostDetailInfo(Number(postId));
     }, [])
+
+    useEffect(() => {
+        if (post) {
+            setIsLiked(post.isHearted ?? false);
+        }
+    }, [post]);
 
     const [isLiked, setIsLiked] = useState<boolean>(post?.isHearted ?? false); // 좋아요를 눌렀는지 여부
     const [isPinned, setIsPinned] = useState<boolean>(post?.pinned ?? false); // 고정된 게시글인지 여부
@@ -66,6 +72,18 @@ export default function CommunityDetail() {
     const togglePinPost = async (newPinned: boolean) => {
         try {
             await togglePin(post.postId, newPinned);
+
+            const data = await getPostDetail(post.postId);
+            setPost(data);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    const toggleLikePost = async () => {
+        try {
+            await toggleLike(post.postId);
+            setIsLiked(prev => !prev);
 
             const data = await getPostDetail(post.postId);
             setPost(data);
@@ -151,10 +169,10 @@ export default function CommunityDetail() {
                         <S.Div>
                             {isLiked
                                 ? <FaHeart color="#FF3535"
-                                    onClick={(e) => { e.stopPropagation(); setIsLiked(false); }}
+                                    onClick={(e) => { e.stopPropagation(); toggleLikePost(); }}
                                     style={{ cursor: "pointer" }} />
                                 : <FaRegHeart color="#FF3535"
-                                    onClick={(e) => { e.stopPropagation(); setIsLiked(true); }}
+                                    onClick={(e) => { e.stopPropagation(); toggleLikePost(); }}
                                     style={{ cursor: "pointer" }} />
                             }
                             <S.LikeCount>{post.likeCount}</S.LikeCount>
