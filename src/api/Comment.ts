@@ -22,3 +22,8 @@ export const createComment = async (postId: number, comment: ServerComment): Pro
 export const editComment = async (postId: number, commentId: number, newContent: string): Promise<void> => {
     await instance.put<void>(`/posts/${postId}/comments/${commentId}`, { content: newContent });
 }
+
+// 댓글 삭제하기
+export const deleteComment = async (postId: number, commentId: number): Promise<void> => {
+    await instance.delete<void>(`/posts/${postId}/comments/${commentId}`);
+}

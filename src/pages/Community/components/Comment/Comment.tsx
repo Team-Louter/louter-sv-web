@@ -5,7 +5,7 @@ import { formatDateTime } from "@/utils/FormatDate";
 import CommentWrite from "../CommentWrite/CommentWrite";
 import KebabMenu from "../KebabMenu/KebabMenu";
 import { useKebab } from "@/hooks/useKebab";
-import { getReplies } from "@/api/Comment";
+import { deleteComment, getReplies } from "@/api/Comment";
 import { IoIosArrowBack } from "react-icons/io";
 
 export default function Comment({ comment, postId }: commentProps) {
@@ -19,6 +19,14 @@ export default function Comment({ comment, postId }: commentProps) {
         try {
             const data = await getReplies(postId, comment.commentId);
             setReplies(data);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    const deleteCommentInfo = async () => {
+        try {
+            await deleteComment(postId, comment.commentId);
         } catch (err) {
             console.error(err);
         }
@@ -39,7 +47,10 @@ export default function Comment({ comment, postId }: commentProps) {
         },
         {
             label: "삭제하기",
-            onClick: () => setIsKebabOpen(false),
+            onClick: () => {
+                setIsKebabOpen(false);
+                deleteCommentInfo();
+            },
         },
     ];
 
