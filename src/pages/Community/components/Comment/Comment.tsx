@@ -83,11 +83,11 @@ export default function Comment({ comment, postId }: commentProps) {
             </S.ForRow>
             {showReplyWrite && (
                 <div style={{ marginLeft: 40, marginTop: 8 }}>
-                    <CommentWrite onClose={() => setShowReplyWrite(false)} />
+                    <CommentWrite onClose={() => setShowReplyWrite(false)} parentId={comment.commentId}/>
                 </div>
             )}
             {showReplies && replies.map((reply) => (
-                <div style={{ marginLeft: 40, marginTop: 8 }}>
+                <div style={{ marginLeft: 40, marginTop: 8 }} key={reply.commentId}>
                     <Comment comment={reply} postId={postId}/>
                 </div>
             ))}

@@ -39,6 +39,7 @@ export interface CommentWriteProps {
     onClose?: () => void;
     initialValue?: string;
     isEditing?: boolean;
+    parentId?: number | null
 }
 
 export interface ConfirmModalProps {

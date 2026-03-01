@@ -1,11 +1,29 @@
 import { useState } from "react";
 import type { CommentWriteProps } from "@/types/community";
 import * as S from "./CommentWrite.styled";
+import { createComment } from "@/api/Comment";
+import { useParams } from "react-router-dom";
 
-export default function CommentWrite({ onClose, initialValue = "", isEditing = false }: CommentWriteProps) {
+export default function CommentWrite({ onClose, initialValue = "", isEditing = false, parentId = null }: CommentWriteProps) {
     const [content, setContent] = useState(initialValue); // 댓글 내용
+    const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
+    const { postId } = useParams();
 
     const isValid = content.trim().length > 0; // 한 글자라도 입력됐는지 확인
+
+    const handleSubmit = async () => {
+        try {
+            await createComment(Number(postId), {
+                content: content,
+                isAnonymous: isAnonymous,
+                parentId: parentId
+            });
+            setContent("");
+            onClose?.();
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
     return (
         <S.CommentWrite>
@@ -23,7 +41,11 @@ export default function CommentWrite({ onClose, initialValue = "", isEditing = f
                     {!isEditing && (
                         <S.Div>
                             <S.CheckboxLabel>
-                                <input type="checkbox" />
+                                <input
+                                    type="checkbox"
+                                    checked={isAnonymous}
+                                    onChange={(e) => setIsAnonymous(e.target.checked)}
+                                />
                             </S.CheckboxLabel>
                             <S.Label>익명으로 게시</S.Label>
                         </S.Div>
@@ -32,8 +54,8 @@ export default function CommentWrite({ onClose, initialValue = "", isEditing = f
                 <S.Div>
                     {onClose && <S.Cancel onClick={onClose}>취소</S.Cancel>}
                     <S.Confirm 
-                        onClick={onClose} 
-                        disabled={!isValid}   // 유효하지 않으면 비활성화
+                        onClick={handleSubmit} 
+                        disabled={!isValid}   
                     >
                         등록
                     </S.Confirm>

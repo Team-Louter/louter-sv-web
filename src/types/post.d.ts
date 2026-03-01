@@ -154,3 +154,9 @@ export type Comment = {
   "isAnonymous": boolean,
   "deleted": boolean
 }
+
+export type ServerComment = {
+  "content": string,
+  "isAnonymous": boolean,
+  "parentId": number | null
+}
