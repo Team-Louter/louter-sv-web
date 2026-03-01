@@ -14,26 +14,26 @@ import type { ServerFile } from "@/types/post";
 export default function CommunityPost() {
     const navigate = useNavigate();
     const location = useLocation();
-    const editPost = location.state?.post;
+    const editPost = location.state?.post; // 수정할 게시글 정보
 
-    const [selectedCategory, setSelectedCategory] = useState(editPost?.category ?? "");
-    const [selectedTag, setSelectedTag] = useState(CATEGORY_TAGS_REVERSED[selectedCategory][editPost?.tag] ?? "");
-    const [content, setContent] = useState(editPost?.postContent ?? "");
-    const [title, setTitle] = useState(editPost?.postTitle ?? "");
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
-    const [isAnonymous, setIsAnonymous] = useState<boolean>(editPost?.isAnonymous ?? false);
-    const [attachedFiles, setAttachedFiles] = useState<ServerFile[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<string>(editPost?.category ?? ""); // 선택된 카테고리
+    const [selectedTag, setSelectedTag] = useState<string>(CATEGORY_TAGS_REVERSED[selectedCategory][editPost?.tag] ?? ""); // 선택된 말머리
+    const [content, setContent] = useState<string>(editPost?.postContent ?? ""); // 게시글 내용
+    const [title, setTitle] = useState<string>(editPost?.postTitle ?? ""); // 게시글 제목
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // 게시 확인 모달 열림 여부
+    const [isCancelModalOpen, setIsCancelModalOpen] = useState<boolean>(false); // 게시 취소 확인 모달 열림 여부
+    const [isAnonymous, setIsAnonymous] = useState<boolean>(editPost?.isAnonymous ?? false); // 익명 게시 여부
+    const [attachedFiles, setAttachedFiles] = useState<ServerFile[]>([]); // 첨부 파일
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const isComposingRef = useRef(false);
     const imageInputRef = useRef<HTMLInputElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const tags = Object.keys(CATEGORY_TAGS[selectedCategory] ?? {});
+    const tags = Object.keys(CATEGORY_TAGS[selectedCategory] ?? {}); // 카테고리별 말머리 모음
     const rendered = renderMarkdown(content);
-    const isOverLimit = content.length >= MAX_LENGTH;
-    const isPostValid = !!title.trim() && !!selectedCategory && !!content.trim();
-    const hasContent = !!content.trim();
+    const isOverLimit = content.length >= MAX_LENGTH; // 게시글 본문 최대 길이 초과 여부
+    const isPostValid = !!title.trim() && !!selectedCategory && !!content.trim(); // 모든 칸이 설정되었는지 여부
+    const hasContent = !!content.trim(); // 내용에 무언가가 적혀있는지 여부
 
     const insert = (text: string) => insertAtCursor(content, setContent, textareaRef, text);
 
@@ -127,8 +127,9 @@ export default function CommunityPost() {
         processListEnter(content, lineStart, currentLine, el, setContent, ulMatch, olMatch);
     };
 
+    // 게시 확인 모달에서 확인 클릭 시 
     const handleSubmit = async () => {
-        if (editPost) {
+        if (editPost) { // 수정
             try {
                 await editPostInfo(editPost.postId, {
                     title,
@@ -143,7 +144,7 @@ export default function CommunityPost() {
             } catch (err) {
                 console.error('수정 실패', err);
             }
-        } else {
+        } else { // 생성
             try {
                 await createPostInfo({
                     title,

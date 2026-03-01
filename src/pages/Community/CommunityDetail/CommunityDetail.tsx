@@ -24,9 +24,10 @@ export default function CommunityDetail() {
     const selectedCategory = location.state?.selectedCategory ?? "전체"; // 선택된 카테고리
     const navigate = useNavigate();
     const { postId } = useParams();
-    const [post, setPost] = useState<Post|null>(null);
-    const [comments, setComments] = useState<CommentType[]>([]);
+    const [post, setPost] = useState<Post|null>(null); // 게시글 세부 정보
+    const [comments, setComments] = useState<CommentType[]>([]); // 댓글 정보
 
+    // 게시글 세부 정보 가져오기
     const getPostDetailInfo = async (postId: number) => {
         try {
             const data = await getPostDetail(postId);
@@ -36,6 +37,7 @@ export default function CommunityDetail() {
         }
     }
 
+    // 댓글 정보 가져오기
     const getCommentsInfo = async (postId: number) => {
         try {
             const data = await getComments(postId);
@@ -50,6 +52,7 @@ export default function CommunityDetail() {
         getCommentsInfo(Number(postId));
     }, [])
 
+    // 좋아요 눌림 여부 가져오기
     useEffect(() => {
         if (post) {
             setIsLiked(post.isHearted ?? false);
@@ -59,7 +62,7 @@ export default function CommunityDetail() {
     const [isLiked, setIsLiked] = useState<boolean>(post?.isHearted ?? false); // 좋아요를 눌렀는지 여부
     const [isPinned, setIsPinned] = useState<boolean>(post?.pinned ?? false); // 고정된 게시글인지 여부
     const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab(); // 케밥 메뉴 관련 커스텀 훅
-    const [isCancelModalOpen, setIsCancelModalOpen] = useState<boolean>(false);
+    const [isCancelModalOpen, setIsCancelModalOpen] = useState<boolean>(false); // 게시글 삭제 확인 모달 열림 여부
 
     // 게시글이 없을 때
     if (!post) {
@@ -71,6 +74,7 @@ export default function CommunityDetail() {
         navigate("/community", { state: { selectedCategory: category } });
     };
 
+    // 게시글 삭제하기
     const deletePostInfo = async () => {
         try {
             await deletePost(post.postId);
@@ -79,6 +83,7 @@ export default function CommunityDetail() {
         }
     }
 
+    // 고정 여부 토글
     const togglePinPost = async (newPinned: boolean) => {
         try {
             await togglePin(post.postId, newPinned);
@@ -90,6 +95,7 @@ export default function CommunityDetail() {
         }
     }
 
+    // 좋아요 눌림 여부 토글
     const toggleLikePost = async () => {
         try {
             await toggleLike(post.postId);

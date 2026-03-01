@@ -15,8 +15,9 @@ export default function Community() {
         location.state?.selectedCategory ?? "전체"
     );
     const navigate = useNavigate();
-    const [posts, setPosts] = useState<Post[]|null>(null);
+    const [posts, setPosts] = useState<Post[]|null>(null); // 게시글 목록 정보
 
+    // 전체 게시글 정보 가져오기
     const getAllPostInfo = async () => {
         try {
             const data = await getAllPost();
@@ -26,6 +27,7 @@ export default function Community() {
         }
     };
 
+    // 카테고리별 게시글 정보 가져오기
     const getCategoryPostInfo = async (category: string) => {
         try {
             const data = await getCategoryPost(category);

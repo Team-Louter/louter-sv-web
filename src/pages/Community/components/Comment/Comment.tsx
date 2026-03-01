@@ -13,8 +13,9 @@ export default function Comment({ comment, postId }: commentProps) {
     const [showReplies, setShowReplies] = useState(false); // 답글 조회 여부
     const [isEditing, setIsEditing] = useState(false); // 댓글 수정 여부
     const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab(); // 케밥 메뉴 관련 훅
-    const [replies, setReplies] = useState<Comment[]>([]);
+    const [replies, setReplies] = useState<Comment[]>([]); // 댓글들
 
+    // 댓글 목록 정보 가져오기
     const getRepliesInfo = async () => {
         try {
             const data = await getReplies(postId, comment.commentId);
@@ -24,6 +25,7 @@ export default function Comment({ comment, postId }: commentProps) {
         }
     }
 
+    // 댓글 삭제하기
     const deleteCommentInfo = async () => {
         try {
             await deleteComment(postId, comment.commentId);

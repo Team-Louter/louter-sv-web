@@ -8,12 +8,13 @@ import type { User } from "@/types/user";
 
 export default function CommentWrite({ comment, onClose, isEditing = false, parentId = null }: CommentWriteProps) {
     const [content, setContent] = useState(comment?.content || ""); // 댓글 내용
-    const [isAnonymous, setIsAnonymous] = useState<boolean>(comment?.isAnonymous || false);
+    const [isAnonymous, setIsAnonymous] = useState<boolean>(comment?.isAnonymous || false); // 댓글 익명 게시 여부
     const { postId } = useParams();
-    const [userInfo, setUserInfo] = useState<User | null>(null);
+    const [userInfo, setUserInfo] = useState<User | null>(null); // 사용자 여부
 
-    const isValid = content.trim().length > 0; // 한 글자라도 입력됐는지 확인
+    const isValid = content.trim().length > 0; // 내용이 한 글자라도 입력됐는지 확인
 
+    // 유저 정보 가져오기
     const getUserInfo = async () => {
             try{
                 const data = await getUser();
@@ -23,15 +24,16 @@ export default function CommentWrite({ comment, onClose, isEditing = false, pare
             }
         };
 
+    // 댓글 게시 버튼 클릭 시 
     const handleSubmit = async () => {
-        if (isEditing && comment?.commentId) {
+        if (isEditing && comment?.commentId) { // 수정
             try {
                 await editComment(Number(postId), comment?.commentId, content);
                 onClose?.();
             } catch (err) {
                 console.error(err);
             }
-        } else {
+        } else { // 생성
             try {
                 await createComment(Number(postId), {
                     content: content,

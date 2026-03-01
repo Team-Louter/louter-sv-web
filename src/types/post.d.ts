@@ -86,15 +86,6 @@ export interface commentProps {
   onSuccess?: () => void;
 }
 
-// 더미 타입
-export interface dComment {
-  id: number;
-  postId: number;
-  author: string; 
-  content: string;
-  createdAt: string;
-}
-
 // 게시글 타입
 export type Post = {
   postId: number;

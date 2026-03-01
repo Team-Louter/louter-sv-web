@@ -90,6 +90,7 @@ export default function Markdown({ textareaRef, content, setContent, onImageClic
         });
     };
 
+    // 마크다운 삽입 버튼 클릭 시 
     const handleToolClick = (tool: typeof MARKDOWN_TOOLS[number]) => {
         if (tool.type === "image") {
             onImageClick?.();

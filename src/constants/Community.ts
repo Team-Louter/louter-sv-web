@@ -54,6 +54,7 @@ export const CATEGORY_TAGS: Record<string, Record<string, string>> = {
     },
 };
 
+// 역방향 객체 생성
 export const CATEGORY_TAGS_REVERSED: Record<string, Record<string, string>> = Object.fromEntries(
     Object.entries(CATEGORY_TAGS).map(([category, tags]) => [
         category,
@@ -61,6 +62,7 @@ export const CATEGORY_TAGS_REVERSED: Record<string, Record<string, string>> = Ob
     ])
 );
 
+// 마크다운 관련 설정
 export const MARKDOWN_TOOLS: Markdown[] = [
     { label: "제목 1",   icon: BsTypeH1,           before: "# ",        after: "",        block: true,  type: "default" },
     { label: "제목 2",   icon: BsTypeH2,            before: "## ",       after: "",        block: true,  type: "default" },
