@@ -1,15 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { CommentWriteProps } from "@/types/community";
 import * as S from "./CommentWrite.styled";
 import { createComment, editComment } from "@/api/Comment";
 import { useParams } from "react-router-dom";
+import { getUser } from "@/api/User";
+import type { User } from "@/types/user";
 
 export default function CommentWrite({ comment, onClose, isEditing = false, parentId = null }: CommentWriteProps) {
     const [content, setContent] = useState(comment?.content || ""); // 댓글 내용
     const [isAnonymous, setIsAnonymous] = useState<boolean>(comment?.isAnonymous || false);
     const { postId } = useParams();
+    const [userInfo, setUserInfo] = useState<User | null>(null);
 
     const isValid = content.trim().length > 0; // 한 글자라도 입력됐는지 확인
+
+    const getUserInfo = async () => {
+            try{
+                const data = await getUser();
+                setUserInfo(data);
+            } catch(err) {
+                console.error(err);
+            }
+        };
 
     const handleSubmit = async () => {
         if (isEditing && comment?.commentId) {
@@ -34,6 +46,10 @@ export default function CommentWrite({ comment, onClose, isEditing = false, pare
         }
     }
 
+    useEffect(() => {
+        getUserInfo();
+    }, [])
+
     return (
         <S.CommentWrite>
             <S.CommentContent
@@ -44,8 +60,8 @@ export default function CommentWrite({ comment, onClose, isEditing = false, pare
             <S.ForRow>
                 <S.Div style={{ gap: 10 }}>
                     <S.Div style={{ marginLeft: 10 }}>
-                        <S.ProfileImg />
-                        <S.Name>이도연</S.Name>
+                        <S.ProfileImg src={userInfo?.profileImageUrl}/>
+                        <S.Name>{userInfo?.userName}</S.Name>
                     </S.Div>
                     {!isEditing && (
                         <S.Div>

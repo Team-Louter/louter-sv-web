@@ -19,11 +19,10 @@ export const Div = styled.div`
     gap: 10px;
 `
 
-export const ProfileImg = styled.div`
+export const ProfileImg = styled.img`
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    border: 1px solid black;
     align-self: flex-start;
     flex-shrink: 0;
 `

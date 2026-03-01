@@ -34,7 +34,7 @@ export default function Posting({ post, selectedCategory }: postProps) {
                 </S.ForRow>
                 <S.ForRow>
                     <S.Div>
-                        <S.ProfileImg />
+                        <S.ProfileImg src={post.userProfileImageUrl}/>
                         <S.Name>{post.userName}</S.Name>
                     </S.Div>
                     <S.UploadTime>{formatDateTime(post.createdAt)}</S.UploadTime>

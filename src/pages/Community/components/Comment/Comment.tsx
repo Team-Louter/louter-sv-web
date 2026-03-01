@@ -70,7 +70,7 @@ export default function Comment({ comment, postId }: commentProps) {
         <S.Container>
             <S.ForRow>
                 <S.Div>
-                    <S.ProfileImg />
+                    <S.ProfileImg src={comment.userProfileImageUrl}/>
                     <S.ForColumn>
                         <S.Name>{comment.userName}</S.Name>
                         <S.CommentContent>{comment.content}</S.CommentContent>
