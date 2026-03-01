@@ -80,9 +80,10 @@ export type postProps = {
   selectedCategory: string
 }
 
-export type commentProps = {
-  comment: Comment,
-  postId: number
+export interface commentProps {
+  comment: Comment;
+  postId: number;
+  onSuccess?: () => void;
 }
 
 // 더미 타입

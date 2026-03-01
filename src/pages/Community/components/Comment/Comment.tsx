@@ -47,9 +47,10 @@ export default function Comment({ comment, postId }: commentProps) {
     if (isEditing) {
         return (
             <CommentWrite
-                initialValue={comment.content}
+                comment={comment}
                 onClose={() => setIsEditing(false)}
                 isEditing
+                
             />
         );
     }

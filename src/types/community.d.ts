@@ -1,5 +1,6 @@
 import type { IconType } from "react-icons";
 import type { RefObject } from "react";
+import type { Comment } from "./post";
 
 export interface CommunitySidebarProps {
     selectedCategory: string;
@@ -36,10 +37,11 @@ export type KebabMenuProps = {
 };
 
 export interface CommentWriteProps {
+    comment?: Comment;
     onClose?: () => void;
-    initialValue?: string;
     isEditing?: boolean;
-    parentId?: number | null
+    parentId?: number | null;
+    onSuccess?: () => void;
 }
 
 export interface ConfirmModalProps {

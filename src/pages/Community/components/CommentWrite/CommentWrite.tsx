@@ -1,27 +1,36 @@
 import { useState } from "react";
 import type { CommentWriteProps } from "@/types/community";
 import * as S from "./CommentWrite.styled";
-import { createComment } from "@/api/Comment";
+import { createComment, editComment } from "@/api/Comment";
 import { useParams } from "react-router-dom";
 
-export default function CommentWrite({ onClose, initialValue = "", isEditing = false, parentId = null }: CommentWriteProps) {
-    const [content, setContent] = useState(initialValue); // 댓글 내용
-    const [isAnonymous, setIsAnonymous] = useState<boolean>(false);
+export default function CommentWrite({ comment, onClose, isEditing = false, parentId = null }: CommentWriteProps) {
+    const [content, setContent] = useState(comment?.content || ""); // 댓글 내용
+    const [isAnonymous, setIsAnonymous] = useState<boolean>(comment?.isAnonymous || false);
     const { postId } = useParams();
 
     const isValid = content.trim().length > 0; // 한 글자라도 입력됐는지 확인
 
     const handleSubmit = async () => {
-        try {
-            await createComment(Number(postId), {
-                content: content,
-                isAnonymous: isAnonymous,
-                parentId: parentId
-            });
-            setContent("");
-            onClose?.();
-        } catch (err) {
-            console.error(err);
+        if (isEditing && comment?.commentId) {
+            try {
+                await editComment(Number(postId), comment?.commentId, content);
+                onClose?.();
+            } catch (err) {
+                console.error(err);
+            }
+        } else {
+            try {
+                await createComment(Number(postId), {
+                    content: content,
+                    isAnonymous: isAnonymous,
+                    parentId: parentId
+                });
+                setContent("");
+                onClose?.();
+            } catch (err) {
+                console.error(err);
+            }
         }
     }
 

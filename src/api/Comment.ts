@@ -15,7 +15,10 @@ export const getReplies = async (postId: number, commentId: number): Promise<Com
 
 // 댓글 생성하기
 export const createComment = async (postId: number, comment: ServerComment): Promise<void> => {
-    console.log(comment)
     await instance.post<void>(`/posts/${postId}/comments`, comment);
 }
 
+// 댓글 수정하기 
+export const editComment = async (postId: number, commentId: number, newContent: string): Promise<void> => {
+    await instance.put<void>(`/posts/${postId}/comments/${commentId}`, { content: newContent });
+}
