@@ -25,9 +25,14 @@ function SignupGoogle() {
       toast.success('회원가입이 완료되었습니다.');
       navigate('/auth/signin');
     } catch (err: unknown) {
+      const status = (err as { response?: { status?: number } })?.response
+        ?.status;
       const msg =
-        (err as { response?: { data?: { message?: string } } })?.response?.data
-          ?.message ?? '회원가입에 실패했습니다. 다시 시도해 주세요.';
+        status === 401
+          ? '구글 인증 세션이 만료되었습니다. 다시 로그인해 주세요.'
+          : ((err as { response?: { data?: { message?: string } } })?.response
+              ?.data?.message ??
+            '회원가입에 실패했습니다. 다시 시도해 주세요.');
       toast.error(msg);
     } finally {
       setIsLoading(false);
