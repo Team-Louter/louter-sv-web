@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import * as S from './style';
 import LogoSvg from '@/assets/AuthImg/AuthLogo.svg';
 import GoogleIcon from '@/assets/Google/Google.svg';
+import { signup } from '@/api/Auth';
+import { toast } from '@/store/toastStore';
 
 function Signup() {
   const navigate = useNavigate();
@@ -12,6 +14,7 @@ function Signup() {
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [email, setEmail] = useState('');
   const [clubCode, setClubCode] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const isDisabled =
     !studentId.trim() ||
     !name.trim() ||
@@ -20,9 +23,30 @@ function Signup() {
     !email.trim() ||
     !clubCode.trim();
 
-  // 테스트용 - 메인 페이지로 이동
-  const handleTest = () => {
-    navigate('/');
+  // 회원가입 요청 핸들러
+  const handleSignup = async () => {
+    if (password !== passwordConfirm) {
+      toast.error('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+    setIsLoading(true);
+    try {
+      await signup({
+        hakbun: Number(studentId),
+        userName: name,
+        userEmail: email,
+        userPassword: password,
+        confirmPassword: passwordConfirm,
+        userProvider: 'SELF',
+        clubCode,
+      });
+      toast.success('회원가입이 완료되었습니다.');
+      navigate('/auth/signin');
+    } catch {
+      toast.error('회원가입에 실패했습니다. 다시 시도해 주세요.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Google 소셜 회원가입 페이지로 이동하는 핸들러
@@ -99,8 +123,8 @@ function Signup() {
             <S.Inputgap />
             <S.LoginButton
               type="button"
-              onClick={handleTest}
-              disabled={isDisabled}
+              onClick={handleSignup}
+              disabled={isDisabled || isLoading}
             >
               회원가입
             </S.LoginButton>
