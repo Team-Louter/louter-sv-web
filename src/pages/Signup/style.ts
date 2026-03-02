@@ -23,7 +23,7 @@ export const LoginContainer = styled.div`
 `;
 
 export const AuthMainImgContainer = styled.div`
-  width: 70%;
+  width: 67%;
   ${token.flexCenter}
   background-image: url(${AuthMainImg});
   background-size: cover;
@@ -34,7 +34,7 @@ export const AuthMainImgContainer = styled.div`
 export const AuthContent = styled.div`
   ${token.flexColumn}
   align-items: center;
-  width: 30%;
+  width: 33%;
   height: auto;
   padding: 3rem 2rem;
   gap: 1.5rem;
@@ -48,7 +48,7 @@ export const GoogleContent = styled.div`
 
 export const LogoImg = styled.img`
   width: auto;
-  height: 32px;
+  height: 36px;
   margin-bottom: 0.5rem;
 `;
 

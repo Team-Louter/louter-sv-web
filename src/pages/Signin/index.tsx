@@ -26,8 +26,15 @@ function Signin() {
       });
       setAuth(data);
       navigate('/');
-    } catch {
-      toast.error('이메일 또는 비밀번호가 올바르지 않습니다.');
+    } catch (err: unknown) {
+      const status = (err as { response?: { status?: number } })?.response
+        ?.status;
+      const msg =
+        status === 404
+          ? '이메일 또는 비밀번호가 올바르지 않습니다.'
+          : ((err as { response?: { data?: { message?: string } } })?.response
+              ?.data?.message ?? '로그인에 실패했습니다. 다시 시도해 주세요.');
+      toast.error(msg);
     } finally {
       setIsLoading(false);
     }

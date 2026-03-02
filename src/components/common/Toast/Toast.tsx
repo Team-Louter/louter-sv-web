@@ -20,7 +20,7 @@ const ICONS = {
   ),
 };
 
-const AUTO_CLOSE = 1000; // 토스트가 자동으로 닫히는 시간 (ms)
+const AUTO_CLOSE = 1200; // 토스트가 자동으로 닫히는 시간 (ms)
 const EXIT_DURATION = 300; // exit 애니메이션 지속 시간 (ms)
 
 // 전역 토스트 알림 컴포넌트 — App.tsx에 한 번만 렌더링
