@@ -6,6 +6,19 @@ import type {
   SignupExtraRequest,
 } from '@/types/auth';
 
+// 이메일로 인증코드 발송
+export const sendEmailCode = async (userEmail: string): Promise<void> => {
+  await instance.get('/auth/email', { params: { userEmail } });
+};
+
+// 인증코드 검증
+export const verifyEmailCode = async (
+  userEmail: string,
+  inputCode: string,
+): Promise<void> => {
+  await instance.get('/auth/verify', { params: { userEmail, inputCode } });
+};
+
 // 일반 회원가입
 export const signup = async (body: SignupRequest): Promise<void> => {
   await instance.post('/auth/signup', body);
