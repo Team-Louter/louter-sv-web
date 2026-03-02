@@ -6,22 +6,26 @@ import sendIcon from '../../../assets/mentoringImg/send.png';
 
 const MAX_LENGTH = 700;
 
+interface AttachedImage {
+  name: string;
+  url: string;
+}
+
 export default function QnaInput() {
   const [value, setValue] = useState("");
+  const [attachedImages, setAttachedImages] = useState<AttachedImage[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.metaKey && !e.shiftKey) {
       e.preventDefault();
-      console.log("전송:", value);
+      console.log("전송:", value, attachedImages);
       setValue("");
+      setAttachedImages([]);
       if (textareaRef.current) {
         textareaRef.current.style.height = "auto";
       }
       return;
-    }
-  
-    if (e.key === "Enter" && (e.metaKey || e.shiftKey)) {
     }
   };
 
@@ -32,14 +36,17 @@ export default function QnaInput() {
     input.onchange = (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (!file) return;
-      const textarea = textareaRef.current;
-      if (!textarea) return;
-      const start = textarea.selectionStart;
-      const snippet = `![${file.name}](이미지URL)`;
-      const newValue = value.slice(0, start) + snippet + value.slice(start);
-      setValue(newValue);
+      const url = URL.createObjectURL(file);
+      setAttachedImages((prev) => [...prev, { name: file.name, url }]);
     };
     input.click();
+  };
+
+  const handleImageRemove = (index: number) => {
+    setAttachedImages((prev) => {
+      URL.revokeObjectURL(prev[index].url); // 메모리 해제
+      return prev.filter((_, i) => i !== index);
+    });
   };
 
   const handleCodeInsert = () => {
@@ -72,21 +79,34 @@ export default function QnaInput() {
 
   return (
     <S.Wrapper>
+      {attachedImages.length > 0 && (
+        <S.ImagePreviewArea>
+          {attachedImages.map((img, i) => (
+            <S.ImagePreviewItem key={i}>
+              <S.PreviewImg src={img.url} alt={img.name} />
+              <S.RemoveButton type="button" onClick={() => handleImageRemove(i)}>
+                
+              </S.RemoveButton>
+            </S.ImagePreviewItem>
+          ))}
+        </S.ImagePreviewArea>
+      )}
+
       <S.TextareaWrapper>
         <S.Input
-        ref={textareaRef}
-        value={value}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-        placeholder="답변을 남겨보세요."
-        rows={1}
+          ref={textareaRef}
+          value={value}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          placeholder="답변을 남겨보세요."
+          rows={1}
         />
       </S.TextareaWrapper>
 
       <S.Toolbar>
         <S.ToolLeft>
           <S.IconButton type="button" onClick={handleImageInsert}>
-          <img src={imageIcon} alt="이미지" width={18} height={18} />
+            <img src={imageIcon} alt="이미지" width={18} height={18} />
           </S.IconButton>
           <S.IconButton type="button" onClick={handleCodeInsert}>
             <img src={codeIcon} alt="코드" width={18} height={18} />

@@ -68,3 +68,44 @@ export const CharCount = styled.span<{ isOver: boolean }>`
   ${token.typography("body", "sm", "medium")}
   color: ${({ isOver }) => (isOver ? token.colors.state.errorSoft : token.colors.text.disabled)};
 `;
+
+export const ImagePreviewArea = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 16px 0;
+`;
+
+export const ImagePreviewItem = styled.div`
+  position: relative;
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+`;
+
+export const PreviewImg = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: ${token.shapes.small};
+  border: 1px solid ${token.colors.line.normal};
+`;
+
+export const RemoveButton = styled.button`
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: none;
+  background-color: ${token.colors.text.normal};
+  color: ${token.colors.background.white};
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+`;
