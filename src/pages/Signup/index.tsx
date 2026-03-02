@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import * as S from './style';
 import LogoSvg from '@/assets/AuthImg/AuthLogo.svg';
 import GoogleIcon from '@/assets/Google/Google.svg';
-import { signup } from '@/api/Auth';
 import { toast } from '@/store/toastStore';
+import EmailVerifyModal from './components/EmailVerifyModal/EmailVerifyModal';
+import type { SignupRequest } from '@/types/auth';
 
 function Signup() {
   const navigate = useNavigate();
@@ -14,7 +15,8 @@ function Signup() {
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [email, setEmail] = useState('');
   const [clubCode, setClubCode] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [signupData, setSignupData] = useState<SignupRequest | null>(null);
   const isDisabled =
     !studentId.trim() ||
     !name.trim() ||
@@ -23,33 +25,22 @@ function Signup() {
     !email.trim() ||
     !clubCode.trim();
 
-  // 회원가입 요청 핸들러
-  const handleSignup = async () => {
+  // 회원가입 버튼
+  const handleSignup = () => {
     if (password !== passwordConfirm) {
       toast.error('비밀번호가 일치하지 않습니다.');
       return;
     }
-    setIsLoading(true);
-    try {
-      await signup({
-        hakbun: Number(studentId),
-        userName: name,
-        userEmail: email,
-        userPassword: password,
-        confirmPassword: passwordConfirm,
-        userProvider: 'SELF',
-        clubCode,
-      });
-      toast.success('회원가입이 완료되었습니다.');
-      navigate('/auth/signin');
-    } catch (err: unknown) {
-      const msg =
-        (err as { response?: { data?: { message?: string } } })?.response?.data
-          ?.message ?? '회원가입에 실패했습니다. 다시 시도해 주세요.';
-      toast.error(msg);
-    } finally {
-      setIsLoading(false);
-    }
+    setSignupData({
+      hakbun: Number(studentId),
+      userName: name,
+      userEmail: email,
+      userPassword: password,
+      confirmPassword: passwordConfirm,
+      userProvider: 'SELF',
+      clubCode,
+    });
+    setShowModal(true);
   };
 
   // Google 소셜 회원가입 페이지로 이동하는 핸들러
@@ -64,6 +55,13 @@ function Signup() {
 
   return (
     <S.Container>
+      {showModal && signupData && (
+        <EmailVerifyModal
+          email={email}
+          signupData={signupData}
+          onClose={() => setShowModal(false)}
+        />
+      )}
       <S.LoginContainer>
         <S.AuthMainImgContainer />
         <S.AuthContent>
@@ -127,7 +125,7 @@ function Signup() {
             <S.LoginButton
               type="button"
               onClick={handleSignup}
-              disabled={isDisabled || isLoading}
+              disabled={isDisabled}
             >
               회원가입
             </S.LoginButton>
