@@ -1,19 +1,11 @@
 import styled from 'styled-components';
-import { elevation } from '@/styles/values/_elevation';
-import {
-  flexCenter,
-  flexColumn,
-  flexColumnCenter,
-} from '@/styles/values/_flex';
-import { shapes } from '@/styles/values/_shape';
-import { colors } from '@/styles/values/_foundation';
-import { fontSize, fontWeight } from '@/styles/values/_typography';
+import * as token from '@/styles/values/token';
 import AuthMainImg from '@/assets/AuthImg/AuthMainImg.png';
 
 export const Container = styled.div`
-  ${flexCenter}
+  ${token.flexCenter}
   min-height: calc(100vh - 72px);
-  background-color: ${colors.main.white};
+  background-color: ${token.colors.main.white};
   padding: 2rem;
 `;
 
@@ -22,16 +14,16 @@ export const SigninContainer = styled.div`
   justify-content: flex-end;
   width: 991px;
   height: auto;
-  background-color: ${colors.main.white};
-  border-radius: ${shapes.xlarge};
-  ${elevation('black_3')}
+  background-color: ${token.colors.main.white};
+  border-radius: ${token.shapes.xlarge};
+  ${token.elevation('black_3')}
   overflow: hidden;
   zoom: 0.9;
 `;
 
 export const AuthMainImgContainer = styled.div`
   width: 62%;
-  ${flexCenter}
+  ${token.flexCenter}
   background-image: url(${AuthMainImg});
   background-size: cover;
   background-position: center;
@@ -39,7 +31,7 @@ export const AuthMainImgContainer = styled.div`
 `;
 
 export const AuthContent = styled.div`
-  ${flexColumn}
+  ${token.flexColumn}
   align-items: center;
   width: 38%;
   height: auto;
@@ -48,7 +40,7 @@ export const AuthContent = styled.div`
 `;
 
 export const GoogleContent = styled.div`
-  ${flexColumnCenter}
+  ${token.flexColumnCenter}
   width: 100%;
   gap: 0.6rem;
 `;
@@ -60,23 +52,21 @@ export const LogoImg = styled.img`
 `;
 
 export const SocialTitle = styled.h2`
-  font-size: ${fontSize.body.sm};
-  font-weight: ${fontWeight.medium};
-  color: ${colors.text.dark};
+  ${token.typography('body', 'sm', 'medium')}
+  color: ${token.colors.text.dark};
 `;
 
 export const GoogleButton = styled.button`
-  ${flexCenter}
+  ${token.flexCenter}
   gap: 0.75rem;
   width: 100%;
   height: auto;
   padding: 0.75rem 1rem;
-  background-color: ${colors.main.white};
-  border: 1px solid ${colors.line.normal};
+  background-color: ${token.colors.main.white};
+  border: 1px solid ${token.colors.line.normal};
   border-radius: 50px;
-  font-size: ${fontSize.body.sm};
-  font-weight: ${fontWeight.semibold};
-  color: ${colors.text.dark};
+  ${token.typography('body', 'sm', 'semibold')}
+  color: ${token.colors.text.dark};
   cursor: pointer;
   transition: all 0.2s ease;
 
@@ -92,11 +82,11 @@ export const GoogleIcon = styled.img`
 
 export const Line = styled.div`
   width: 100%;
-  border: 0.5px solid ${colors.line.normal};
+  border: 0.5px solid ${token.colors.line.normal};
 `;
 
 export const SigninForm = styled.form`
-  ${flexColumn}
+  ${token.flexColumn}
   gap: 0.875rem;
   width: 100%;
 `;
@@ -104,24 +94,23 @@ export const SigninForm = styled.form`
 export const Input = styled.input`
   width: 100%;
   padding: 0.8rem 1rem;
-  background-color: ${colors.background.white};
+  background-color: ${token.colors.background.white};
   align-items: flex-start;
   justify-content: center;
-  border: 1px solid ${colors.line.normal};
+  border: 1px solid ${token.colors.line.normal};
   border-radius: 4px;
-  font-size: ${fontSize.body.sm};
-  font-weight: ${fontWeight.semibold};
-  color: ${colors.text.dark};
+  ${token.typography('body', 'sm', 'semibold')}
+  color: ${token.colors.text.dark};
   transition: all 0.2s ease;
 
   &::placeholder {
-    color: ${colors.text.coolGray};
+    color: ${token.colors.text.coolGray};
   }
 
   &:focus {
     outline: none;
-    border-color: ${colors.main.black};
-    background-color: ${colors.main.white};
+    border-color: ${token.colors.main.black};
+    background-color: ${token.colors.main.white};
   }
 `;
 
@@ -133,12 +122,11 @@ export const Inputgap = styled.div`
 export const SigninButton = styled.button`
   width: 100%;
   padding: 0.8rem 1rem;
-  background-color: ${colors.main.yellow};
+  background-color: ${token.colors.main.yellow};
   border: none;
   border-radius: 50px;
-  font-size: ${fontSize.body.sm};
-  font-weight: ${fontWeight.bold};
-  color: ${colors.text.dark};
+  ${token.typography('body', 'sm', 'bold')}
+  color: ${token.colors.text.dark};
   cursor: pointer;
   transition: all 0.2s ease;
 
@@ -148,7 +136,7 @@ export const SigninButton = styled.button`
   }
 
   &:hover:not(:disabled) {
-    background-color: ${colors.accent.secondary1};
+    background-color: ${token.colors.accent.secondary1};
   }
 
   &:active:not(:disabled) {
@@ -159,28 +147,26 @@ export const SigninButton = styled.button`
 export const FindAccountLink = styled.button`
   background: none;
   border: none;
-  font-size: ${fontSize.caption.lg};
-  font-weight: ${fontWeight.medium};
-  color: ${colors.text.dark};
+  ${token.typography('caption', 'lg', 'medium')}
+  color: ${token.colors.text.dark};
   cursor: pointer;
   text-decoration: none;
   transition: color 0.2s ease;
 
   &:hover {
-    color: ${colors.text.dark};
+    color: ${token.colors.text.dark};
     text-decoration: underline;
   }
 `;
 
 export const SignupText = styled.p`
-  font-size: ${fontSize.caption.md};
-  font-weight: ${fontWeight.medium};
-  color: ${colors.text.dark};
+  ${token.typography('caption', 'md', 'medium')}
+  color: ${token.colors.text.dark};
 `;
 
 export const SignupLink = styled.span`
-  color: ${colors.text.gold};
-  font-weight: ${fontWeight.semibold};
+  color: ${token.colors.text.gold};
+  font-weight: ${token.fontWeight.semibold};
   cursor: pointer;
 
   &:hover {
@@ -189,15 +175,14 @@ export const SignupLink = styled.span`
 `;
 
 export const PolicyText = styled.p`
-  font-size: ${fontSize.caption.md};
-  font-weight: ${fontWeight.medium};
-  color: ${colors.text.dark};
+  ${token.typography('caption', 'md', 'medium')}
+  color: ${token.colors.text.dark};
   text-align: center;
 `;
 
 export const PolicyLink = styled.a`
-  color: ${colors.text.gold};
-  font-weight: ${fontWeight.semibold};
+  color: ${token.colors.text.gold};
+  font-weight: ${token.fontWeight.semibold};
   cursor: pointer;
 
   &:hover {
