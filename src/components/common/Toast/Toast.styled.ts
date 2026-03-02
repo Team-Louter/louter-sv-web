@@ -37,7 +37,8 @@ export const ToastBox = styled.div`
   border-radius: 999px;
   background-color: ${token.colors.main.white};
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-  white-space: nowrap;
+  max-width: 320px;
+  word-break: keep-all;
 `;
 
 export const IconCircle = styled.div<{
