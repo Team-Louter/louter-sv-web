@@ -11,7 +11,7 @@ const slideUp = keyframes`
   to   { transform: translateX(-50%) translateY(-20px); opacity: 0; }
 `;
 
-export const Wrapper = styled.div<{ $visible: boolean }>`
+export const Wrapper = styled.div<{ $visible: boolean; $exitDuration: number }>`
   position: fixed;
   top: 24px;
   left: 50%;
@@ -19,13 +19,13 @@ export const Wrapper = styled.div<{ $visible: boolean }>`
   z-index: 9999;
   pointer-events: none;
 
-  ${({ $visible }) =>
+  ${({ $visible, $exitDuration }) =>
     $visible
       ? css`
           animation: ${slideDown} 0.22s ease forwards;
         `
       : css`
-          animation: ${slideUp} 0.2s ease forwards;
+          animation: ${slideUp} ${$exitDuration}ms ease forwards;
         `}
 `;
 
