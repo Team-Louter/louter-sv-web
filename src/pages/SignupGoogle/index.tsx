@@ -2,74 +2,72 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as S from './style';
 import LogoSvg from '@/assets/AuthImg/AuthLogo.svg';
-import GoogleIcon from '@/assets/Google/Google.svg';
 
-function Signin() {
+function SignupGoogle() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const isDisabled = !email.trim() || !password.trim();
+  const [studentId, setStudentId] = useState('');
+  const [name, setName] = useState('');
+  const [clubCode, setClubCode] = useState('');
+  const isDisabled = !studentId.trim() || !name.trim() || !clubCode.trim();
 
-  // 테스트용 - 메인 페이지로 이동
+  // 테스트용 핸들러 - 메인 페이지로 이동
   const handleTest = () => {
     navigate('/');
   };
 
-  // 회원가입 페이지(약관 동의)로 이동하는 핸들러
-  const handleSignup = () => {
-    navigate('/auth/signup/check');
+  // 로그인 페이지로 이동하는 핸들러
+  const handleSignin = () => {
+    navigate('/auth/signin');
   };
 
   return (
     <S.Container>
-      <S.SigninContainer>
+      <S.SignupContainer>
         <S.AuthMainImgContainer />
         <S.AuthContent>
           <S.LogoImg src={LogoSvg} alt="Logo" />
 
           <S.GoogleContent>
-            <S.SocialTitle>소셜 로그인</S.SocialTitle>
-
-            <S.GoogleButton onClick={handleTest}>
-              <S.GoogleIcon src={GoogleIcon} alt="Google" />
-              Google로 계속하기
-            </S.GoogleButton>
+            <S.SocialTitle>학생 개인정보 입력</S.SocialTitle>
           </S.GoogleContent>
 
           <S.Line />
 
-          <S.SigninForm>
+          <S.SignupForm>
             <S.Input
-              type="email"
-              placeholder="이메일"
+              type="text"
+              placeholder="학번"
               required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={studentId}
+              onChange={(e) => setStudentId(e.target.value)}
             />
             <S.Input
-              type="password"
-              placeholder="비밀번호"
+              type="text"
+              placeholder="이름"
               required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <S.Input
+              type="text"
+              placeholder="동아리 코드"
+              required
+              value={clubCode}
+              onChange={(e) => setClubCode(e.target.value)}
             />
             <S.Inputgap />
-            <S.SigninButton
+            <S.SignupButton
               type="button"
               onClick={handleTest}
               disabled={isDisabled}
             >
-              로그인
-            </S.SigninButton>
-          </S.SigninForm>
-
-          <S.FindAccountLink onClick={handleTest}>
-            아이디/비밀번호 찾기
-          </S.FindAccountLink>
+              회원가입
+            </S.SignupButton>
+          </S.SignupForm>
 
           <S.SignupText>
-            계정이 없으신가요?{' '}
-            <S.SignupLink onClick={handleSignup}>회원가입</S.SignupLink>
+            이미 계정이 있으신가요?{' '}
+            <S.SignupLink onClick={handleSignin}>로그인</S.SignupLink>
           </S.SignupText>
 
           <S.Line />
@@ -94,9 +92,9 @@ function Signin() {
             apply.
           </S.PolicyText>
         </S.AuthContent>
-      </S.SigninContainer>
+      </S.SignupContainer>
     </S.Container>
   );
 }
 
-export default Signin;
+export default SignupGoogle;

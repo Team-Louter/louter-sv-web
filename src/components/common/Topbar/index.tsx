@@ -2,11 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import * as S from './style';
 import LogoSvg from '@/assets/Logo/Logo.svg';
 
-function Topbar() {
+function Topbar({ hidden }: { hidden: boolean }) {
   const navigate = useNavigate();
 
   return (
-    <S.Container>
+    <S.Container $hidden={hidden}>
       <S.LogoWrapper onClick={() => navigate('/')}>
         <S.Logo src={LogoSvg} alt="Louter Logo" />
       </S.LogoWrapper>

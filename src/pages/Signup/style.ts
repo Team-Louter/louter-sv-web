@@ -7,22 +7,23 @@ export const Container = styled.div`
   min-height: calc(100vh - 72px);
   background-color: ${token.colors.main.white};
   padding: 2rem;
+  overflow: auto;
 `;
 
-export const SigninContainer = styled.div`
+export const LoginContainer = styled.div`
   display: flex;
   justify-content: flex-end;
-  width: 991px;
+  width: 1380px;
   height: auto;
   background-color: ${token.colors.main.white};
   border-radius: ${token.shapes.xlarge};
   ${token.elevation('black_3')}
-  overflow: hidden;
-  zoom: 0.9;
+  overflow: auto;
+  zoom: 0.75;
 `;
 
 export const AuthMainImgContainer = styled.div`
-  width: 62%;
+  width: 70%;
   ${token.flexCenter}
   background-image: url(${AuthMainImg});
   background-size: cover;
@@ -33,7 +34,7 @@ export const AuthMainImgContainer = styled.div`
 export const AuthContent = styled.div`
   ${token.flexColumn}
   align-items: center;
-  width: 38%;
+  width: 30%;
   height: auto;
   padding: 3rem 2rem;
   gap: 1.5rem;
@@ -52,7 +53,8 @@ export const LogoImg = styled.img`
 `;
 
 export const SocialTitle = styled.h2`
-  ${token.typography('body', 'sm', 'medium')}
+  font-size: 0.9rem;
+  font-weight: ${token.fontWeight.medium};
   color: ${token.colors.text.dark};
 `;
 
@@ -85,7 +87,7 @@ export const Line = styled.div`
   border: 0.5px solid ${token.colors.line.normal};
 `;
 
-export const SigninForm = styled.form`
+export const LoginForm = styled.form`
   ${token.flexColumn}
   gap: 0.875rem;
   width: 100%;
@@ -99,7 +101,7 @@ export const Input = styled.input`
   justify-content: center;
   border: 1px solid ${token.colors.line.normal};
   border-radius: 4px;
-  ${token.typography('body', 'sm', 'semibold')}
+  ${token.typography('body', 'md', 'semibold')}
   color: ${token.colors.text.dark};
   transition: all 0.2s ease;
 
@@ -116,16 +118,16 @@ export const Input = styled.input`
 
 export const Inputgap = styled.div`
   width: 100%;
-  height: 0px;
+  height: 8px;
 `;
 
-export const SigninButton = styled.button`
+export const LoginButton = styled.button`
   width: 100%;
   padding: 0.8rem 1rem;
   background-color: ${token.colors.main.yellow};
   border: none;
   border-radius: 50px;
-  ${token.typography('body', 'sm', 'bold')}
+  ${token.typography('body', 'md', 'bold')}
   color: ${token.colors.text.dark};
   cursor: pointer;
   transition: all 0.2s ease;
@@ -147,7 +149,7 @@ export const SigninButton = styled.button`
 export const FindAccountLink = styled.button`
   background: none;
   border: none;
-  ${token.typography('caption', 'lg', 'medium')}
+  ${token.typography('body', 'sm', 'medium')}
   color: ${token.colors.text.dark};
   cursor: pointer;
   text-decoration: none;
@@ -160,7 +162,7 @@ export const FindAccountLink = styled.button`
 `;
 
 export const SignupText = styled.p`
-  ${token.typography('caption', 'md', 'medium')}
+  ${token.typography('body', 'sm', 'medium')}
   color: ${token.colors.text.dark};
 `;
 
@@ -175,7 +177,7 @@ export const SignupLink = styled.span`
 `;
 
 export const PolicyText = styled.p`
-  ${token.typography('caption', 'md', 'medium')}
+  ${token.typography('caption', 'lg', 'medium')}
   color: ${token.colors.text.dark};
   text-align: center;
 `;
