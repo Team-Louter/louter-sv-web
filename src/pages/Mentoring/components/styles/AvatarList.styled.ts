@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import * as token from "@/styles/values/token";
 
+
 interface Props {
   $isClicked: boolean;
 }
@@ -15,7 +16,8 @@ export const container = styled.div<Props>`
   border-radius: ${token.shapes.medium};
   ${token.flexRow}
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
+  
 `;
 
 export const avatarArea = styled.div`
@@ -53,3 +55,14 @@ export const userImg = styled.img<{ $isGroup?: boolean }>`
     &:nth-child(4) { bottom: 0; right: 0; }
   `}
 `;
+
+export const Kebab = styled.img`
+  width: 3px;
+  height: 15px;
+`
+
+export const profile = styled.div`
+  ${token.flexRow}
+  align-items: center;
+  gap: 10px;
+`

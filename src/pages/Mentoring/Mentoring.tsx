@@ -5,6 +5,7 @@ import type { Comment } from "./components/types/Qna.types";
 import userImg from "../../assets/dummy/userImg.png";
 import QnaInput from "./components/QnaInput";
 
+
 const dummyComments: Comment[] = [
   {
     id: 1,
