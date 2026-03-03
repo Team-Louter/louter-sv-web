@@ -120,6 +120,7 @@ const dummyQuestions = [
 
 export default function Mentoring() {
   const [role, setRole] = useState<"mentor" | "mentee">("mentor");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <>
@@ -137,7 +138,7 @@ export default function Mentoring() {
                 {role === "mentor" && (
                   <>
                     멘티
-                    <S.AddButton src={Add} />
+                    <S.AddButton src={Add} onClick={() => setIsModalOpen(true)} />
                   </>
                 )}
               </S.TitleAddContainer>
@@ -165,7 +166,6 @@ export default function Mentoring() {
               </S.EndContainer>
             )}
 
-            {/* QnaList */}
             <S.QnaListWrapper>
               <QnaList comments={dummyComments} />
             </S.QnaListWrapper>
@@ -173,7 +173,8 @@ export default function Mentoring() {
             <QnaInput />
           </S.RightContainer>
         </S.container>
-        <RoomModal />
+
+        <RoomModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       </S.body>
     </>
   );

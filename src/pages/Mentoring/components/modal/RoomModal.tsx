@@ -5,6 +5,11 @@ import MemberList from "./member/MemberList";
 import Search from "../SearchBar/SearchBar";
 import type { GradeGroup } from "./member/member.type";
 
+interface RoomModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
 const DUMMY_GROUPS: GradeGroup[] = [
   {
     grade: 1,
@@ -49,7 +54,8 @@ const DUMMY_GROUPS: GradeGroup[] = [
   },
 ];
 
-export default function Mentoring() {
+export default function Mentoring({ isOpen, onClose }: RoomModalProps) {
+  if (!isOpen) return null;
   const [groups, setGroups] = useState<GradeGroup[]>(DUMMY_GROUPS);
   const [checkedGrades, setCheckedGrades] = useState<Set<number>>(new Set([2]));
   const [searchValue, setSearchValue] = useState("");
@@ -123,16 +129,16 @@ export default function Mentoring() {
   };
 
   return (
-    <>
-      <S.container>
+    <S.Overlay onClick={onClose}>
+      <S.container onClick={e => e.stopPropagation()}>
         <S.TitleCancelContainer>
           <S.Wrapper />
           <S.Title>멘토링 방 생성</S.Title>
-          <S.Cancel src={cancelIcon} />
+          <S.Cancel src={cancelIcon} onClick={onClose} />
         </S.TitleCancelContainer>
-
+  
         <S.RoomName placeholder="방 제목을 입력해 주세요." />
-
+  
         <S.AddMemberContainer>
           <MemberList
             groups={filteredGroups}
@@ -146,6 +152,6 @@ export default function Mentoring() {
           />
         </S.AddMemberContainer>
       </S.container>
-    </>
+    </S.Overlay>
   );
 }

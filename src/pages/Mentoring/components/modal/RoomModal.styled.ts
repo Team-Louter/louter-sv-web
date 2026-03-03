@@ -46,3 +46,13 @@ export const AddMemberContainer = styled.div`
   min-height: 460px;
   flex-shrink: 0;
 `;
+
+export const Overlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+`;
