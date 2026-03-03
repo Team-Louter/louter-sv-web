@@ -12,6 +12,7 @@ export const Container = styled.div<{ $isPinned?: boolean }>`
     padding: 18px 25px;
     flex-shrink: 0;
     cursor: pointer;
+    gap: 10px;
 `
 
 export const ForColumn = styled.div`
