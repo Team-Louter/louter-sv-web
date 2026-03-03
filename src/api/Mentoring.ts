@@ -45,6 +45,9 @@ export const mentoringApi = {
     
   createMentoring: (data: MentoringRequest) => 
     instance.post<MentoringResponse>("/mentoring", data),
+
+  updateMentoring: (mentoringId: number, data: MentoringRequest) =>
+    instance.put<MentoringResponse>(`/mentoring/${mentoringId}`, data),
     
   deleteMentoring: (mentoringId: number) => 
     instance.delete(`/mentoring/${mentoringId}`),
@@ -58,9 +61,9 @@ export const mentoringApi = {
 
   createQuestion: (mentoringId: number, title: string, content: string, files?: File[]) => {
     const formData = new FormData();
-    const requestBlob = new Blob([JSON.stringify({ mentoringId, title, content })], { type: 'application/json' });
-    formData.append("request", requestBlob);
-    if (files) {
+    const requestData = { mentoringId, title, content };
+    formData.append("request", new Blob([JSON.stringify(requestData)], { type: 'application/json' }));
+    if (files && files.length > 0) {
       files.forEach(file => formData.append("files", file));
     }
     return instance.post<QuestionResponse>("/mentoring/questions", formData, {
@@ -71,19 +74,25 @@ export const mentoringApi = {
   updateStatus: (questionId: number, status: "PAUSED" | "ACTIVE" | "DONE") =>
     instance.patch(`/mentoring/questions/${questionId}/status`, null, { params: { status } }),
 
+  deleteQuestion: (questionId: number) =>
+    instance.delete(`/mentoring/questions/${questionId}`),
+
   // 메시지(답변) 관련
   getMessages: () =>
     instance.get<MessageResponse[]>("/mentoring/messages"),
 
   createMessage: (questionId: number, content: string, files?: File[]) => {
     const formData = new FormData();
-    const requestBlob = new Blob([JSON.stringify({ questionId, content })], { type: 'application/json' });
-    formData.append("request", requestBlob);
-    if (files) {
+    const requestData = { questionId, content };
+    formData.append("request", new Blob([JSON.stringify(requestData)], { type: 'application/json' }));
+    if (files && files.length > 0) {
       files.forEach(file => formData.append("files", file));
     }
     return instance.post<MessageResponse>("/mentoring/messages", formData, {
       headers: { "Content-Type": "multipart/form-data" }
     });
-  }
+  },
+
+  deleteMessage: (messageId: number) =>
+    instance.delete(`/mentoring/messages/${messageId}`)
 };

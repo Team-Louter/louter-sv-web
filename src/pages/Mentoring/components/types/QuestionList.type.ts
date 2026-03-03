@@ -12,4 +12,5 @@ export interface QuestionListProps {
   questions: Question[];
   selectedId: number | null;
   onSelect: (question: Question) => void;
+  onDelete?: (id: number) => void;
 }

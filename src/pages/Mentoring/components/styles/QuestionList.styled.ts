@@ -18,10 +18,25 @@ export const container = styled.div<Props>`
   border: solid 1px ${token.colors.main.yellow};
   border-radius: ${token.shapes.medium};
   padding: 0.6rem 1.25rem;
+  ${token.flexRow}
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+`;
+
+export const KebabWrapper = styled.div`
+  position: relative;
+`;
+
+export const KebabIcon = styled.img`
+  width: 3px;
+  height: 15px;
+  cursor: pointer;
 `;
 
 export const questionItem = styled.div`
   ${token.flexColumn}
+  flex: 1;
 `;
 
 export const questionHeader = styled.div`

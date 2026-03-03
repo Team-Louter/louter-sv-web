@@ -1,14 +1,17 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import * as S from "./RoomModal.styled";
 import cancelIcon from "../../../../assets/mentoringImg/cancel.png";
 import MemberList from "./member/MemberList";
 import Search from "../SearchBar/SearchBar";
 import type { GradeGroup } from "./member/member.type";
+import type { AvatarItem } from "../../components/types/AvatarList.type";
 
 interface RoomModalProps {
   isOpen: boolean;
   onClose: () => void;
   onCreate: (name: string, memberIds: number[]) => void;
+  onUpdate?: (id: number, name: string, memberIds: number[]) => void;
+  initialData?: AvatarItem | null;
 }
 
 const DUMMY_GROUPS: GradeGroup[] = [
@@ -55,12 +58,27 @@ const DUMMY_GROUPS: GradeGroup[] = [
   },
 ];
 
-export default function Mentoring({ isOpen, onClose, onCreate }: RoomModalProps) {
+export default function Mentoring({ isOpen, onClose, onCreate, onUpdate, initialData }: RoomModalProps) {
   if (!isOpen) return null;
 
   const [groups, setGroups] = useState<GradeGroup[]>(DUMMY_GROUPS);
   const [searchValue, setSearchValue] = useState("");
   const [roomName, setRoomName] = useState("");
+
+  const isEditMode = !!initialData;
+
+  useEffect(() => {
+    if (initialData) {
+      setRoomName(initialData.name);
+      // 수정 모드 시 기존 멤버 체크 로직 (추후 API에서 멤버 목록을 가져오면 더 정확해집니다)
+    } else {
+      setRoomName("");
+      setGroups(DUMMY_GROUPS.map(g => ({
+        ...g,
+        members: g.members.map(m => ({ ...m, checked: false }))
+      })));
+    }
+  }, [initialData, isOpen]);
 
   const checkedGrades = useMemo(
     () =>
@@ -126,7 +144,13 @@ export default function Mentoring({ isOpen, onClose, onCreate }: RoomModalProps)
   const handleCreate = () => {
     if (!roomName.trim()) return;
     const memberIds = selectedMembers.map((m) => m.id);
-    onCreate(roomName, memberIds);
+    
+    if (isEditMode && initialData && onUpdate) {
+      onUpdate(initialData.id, roomName, memberIds);
+    } else {
+      onCreate(roomName, memberIds);
+    }
+    
     setRoomName("");
     onClose();
   };
@@ -136,7 +160,7 @@ export default function Mentoring({ isOpen, onClose, onCreate }: RoomModalProps)
       <S.container onClick={(e) => e.stopPropagation()}>
         <S.TitleCancelContainer>
           <S.Wrapper />
-          <S.Title>멘토링 방 생성</S.Title>
+          <S.Title>{isEditMode ? "멘토링 방 수정" : "멘토링 방 생성"}</S.Title>
           <S.Cancel src={cancelIcon} onClick={onClose} />
         </S.TitleCancelContainer>
 
@@ -158,7 +182,9 @@ export default function Mentoring({ isOpen, onClose, onCreate }: RoomModalProps)
             searchSlot={<Search onSearch={setSearchValue} />}
           />
         </S.AddMemberContainer>
-        <S.DoneButton onClick={handleCreate}>생성</S.DoneButton>
+        <S.DoneButton onClick={handleCreate}>
+          {isEditMode ? "수정 완료" : "생성"}
+        </S.DoneButton>
       </S.container>
     </S.Overlay>
   );
