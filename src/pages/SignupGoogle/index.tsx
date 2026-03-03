@@ -71,7 +71,12 @@ function SignupGoogle() {
 
           <S.Line />
 
-          <S.SignupForm>
+          <S.SignupForm
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !isDisabled && !isLoading)
+                handleSignupExtra();
+            }}
+          >
             <S.Input
               type="text"
               placeholder="학번"
