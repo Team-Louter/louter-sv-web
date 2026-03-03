@@ -23,7 +23,7 @@ export default function CommunityPost() {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // 게시 확인 모달 열림 여부
     const [isCancelModalOpen, setIsCancelModalOpen] = useState<boolean>(false); // 게시 취소 확인 모달 열림 여부
     const [isAnonymous, setIsAnonymous] = useState<boolean>(editPost?.isAnonymous ?? false); // 익명 게시 여부
-    const [attachedFiles, setAttachedFiles] = useState<ServerFile[]>([]); // 첨부 파일
+    const [attachedFiles, setAttachedFiles] = useState<ServerFile[]>(editPost?.files ?? []); // 첨부 파일
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const isComposingRef = useRef(false);
     const imageInputRef = useRef<HTMLInputElement>(null);
@@ -129,7 +129,10 @@ export default function CommunityPost() {
 
     // 게시 확인 모달에서 확인 클릭 시 
     const handleSubmit = async () => {
-        if (editPost) { // 수정
+        // content에서 실제 첨부되어있는 파일만 필터링
+        const usedFiles = attachedFiles.filter(file => content.includes(file.fileUrl));
+    
+        if (editPost) {
             try {
                 await editPostInfo(editPost.postId, {
                     title,
@@ -137,14 +140,13 @@ export default function CommunityPost() {
                     isAnonymous,
                     category: selectedCategory,
                     tag: CATEGORY_TAGS[selectedCategory]?.[selectedTag] ?? "",
-                    files: attachedFiles,
+                    files: usedFiles,
                 });
-
                 navigate(-1);
             } catch (err) {
                 console.error('수정 실패', err);
             }
-        } else { // 생성
+        } else {
             try {
                 await createPostInfo({
                     title,
@@ -154,9 +156,8 @@ export default function CommunityPost() {
                     tag: selectedTag
                         ? CATEGORY_TAGS[selectedCategory]?.[selectedTag] ?? null
                         : null,
-                    files: attachedFiles,
+                    files: usedFiles,
                 });
-
                 navigate(-1);
             } catch (err) {
                 console.error('생성 실패', err);

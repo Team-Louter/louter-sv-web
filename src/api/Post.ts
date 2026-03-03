@@ -45,6 +45,7 @@ export const uploadFile = async (file:File): Promise<{url: string}> => {
 
 // 게시글 수정하기
 export const editPostInfo = async (postId: number|null, event: ServerPost): Promise<void> => {
+    console.log(event)
     await instance.put<void>(`/posts/${postId}`, event);
 }
 

@@ -135,6 +135,8 @@ export default function CommunityDetail() {
         },
     ];
 
+    console.log(post)
+
     return (
         <S.Container>
             <S.ForCenter>
