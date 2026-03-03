@@ -12,12 +12,14 @@ export const Container = styled.div<{ $isPinned?: boolean }>`
     padding: 18px 25px;
     flex-shrink: 0;
     cursor: pointer;
+    gap: 10px;
 `
 
 export const ForColumn = styled.div`
     ${token.flexColumn};
     justify-content: space-between;
-    width: 100%;
+    flex: 1;
+    min-width: 0px;
 `
 
 export const ForRow = styled.div`
@@ -61,11 +63,10 @@ export const Content = styled.span`
     white-space: nowrap;
 `
 
-export const ProfileImg = styled.div`
+export const ProfileImg = styled.img`
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    border: 1px solid black;
 `
 
 export const Name = styled.span`
@@ -88,9 +89,29 @@ export const CommentCount = styled.span`
     color: ${token.colors.text.gold};
 `
 
-export const Img = styled.div`
+export const ImgContainer = styled.div`
+    position: relative;
     height: 100%;
     aspect-ratio: 1;
+    flex-shrink: 0;
     border-radius: ${token.shapes.small};
-    border: 1px solid black;
+`
+
+export const ImgOverlay = styled.span`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: ${token.colors.text.normal};
+    font-weight: bold;
+    z-index: 1;
+    pointer-events: none;
+`
+
+export const Img = styled.img`
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: ${token.shapes.small};
+    opacity: 0.7;
 `

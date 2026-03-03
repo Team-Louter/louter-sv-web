@@ -4,18 +4,22 @@ import Profile from "./components/Profile/Profile.tsx";
 import { getGenerations } from "@/utils/FormatFilters.ts";
 import { useEffect, useState } from "react";
 import Member from "./components/Member/Member.tsx";
-import type { Member as MemberType } from "@/types/member.js";
 import { getMember } from "@/api/Member.ts";
+import type { Member as MemberType } from "@/types/member.js";
 
 export default function Main() {
     const [selectedGen, setSelectedGen] = useState<string>("전체"); // 선택된 기수
     const [members, setMembers] = useState<MemberType[]|null>(null);
+    const [allMembers, setAllMembers] = useState<MemberType[] | null>(null);
     
     const getMemberInfo = async () => {
         try{
-            const data = await getMember(selectedGen);
+            const data = await getMember(selectedGen, null);
             setMembers(data);
-            console.log(data);
+
+            if (selectedGen === "전체" && !allMembers) {
+                setAllMembers(data);
+            }
         } catch(err) {
             console.error(err);
         }
@@ -43,7 +47,7 @@ export default function Main() {
                 <S.MemberContainer>
                     <S.Title>Louter Member</S.Title>
                     <S.FilterContainer>
-                        {getGenerations(members).map((gen) => (
+                        {getGenerations(allMembers).map((gen) => (
                             <S.GenFilter
                                 key={gen}
                                 onClick={() => setSelectedGen(gen)}

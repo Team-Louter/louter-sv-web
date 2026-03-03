@@ -1,5 +1,6 @@
+// 메인 타입
 // 게시글 하나 타입
-export interface Post {
+export interface MainPost {
   commentCount: number;
   createdAt: string;
   likeCount: number;
@@ -28,7 +29,7 @@ export interface Pageable {
 
 // 전체 응답 타입
 export interface MyPost {
-  content: Post[];
+  content: MainPost[];
   empty: boolean;
   first: boolean;
   last: boolean;
@@ -74,25 +75,80 @@ export type mainProps = {
   id: number|undefined
 }
 
-export type dPost = {
-  id: number;
-  category: string;
-  tag: string;
-  title: string;
-  content: string;
-  views: number;
-  likes: number;
-  comments: number;
-  author: string;
-  createdAt: string;
-  isPinned: boolean;
-  isHearted: boolean;
+export type postProps = {
+  post: Post,
+  selectedCategory: string
 }
 
-export interface Comment {
-  id: number;
+export interface commentProps {
+  comment: Comment;
   postId: number;
-  author: string; 
-  content: string;
+  onSuccess?: () => void;
+}
+
+// 게시글 타입
+export type Post = {
+  postId: number;
+  userName: string;
+  userProfileImageUrl: string;
+  postTitle: string;
+  postContent: string;
+  category: string;
   createdAt: string;
+  isAnonymous: boolean;
+  viewers: number;
+  likeCount: number;
+  commentCount: number;
+  isHearted: boolean;
+  pinned: boolean;
+  tag: string;
+  files: PostFile[];
+};
+
+export type PostList = {
+  totalElements: number;
+  totalPages: number;
+  pageable: Pageable;
+  numberOfElements: number;
+  first: boolean;
+  last: boolean;
+  size: number;
+  content: Post[];
+  number: number;
+  sort: Sort;
+  empty: boolean;
+};
+
+export type ServerPost = {
+  "title": string,
+  "content": string,
+  "isAnonymous": boolean,
+  "category": string,
+  "tag": string | null,
+  "files": ServerFile[]
+}
+
+export type ServerFile = {
+  "fileUrl": string,
+  "fileName": string,
+  "fileType": string,
+  "fileSize": number
+}
+
+export type Comment = {
+  "commentId": number,
+  "userName": string,
+  "userProfileImageUrl": string,
+  "content": string,
+  "depth": number,
+  "replyCount": number,
+  "createdAt": string,
+  "isAnonymous": boolean,
+  "deleted": boolean
+}
+
+export type ServerComment = {
+  "content": string,
+  "isAnonymous": boolean,
+  "parentId": number | null
 }

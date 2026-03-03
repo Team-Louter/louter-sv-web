@@ -25,6 +25,7 @@ export const PostContainer = styled.div`
     padding: 50px;
     gap: 20px;
     overflow-y: scroll;
+    overflow-x: hidden;
 `
 
 export const WriteButton = styled.button`

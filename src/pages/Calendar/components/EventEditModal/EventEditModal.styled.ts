@@ -2,19 +2,20 @@ import styled from "styled-components";
 import * as token from "@/styles/values/token";
 
 export const Background = styled.div`
-    height: 100vh;
+    height: calc(100vh - 60px);
     width: 100vw;
     background-color: rgba(0, 0, 0, 0.5);
     position: fixed;
     top: 0px;
     left: 0px;
     z-index: 1;
-    ${token.flexCenter}
+    ${token.flexCenter};
+    margin-top: 60px;
 `
 
 export const Container = styled.div`
     width: 37%;
-    height: 69%;
+    height: content-fit;
     background-color: ${token.colors.background.white};
     border-radius: ${token.shapes.large};
     padding: 40px;

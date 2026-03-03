@@ -1,5 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
-import * as token from "@/styles/values/token";
+import * as token from '@/styles/values/token';
 
 export const GlobalStyle = createGlobalStyle`
   * {
@@ -18,6 +18,7 @@ export const GlobalStyle = createGlobalStyle`
     color: ${token.colors.text.black};
     background-color: ${token.colors.background.white};
     line-height: 1.5;
+    overflow: hidden;
 
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

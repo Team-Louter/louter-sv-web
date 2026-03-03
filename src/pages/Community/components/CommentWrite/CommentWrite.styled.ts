@@ -14,11 +14,10 @@ export const Div = styled.div`
     gap: 5px;
 `
 
-export const ProfileImg = styled.div`
+export const ProfileImg = styled.img`
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    border: 1px solid black;
 `
 
 export const Name = styled.span`

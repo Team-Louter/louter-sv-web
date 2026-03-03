@@ -149,13 +149,11 @@ export const CalendarWrapper = styled.div`
   }
 
   .fc .fc-event {
-    background-color: ${token.colors.background.yellow};
     ${token.typography("caption", "md", "semibold")};
     border: none;
     border-radius: 4px;
     padding: 2px 6px;
     margin: 2px 4px;
-    color: ${token.colors.fill.slate};
     cursor: pointer;
     white-space: nowrap;
     overflow: hidden;
@@ -188,10 +186,29 @@ export const CalendarWrapper = styled.div`
   .fc .fc-daygrid-body tr {
     height: 20%;
   }
+
+  /* +more 클릭 시 나오는 팝오버 */
+  .fc .fc-popover {
+    background: ${token.colors.fill.white} !important;
+    border: 1px solid ${token.colors.line.light};
+    border-radius: ${token.shapes.xsmall};
+    ${token.elevation('black_2')}
+  }
+
+  .fc .fc-popover-body {
+    background: ${token.colors.fill.white} !important;
+  }
 `;
 
 export const EventContentWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 4px;
+  overflow: hidden;
 `;
+
+export const EventLabel = styled.span`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`

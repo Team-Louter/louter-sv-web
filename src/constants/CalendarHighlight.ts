@@ -1,1 +1,1 @@
-export const calendarHighlight = ['LightGrey', 'Pink', 'Gold', 'LightGreen', 'LightBlue'];
+export const calendarHighlight = ['LIGHTGREY', 'PINK', 'GOLD', 'LIGHTGREEN', 'LIGHTBLUE'];

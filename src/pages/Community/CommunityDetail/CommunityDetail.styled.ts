@@ -5,11 +5,11 @@ import { GoKebabHorizontal } from "react-icons/go";
 export const Container = styled.div`
     background-color: ${token.colors.background.lightGray};
     width: 100%;
-    min-height: calc(100vh - 60px);
-    height: fit-content;
+    height: calc(100vh - 60px);
     ${token.flexRow};
     justify-content: center;
     padding: 55px 0px;
+    overflow-y: scroll;
 `
 
 export const ForCenter = styled.div`
@@ -65,11 +65,10 @@ export const ViewCount = styled.span`
     color: ${token.colors.fill.yellow};
 `
 
-export const ProfileImg = styled.div`
+export const ProfileImg = styled.img`
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    border: 1px solid black;
 `
 
 export const Name = styled.span`
@@ -101,7 +100,93 @@ export const ContentContainer = styled.div`
     width: 100%;
     ${token.typography('body', 'md', 'medium')};
     color: ${token.colors.text.normal};
-`
+
+    p {
+        margin: 0.3em 0;
+    }
+
+    h1 {
+        font-size: 1.5em;
+        font-weight: 700;
+        margin: 0.6em 0 0.3em;
+    }
+
+    h2 {
+        font-size: 1.25em;
+        font-weight: 700;
+        margin: 0.6em 0 0.3em;
+    }
+
+    strong {
+        font-weight: 700;
+    }
+
+    em {
+        font-style: italic;
+    }
+
+    ul {
+        list-style-type: disc;
+        padding-left: 1.5em;
+        margin: 0.4em 0;
+    }
+
+    ol {
+        list-style-type: decimal;
+        padding-left: 1.5em;
+        margin: 0.4em 0;
+    }
+
+    li {
+        margin: 2px 0;
+    }
+
+    blockquote {
+        border-left: 3px solid ${token.colors.line.highlight};
+        margin: 0.4em 0;
+        padding: 4px 0 4px 12px;
+        color: ${token.colors.text.neutral};
+    }
+
+    code {
+        background-color: ${token.colors.fill.normal};
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.9em;
+        font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+
+    pre {
+        background-color: ${token.colors.fill.normal};
+        padding: 12px 16px;
+        border-radius: 8px;
+        overflow-x: auto;
+        margin: 0.4em 0;
+    }
+
+    pre code {
+        background: none;
+        padding: 0;
+    }
+
+    hr {
+        border: none;
+        border-top: 1px solid ${token.colors.line.normal};
+        margin: 12px 0;
+    }
+
+    a {
+        color: ${token.colors.text.gold};
+        text-decoration: underline;
+    }
+
+    img {
+        max-width: 100%;
+        max-height: 300px;
+        object-fit: contain;
+        border-radius: 8px;
+    }
+`;
 
 export const LikeCount = styled.span`
     ${token.typography('body', 'sm', 'medium')};
@@ -122,7 +207,7 @@ export const CommentContainer = styled.div`
     width: 100%;
     min-height: 120px;
     ${token.flexColumn};
-    gap: 20px;
+    gap: 10px;
 `
 
 export const CommentWrite = styled.div`

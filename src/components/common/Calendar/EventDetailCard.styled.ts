@@ -6,7 +6,7 @@ export const CardContainer = styled.div`
   background: white;
   border-radius: 8px;
   padding: 24px;
-  width: 400px;
+  min-width: 400px;
   z-index: 100;
   border: 1px solid #DFDFDF;
 `;
@@ -31,4 +31,5 @@ export const DetailValue = styled.div`
   color: ${token.colors.fill.charcoal};
   line-height: 1.5;
   flex: 1;
+  white-space: pre-wrap;
 `;

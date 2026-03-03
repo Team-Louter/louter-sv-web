@@ -4,7 +4,7 @@ import { FaExclamation } from "react-icons/fa6";
 import { colors } from "@/styles/values/_foundation";
 import type { MarkdownProps } from "@/types/community";
 
-export default function Markdown({ textareaRef, content, setContent }: MarkdownProps) {
+export default function Markdown({ textareaRef, content, setContent, onImageClick, onFileClick }: MarkdownProps) {
 
     // 마크다운 버튼 클릭 시 마크다운 적용/해제
     const insert = (before: string, after = "", block = false) => {
@@ -90,6 +90,17 @@ export default function Markdown({ textareaRef, content, setContent }: MarkdownP
         });
     };
 
+    // 마크다운 삽입 버튼 클릭 시 
+    const handleToolClick = (tool: typeof MARKDOWN_TOOLS[number]) => {
+        if (tool.type === "image") {
+            onImageClick?.();
+        } else if (tool.type === "file") {
+            onFileClick?.();
+        } else {
+            insert(tool.before, tool.after, tool.block);
+        }
+    };
+
     return (
         <S.Container>
             <S.MarkdownContainer>
@@ -97,11 +108,11 @@ export default function Markdown({ textareaRef, content, setContent }: MarkdownP
                     <S.ForColumn key={index}>
                         <S.MarkdownButton
                             onMouseDown={(e) => {
-                                e.preventDefault(); 
-                                insert(tool.before, tool.after, tool.block);
+                                e.preventDefault();
+                                handleToolClick(tool);
                             }}
                         >
-                            <tool.icon size={tool.size ?? 20} style={{color: colors.fill.yellow}}/>
+                            <tool.icon size={tool.size ?? 20} style={{ color: colors.fill.yellow }} />
                         </S.MarkdownButton>
                         <S.MarkdownLabel>{tool.label}</S.MarkdownLabel>
                     </S.ForColumn>

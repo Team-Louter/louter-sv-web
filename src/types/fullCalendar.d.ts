@@ -44,17 +44,20 @@ declare module '@fullcalendar/core' {
   }
   
   export interface Assignee {
-    id: number;
-    name: string;
-}
+    userId: number;
+    userEmail: string;
+    userName: string;
+  }
 
   export interface EventInput {
-      title: string;
-      date?: string;
-      start?: string;
-      end?: string;
-      allDay?: boolean;
-      extendedProps?: {
+    title: string;
+    date?: string;
+    start?: string;
+    scheduleId: number;
+    end?: string;
+    color: string;
+    allDay?: boolean;
+    extendedProps?: {
       assignees?: Assignee[];
       description?: string;
       [key: string]: any;
@@ -67,7 +70,7 @@ export type CalendarProps = {
 }
 
 export interface EventDetailCardProps {
-  event: import('@fullcalendar/core').EventApi | null;
+  event: EventInput | null;
   position: { x: number; y: number };
   onClose: () => void;
 }
@@ -75,8 +78,10 @@ export interface EventDetailCardProps {
 export interface EventEditModalProps {
   selectedDate?: Date | null;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedEndDate?: Date | null;
   modalMode: string;
-  event: import('@fullcalendar/core').EventApi | null;
+  event: EventInput | null;
+  setEvents: React.Dispatch<React.SetStateAction<EventInput[]>>;
 }
 
 export interface DateInputFieldProps {
@@ -99,4 +104,30 @@ export interface TextInputFieldProps {
 export interface MemberDropdownProps {
   selectedMemberIds: number[];
   onSelectChange: (memberIds: number[]) => void;
+  onMembersLoad: (members: Member[]) => void;
+}
+
+export type Event = {
+  "title": string,
+  "content": string,
+  "startDate": string,
+  "endDate": string,
+  "scheduleId": number,
+  "color": string,
+  "users": {
+      "userId": number,
+      "userEmail": string,
+      "userName": string
+    }[]
+}
+
+export type ServerEvent = {
+  "title": string,
+  "content": string,
+  "startDate": string,
+  "endDate": string,
+  "color": string,
+  "scheduleTarget": string,
+  "generations": number[],
+  "userIds": number[]
 }

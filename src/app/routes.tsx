@@ -15,6 +15,9 @@ import Study from '@/pages/Study';
 import StudyAdmin from '@/pages/StudyAdmin';
 import Calendar from '@/pages/Calendar/Calendar';
 import Layout from '@/layout/Layout/index';
+import RequireAuth from '@/components/common/RequireAuth';
+import NotFound from '@/pages/NotFound/NotFound';
+import GoogleOAuthCallback from '@/pages/GoogleOAuthCallback/GoogleOAuthCallback';
 
 const Router = () => {
   return (
@@ -22,28 +25,40 @@ const Router = () => {
       <Route element={<Layout />}>
         {/* Auth / Public Pages */}
         <Route path={'/auth/signup/check'} element={<SignupCheck />} />
-        <Route path={'/auth/signup/signup'} element={<Signup />} />
+        <Route path={'/auth/signup'} element={<Signup />} />
         <Route path={'/auth/signup/google'} element={<SignupGoogle />} />
         <Route path={'/auth/signin'} element={<Signin />} />
 
-        {/* Main / Private Pages */}
-        <Route path={'/'} element={<Main />} />
-        <Route path={'/me'} element={<Profile />} />
+        {/* Google OAuth 콜백 — 신규 유저 추가정보 입력 */}
+        <Route path={'/extra-signup'} element={<SignupGoogle />} />
+        {/* Google OAuth 콜백 — 기존 유저 메인 이동 */}
+        <Route path={'/main'} element={<GoogleOAuthCallback />} />
 
-        {/* Community */}
-        <Route path={'/community'} element={<CommunityList />} />
-        <Route path={'/community/:postId'} element={<CommunityDetail />} />
-        <Route path={'/community/write'} element={<CommunityPost />} />
+        {/* Private Pages — 로그인 필요 */}
+        <Route element={<RequireAuth />}>
+          {/* Main */}
+          <Route path={'/'} element={<Main />} />
+          <Route path={'/me'} element={<Profile />} />
 
-        {/* Mentoring */}
-        <Route path={'/mentoring'} element={<Mentoring />} />
-        {/* Study */}
-        <Route path={'/study'} element={<Study />} />
-        <Route path={'/study/admin'} element={<StudyAdmin />} />
+          {/* Community */}
+          <Route path={'/community'} element={<CommunityList />} />
+          <Route path={'/community/:postId'} element={<CommunityDetail />} />
+          <Route path={'/community/write'} element={<CommunityPost />} />
 
-        {/* Calendar */}
-        <Route path={'/calendar'} element={<Calendar />} />
+          {/* Mentoring */}
+          <Route path={'/mentoring'} element={<Mentoring />} />
+
+          {/* Study */}
+          <Route path={'/study'} element={<Study />} />
+          <Route path={'/study/admin'} element={<StudyAdmin />} />
+
+          {/* Calendar */}
+          <Route path={'/calendar'} element={<Calendar />} />
+        </Route>
       </Route>
+
+      {/* 존재하지 않는 경로 */}
+      <Route path={'*'} element={<NotFound />} />
     </Routes>
   );
 };

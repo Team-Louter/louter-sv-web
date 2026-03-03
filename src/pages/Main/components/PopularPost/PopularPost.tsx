@@ -23,9 +23,11 @@ export default function PopularPost () {
     return (
         <S.PopularContainer>
             <S.PopularTitle>실시간 인기글</S.PopularTitle>
-            {hotPosts?.map(post => (
-                <MainPost title={post.postTitle} viewCount={post.viewers} key={post.postId} id={post.postId}/>
-            ))}
+            { (hotPosts?.length ?? 0) > 0
+                ? hotPosts?.map(post => (
+                    <MainPost title={post.postTitle} viewCount={post.viewers} key={post.postId} id={post.postId}/>
+                ))
+            : <span style={{alignSelf: 'center', marginTop: 100}}>인기글이 없습니다.</span>}
         </S.PopularContainer>
     )
 }
