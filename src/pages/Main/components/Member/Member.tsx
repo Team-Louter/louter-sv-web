@@ -10,7 +10,7 @@ export default function Member ({memberInfo}: MemberProps) {
             <S.ForColumn>
                 <S.Position $position={memberInfo.role}>{memberInfo.generation}기 {memberInfo.role === 'LEADER' ? '부장' : '부원'}</S.Position>
                 <S.StudentName>
-                    {memberInfo.userName} ({memberInfo.majors.join(" & ")} Developer)
+                {memberInfo.userName} ({memberInfo.majors.length > 0 ? `${memberInfo.majors.join(" & ")} ` : ""}Developer)
                 </S.StudentName>
                 <S.SocialMedia>
                     {memberInfo.githubUrl && 
