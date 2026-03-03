@@ -40,7 +40,8 @@ function SignupGoogle() {
         clubCode,
       });
       // 추가정보 등록 완료 → 정식 로그인 상태로 전환
-      const token = localStorage.getItem('accessToken')!;
+      const token = localStorage.getItem('pendingToken')!;
+      localStorage.removeItem('pendingToken');
       setToken(token);
       toast.success('회원가입이 완료되었습니다.');
       navigate('/');
