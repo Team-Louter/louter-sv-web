@@ -43,9 +43,9 @@ function Signup() {
     setShowModal(true);
   };
 
-  // Google 소셜 회원가입 페이지로 이동하는 핸들러
+  // Google 소셜 회원가입 — OAuth 인증 시작
   const handleSignupGoogle = () => {
-    navigate('/auth/signup/Google');
+    window.location.href = `${import.meta.env.VITE_BASE_URL}/oauth2/authorization/google`;
   };
 
   // 로그인 페이지로 이동하는 핸들러

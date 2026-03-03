@@ -42,7 +42,10 @@ function Topbar({ hidden }: { hidden: boolean }) {
             {NAV_ITEMS.map(({ label, path }) => (
               <S.NavItem
                 key={path}
-                $active={location.pathname.startsWith(path)}
+                $active={
+                  location.pathname === path ||
+                  location.pathname.startsWith(path + '/')
+                }
                 onClick={() => navigate(path)}
               >
                 {label}

@@ -7,6 +7,7 @@ type AuthState = {
   accessToken: string | null;
 
   setAuth: (data: LoginResponse) => void;
+  setToken: (token: string) => void;
   clearAuth: () => void;
 };
 
@@ -20,6 +21,12 @@ export const useAuthStore = create<AuthState>((set) => ({
     const { token, ...user } = data;
     localStorage.setItem('accessToken', token);
     set({ isLoggedIn: true, user, accessToken: token });
+  },
+
+  // OAuth 콜백 등 토큰만 있을 때 저장 (유저 정보는 추후 API로 취득)
+  setToken: (token: string) => {
+    localStorage.setItem('accessToken', token);
+    set({ isLoggedIn: true, accessToken: token });
   },
 
   // 로그아웃 시 유저 정보와 토큰 초기화

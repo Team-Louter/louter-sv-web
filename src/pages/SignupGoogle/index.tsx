@@ -1,17 +1,31 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as S from './style';
 import LogoSvg from '@/assets/AuthImg/AuthLogo.svg';
 import { signupExtra } from '@/api/Auth';
 import { toast } from '@/store/toastStore';
+import { useAuthStore } from '@/store/authStore';
 
 function SignupGoogle() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const setToken = useAuthStore((s) => s.setToken);
   const [studentId, setStudentId] = useState('');
   const [name, setName] = useState('');
   const [clubCode, setClubCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const isDisabled = !studentId.trim() || !name.trim() || !clubCode.trim();
+
+  // URL의 token을 localStorage에 저장 (API 요청 시 Bearer로 사용됨)
+  useEffect(() => {
+    const token = searchParams.get('token');
+    if (token) {
+      setToken(token);
+    } else {
+      toast.error('구글 인증 정보가 없습니다. 다시 시도해 주세요.');
+      navigate('/auth/signin', { replace: true });
+    }
+  }, []);
 
   // Google 소셜 회원가입 추가 정보 등록 핸들러
   const handleSignupExtra = async () => {

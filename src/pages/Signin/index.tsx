@@ -55,7 +55,11 @@ function Signin() {
           <S.GoogleContent>
             <S.SocialTitle>소셜 로그인</S.SocialTitle>
 
-            <S.GoogleButton onClick={() => navigate('/')}>
+            <S.GoogleButton
+              onClick={() => {
+                window.location.href = `${import.meta.env.VITE_BASE_URL}/oauth2/authorization/google`;
+              }}
+            >
               <S.GoogleIcon src={GoogleIcon} alt="Google" />
               Google로 계속하기
             </S.GoogleButton>

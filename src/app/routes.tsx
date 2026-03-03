@@ -17,6 +17,7 @@ import Calendar from '@/pages/Calendar/Calendar';
 import Layout from '@/layout/Layout/index';
 import RequireAuth from '@/components/common/RequireAuth';
 import NotFound from '@/pages/NotFound/NotFound';
+import GoogleOAuthCallback from '@/pages/GoogleOAuthCallback/GoogleOAuthCallback';
 
 const Router = () => {
   return (
@@ -27,6 +28,11 @@ const Router = () => {
         <Route path={'/auth/signup'} element={<Signup />} />
         <Route path={'/auth/signup/google'} element={<SignupGoogle />} />
         <Route path={'/auth/signin'} element={<Signin />} />
+
+        {/* Google OAuth 콜백 — 신규 유저 추가정보 입력 */}
+        <Route path={'/extra-signup'} element={<SignupGoogle />} />
+        {/* Google OAuth 콜백 — 기존 유저 메인 이동 */}
+        <Route path={'/main'} element={<GoogleOAuthCallback />} />
 
         {/* Private Pages — 로그인 필요 */}
         <Route element={<RequireAuth />}>
