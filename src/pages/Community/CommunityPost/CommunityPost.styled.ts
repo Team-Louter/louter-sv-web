@@ -111,7 +111,7 @@ export const Title = styled.input`
 
 export const MainContainer = styled.div`
     width: 90%;
-    min-height: 100vh;
+    flex-grow: 1;
     background-color: ${token.colors.background.white};
     border: 1px solid ${token.colors.line.normal};
     border-radius: ${token.shapes.xlarge};
@@ -125,6 +125,7 @@ export const WriteContainer = styled.div`
     width: 100%;
     flex: 1;
     ${token.flexRow};
+    min-height: 100vh;
 `
 
 export const Write = styled.textarea`
