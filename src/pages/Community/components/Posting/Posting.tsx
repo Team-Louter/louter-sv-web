@@ -68,7 +68,13 @@ export default function Posting({ post, selectedCategory }: postProps) {
                     </S.Div>
                 </S.ForRow>
             </S.ForColumn>
-            <S.Img />
+            {post.files.length > 0
+                ? <S.ImgContainer>
+                    {post.files.length > 1 && <S.ImgOverlay>+{post.files.length -1}</S.ImgOverlay>}
+                    <S.Img src={post.files[0].fileUrl}/>
+                </S.ImgContainer> 
+                : <></>
+            }
         </S.Container>
     );
 }
