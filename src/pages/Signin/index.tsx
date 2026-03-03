@@ -67,7 +67,11 @@ function Signin() {
 
           <S.Line />
 
-          <S.SigninForm>
+          <S.SigninForm
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !isDisabled) handleLogin();
+            }}
+          >
             <S.Input
               type="email"
               placeholder="이메일"

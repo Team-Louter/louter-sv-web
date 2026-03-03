@@ -78,7 +78,11 @@ function Signup() {
 
           <S.Line />
 
-          <S.LoginForm>
+          <S.LoginForm
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !isDisabled) handleSignup();
+            }}
+          >
             <S.Input
               type="text"
               placeholder="학번"
