@@ -26,7 +26,10 @@ export const getDateRange = (start: Date | string | null, end: Date | string | n
   
   if (!end) return `${startDate} ~ ${startDate}`;
   
-  const endObj = typeof end === 'string' ? new Date(end) : end;
+  const endObj = typeof end === 'string' ? new Date(end) : new Date(end.getTime());
+
+  endObj.setDate(endObj.getDate() - 1);
+  
   const endDate = formatDate(endObj);
   
   return `${startDate} ~ ${endDate}`;
