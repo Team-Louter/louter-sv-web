@@ -11,88 +11,21 @@ import Add from "../../assets/mentoringImg/add.png";
 import Category from "./components/Category";
 import RoomModal from "./components/modal/RoomModal";
 import type { AttachedImage } from "./components/types/QnaInput.type";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { mentoringApi } from "@/api/Mentoring";
+import { getUser } from "@/api/User";
+import type { User } from "@/types/user";
 
 interface QuestionWithComments extends Question {
   comments: Comment[];
 }
 
-const dummyComments: Comment[] = [
-  {
-    id: 1,
-    userName: "멘토A",
-    content: "이 부분은 이렇게 접근하는 게 좋아요.",
-    time: "01.15. 오후 6:40",
-    images: [userImg],
-    profileUrl: userImg,
-    replies: [
-      {
-        id: 2,
-        userName: "멘티B",
-        content:
-          "음\n```tsx\nexport function QnaItem({ comment, isReply = false }: Props) {\n ``` \n 아 진짜 어렵네\n ```tsx\nexport function QnaItem({ comment, isReply = false }: Props) {\n ```",
-        time: "01.15. 오후 6:45",
-        profileUrl: userImg,
-        replies: [],
-      },
-      {
-        id: 3,
-        userName: "멘토A",
-        content: "내일 할 일:최초 질문 크기 확대하기.",
-        time: "01.15. 오후 6:47",
-        profileUrl: userImg,
-        replies: [],
-      },
-    ],
-  },
-];
-
-const dummyAvatars: AvatarItem[] = [
-  {
-    id: 1,
-    roomId: 1,
-    type: "single",
-    name: "이도연 멘토",
-    userImg,
-  },
-  {
-    id: 2,
-    roomId: 2,
-    type: "batch",
-    name: "9기 멘토",
-    users: [
-      { id: 1, img: userImg },
-      { id: 2, img: userImg },
-      { id: 3, img: userImg },
-      { id: 4, img: userImg },
-    ],
-  },
-];
-
-const DUMMY_QUESTIONS: QuestionWithComments[] = [
-  {
-    id: 1,
-    roomId: 1,
-    title: "CRUD가 뭐예요?",
-    date: "01.15. 오후 7:01",
-    status: "답변 중",
-    comments: dummyComments,
-  },
-  {
-    id: 2,
-    roomId: 2,
-    title: "REST API가 뭐예요?",
-    date: "01.16. 오후 3:00",
-    status: "답변 완료",
-    comments: [],
-  },
-];
-
-const formatDate = (date: Date) => {
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  const hours = date.getHours();
-  const minutes = String(date.getMinutes()).padStart(2, "0");
+const formatDate = (date: string | Date) => {
+  const d = typeof date === "string" ? new Date(date) : date;
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  const hours = d.getHours();
+  const minutes = String(d.getMinutes()).padStart(2, "0");
   const ampm = hours >= 12 ? "오후" : "오전";
   const h = hours % 12 || 12;
   return `${month}.${day}. ${ampm} ${h}:${minutes}`;
@@ -101,13 +34,112 @@ const formatDate = (date: Date) => {
 export default function Mentoring() {
   const [role, setRole] = useState<"mentor" | "mentee">("mentor");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [questions, setQuestions] = useState<QuestionWithComments[]>(DUMMY_QUESTIONS);
-  // 첫 번째 아바타 기본 선택
-  const [selectedRoom, setSelectedRoom] = useState<AvatarItem>(dummyAvatars[0]);
+  const [avatars, setAvatars] = useState<AvatarItem[]>([]);
+  const [questions, setQuestions] = useState<QuestionWithComments[]>([]);
+  const [selectedRoom, setSelectedRoom] = useState<AvatarItem | null>(null);
   const [selectedQuestion, setSelectedQuestion] = useState<QuestionWithComments | null>(null);
   const [isWritingNew, setIsWritingNew] = useState(false);
+  const [me, setMe] = useState<User | null>(null);
 
-  const roomQuestions = questions.filter((q) => q.roomId === selectedRoom.roomId);
+  // 내 정보 조회
+  useEffect(() => {
+    const fetchMe = async () => {
+      try {
+        const userData = await getUser();
+        setMe(userData);
+      } catch (error) {
+        console.error("내 정보 조회 실패:", error);
+      }
+    };
+    fetchMe();
+  }, []);
+
+  // 유연한 데이터 파싱 헬퍼 함수
+  const extractArray = (resData: any): any[] => {
+    if (!resData) return [];
+    if (Array.isArray(resData)) return resData;
+    if (resData.data && Array.isArray(resData.data)) return resData.data;
+    if (resData.content && Array.isArray(resData.content)) return resData.content;
+    return [];
+  };
+
+  // 1. 방 목록 조회
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const res = await mentoringApi.getMentorings();
+        const data = extractArray(res.data);
+        const rooms: AvatarItem[] = data.map(room => ({
+          id: room.mentoringId,
+          roomId: room.mentoringId,
+          name: room.mentoringName,
+          type: "single", 
+          userImg: userImg,
+        }));
+        setAvatars(rooms);
+        if (rooms.length > 0 && !selectedRoom) {
+          setSelectedRoom(rooms[0]);
+        }
+      } catch (error) {
+        console.error("방 목록 로딩 실패:", error);
+      }
+    };
+    fetchRooms();
+  }, []);
+
+  // 2. 선택된 방의 질문 목록 조회
+  useEffect(() => {
+    if (!selectedRoom) return;
+    const fetchQuestions = async () => {
+      try {
+        const res = await mentoringApi.getQuestions();
+        const data = extractArray(res.data);
+        const mappedQuestions: QuestionWithComments[] = data.map(q => ({
+          id: q.questionId,
+          roomId: q.mentoringId,
+          title: q.title,
+          date: formatDate(q.createdAt),
+          status: q.status === "DONE" ? "답변 완료" : q.status === "ACTIVE" ? "답변 중" : "답변 대기",
+          comments: []
+        }));
+        setQuestions(mappedQuestions);
+      } catch (error) {
+        console.error("질문 목록 로딩 실패:", error);
+      }
+    };
+    fetchQuestions();
+  }, [selectedRoom]);
+
+  // 3. 선택된 질문의 메시지(댓글) 조회
+  useEffect(() => {
+    if (!selectedQuestion) return;
+    const fetchMessages = async () => {
+      try {
+        const res = await mentoringApi.getMessages();
+        const data = extractArray(res.data);
+        const comments: Comment[] = data.map(m => ({
+          id: m.messageId,
+          userName: m.userName,
+          content: m.content,
+          time: formatDate(m.createdAt),
+          profileUrl: m.profileUrl || userImg,
+          images: m.images || [],
+          replies: [] 
+        }));
+        
+        setQuestions(prev => prev.map(q => 
+          q.id === selectedQuestion.id ? { ...q, comments } : q
+        ));
+      } catch (error) {
+        console.error("메시지 로딩 실패:", error);
+      }
+    };
+    fetchMessages();
+  }, [selectedQuestion]);
+
+  const roomQuestions = selectedRoom 
+    ? questions.filter((q) => q.roomId === selectedRoom.roomId)
+    : [];
 
   const handleSelectRoom = (item: AvatarItem) => {
     setSelectedRoom(item);
@@ -115,68 +147,102 @@ export default function Mentoring() {
     setIsWritingNew(false);
   };
 
+  const handleCreateRoom = async (name: string, memberIds: number[]) => {
+    try {
+      const res = await mentoringApi.createMentoring({ mentoringName: name, memberIds });
+      const resData = res.data as any;
+      const actualData = resData.data || resData.content || resData;
+
+      const newAvatar: AvatarItem = {
+        id: actualData.mentoringId,
+        roomId: actualData.mentoringId,
+        name: actualData.mentoringName,
+        type: memberIds.length > 1 ? "batch" : "single",
+        ...(memberIds.length > 1
+          ? { users: memberIds.map((id) => ({ id, img: userImg })) }
+          : { userImg: userImg }),
+      } as AvatarItem;
+
+      setAvatars((prev) => [...prev, newAvatar]);
+      setSelectedRoom(newAvatar);
+    } catch (error) {
+      console.error("방 생성 실패:", error);
+    }
+  };
+
   const handleAddButtonClick = () => {
     setIsWritingNew(true);
     setSelectedQuestion(null);
   };
 
-  const handleFirstSubmit = (content: string, images: AttachedImage[]) => {
-    const newQuestion: QuestionWithComments = {
-      id: Date.now(),
-      roomId: selectedRoom.roomId,
-      title: content.length > 20 ? content.slice(0, 20) + "..." : content,
-      date: formatDate(new Date()),
-      status: "답변 대기",
-      comments: [
-        {
-          id: Date.now(),
-          userName: "나",
-          content,
-          time: formatDate(new Date()),
-          profileUrl: userImg,
-          images: images.map((img) => img.url),
-          replies: [],
-        },
-      ],
-    };
-    setQuestions((prev) => [newQuestion, ...prev]);
-    setSelectedQuestion(newQuestion);
-    setIsWritingNew(false);
+  const handleFirstSubmit = async (content: string, _images: AttachedImage[]) => {
+    if (!selectedRoom) return;
+    try {
+      const res = await mentoringApi.createQuestion(
+        selectedRoom.roomId, 
+        content.length > 20 ? content.slice(0, 20) + "..." : content,
+        content
+      );
+      
+      const resData = res.data as any;
+      const actualData = resData.data || resData.content || resData;
+
+      const newQuestion: QuestionWithComments = {
+        id: actualData.questionId,
+        roomId: actualData.mentoringId,
+        title: actualData.title,
+        date: formatDate(actualData.createdAt),
+        status: "답변 대기",
+        comments: []
+      };
+      
+      setQuestions((prev) => [newQuestion, ...prev]);
+      setSelectedQuestion(newQuestion);
+      setIsWritingNew(false);
+    } catch (error) {
+      console.error("질문 등록 실패:", error);
+    }
   };
 
-  const handleReplySubmit = (content: string, images: AttachedImage[]) => {
+  const handleReplySubmit = async (content: string, _images: AttachedImage[]) => {
     if (!selectedQuestion) return;
-    const newReply: Comment = {
-      id: Date.now(),
-      userName: "나",
-      content,
-      time: formatDate(new Date()),
-      profileUrl: userImg,
-      images: images.map((img) => img.url),
-      replies: [],
-    };
-    setQuestions((prev) =>
-      prev.map((q) =>
-        q.id === selectedQuestion.id
-          ? {
-              ...q,
-              comments: q.comments.map((c, i) =>
-                i === 0 ? { ...c, replies: [...c.replies, newReply] } : c,
-              ),
-            }
-          : q,
-      ),
-    );
-    setSelectedQuestion((prev) =>
-      prev
-        ? {
-            ...prev,
-            comments: prev.comments.map((c, i) =>
-              i === 0 ? { ...c, replies: [...c.replies, newReply] } : c,
-            ),
-          }
-        : prev,
-    );
+    try {
+      const res = await mentoringApi.createMessage(selectedQuestion.id, content);
+      const resData = res.data as any;
+      const actualData = resData.data || resData.content || resData;
+
+      const newComment: Comment = {
+        id: actualData.messageId,
+        userName: actualData.userName || me?.userName || "나",
+        content: actualData.content,
+        time: formatDate(actualData.createdAt),
+        profileUrl: actualData.profileUrl || me?.profileImageUrl || userImg,
+        images: actualData.images || [],
+        replies: [],
+      };
+      
+      setQuestions((prev) =>
+        prev.map((q) =>
+          q.id === selectedQuestion.id
+            ? { ...q, comments: [...q.comments, newComment] }
+            : q,
+        ),
+      );
+    } catch (error) {
+      console.error("답변 등록 실패:", error);
+    }
+  };
+
+  const handleUpdateStatus = async (status: "DONE") => {
+    if (!selectedQuestion) return;
+    try {
+      await mentoringApi.updateStatus(selectedQuestion.id, status);
+      setQuestions(prev => prev.map(q => 
+        q.id === selectedQuestion.id ? { ...q, status: "답변 완료" } : q
+      ));
+    } catch (error) {
+      console.error("상태 업데이트 실패:", error);
+    }
   };
 
   return (
@@ -201,8 +267,8 @@ export default function Mentoring() {
               </S.TitleAddContainer>
 
               <AvatarList
-                data={dummyAvatars}
-                selectedId={selectedRoom.id}
+                data={avatars}
+                selectedId={selectedRoom?.id ?? null}
                 onSelect={handleSelectRoom}
               />
             </S.AvatarContainer>
@@ -231,31 +297,30 @@ export default function Mentoring() {
                 <S.AddButton src={Add} onClick={handleAddButtonClick} />
               </S.AddContainer>
             )}
-            {role === "mentor" && (
+            {role === "mentor" && selectedQuestion && selectedQuestion.status !== "답변 완료" && (
               <S.EndContainer>
                 <S.EndWrap>
                   질문에 대한 답변이 끝났나요? 답변 완료 버튼을 눌러주세요.
-                  <S.End>답변완료</S.End>
+                  <S.End onClick={() => handleUpdateStatus("DONE")}>답변완료</S.End>
                 </S.EndWrap>
               </S.EndContainer>
             )}
 
             <S.QnaListWrapper>
-              {role === "mentee" && (isWritingNew || selectedQuestion) && (
+              {(isWritingNew || selectedQuestion) ? (
                 <QnaList
                   comments={
                     questions.find((q) => q.id === selectedQuestion?.id)?.comments ?? []
                   }
                 />
+              ) : (
+                <S.EmptyText>
+                  {roomQuestions.length > 0 ? "선택된 질문이 없어요." : "등록된 질문이 없어요."}
+                </S.EmptyText>
               )}
-              
-              {role === "mentee" && !isWritingNew && !selectedQuestion && (
-                <S.EmptyText>선택된 질문이 없어요.</S.EmptyText>
-              )}
-              {role === "mentor" && <QnaList comments={dummyComments} />}
             </S.QnaListWrapper>
 
-            {(role === "mentor" || isWritingNew || selectedQuestion) && (
+            {(isWritingNew || selectedQuestion) && (
               <QnaInput
                 onSubmit={
                   role === "mentee"
@@ -269,7 +334,11 @@ export default function Mentoring() {
           </S.RightContainer>
         </S.container>
 
-        <RoomModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+        <RoomModal 
+          isOpen={isModalOpen} 
+          onClose={() => setIsModalOpen(false)} 
+          onCreate={handleCreateRoom}
+        />
       </S.body>
     </>
   );

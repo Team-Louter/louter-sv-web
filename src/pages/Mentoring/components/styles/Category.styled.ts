@@ -10,7 +10,7 @@ export const Container = styled.div`
   border-radius: ${token.shapes.xlarge};
 `;
 
-export const Item = styled.div<{ active: boolean }>`
+export const Item = styled.div<{ $active: boolean }>`
   width: 250px;
   height: 38px;
   display: flex;
@@ -20,11 +20,11 @@ export const Item = styled.div<{ active: boolean }>`
   ${token.typography("body", "md", "semibold")}
   border: 1px solid ${token.colors.line.normal};
 
-  background-color: ${({ active }) =>
-    active ? token.colors.main.yellow : token.colors.fill.assistive};
+  background-color: ${({ $active }) =>
+    $active ? token.colors.main.yellow : token.colors.fill.assistive};
 
-  color: ${({ active }) =>
-    active ? token.colors.fill.assistive: token.colors.text.neutral};
+  color: ${({ $active }) =>
+    $active ? token.colors.fill.assistive: token.colors.text.neutral};
 
   border-radius: ${token.shapes.large};
 `;

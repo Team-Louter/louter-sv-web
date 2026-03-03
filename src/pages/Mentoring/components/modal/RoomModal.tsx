@@ -8,6 +8,7 @@ import type { GradeGroup } from "./member/member.type";
 interface RoomModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onCreate: (name: string, memberIds: number[]) => void;
 }
 
 const DUMMY_GROUPS: GradeGroup[] = [
@@ -54,11 +55,12 @@ const DUMMY_GROUPS: GradeGroup[] = [
   },
 ];
 
-export default function Mentoring({ isOpen, onClose }: RoomModalProps) {
+export default function Mentoring({ isOpen, onClose, onCreate }: RoomModalProps) {
   if (!isOpen) return null;
 
   const [groups, setGroups] = useState<GradeGroup[]>(DUMMY_GROUPS);
   const [searchValue, setSearchValue] = useState("");
+  const [roomName, setRoomName] = useState("");
 
   const checkedGrades = useMemo(
     () =>
@@ -81,9 +83,8 @@ export default function Mentoring({ isOpen, onClose }: RoomModalProps) {
   }));
 
   const flatSearchResults = filteredGroups.flatMap((g) => g.members);
-  const selectedCount = groups
-    .flatMap((g) => g.members)
-    .filter((m) => m.checked).length;
+  const selectedMembers = groups.flatMap((g) => g.members).filter((m) => m.checked);
+  const selectedCount = selectedMembers.length;
 
   const handleToggleMember = (id: number) => {
     setGroups((prev) =>
@@ -122,6 +123,14 @@ export default function Mentoring({ isOpen, onClose }: RoomModalProps) {
     );
   };
 
+  const handleCreate = () => {
+    if (!roomName.trim()) return;
+    const memberIds = selectedMembers.map((m) => m.id);
+    onCreate(roomName, memberIds);
+    setRoomName("");
+    onClose();
+  };
+
   return (
     <S.Overlay onClick={onClose}>
       <S.container onClick={(e) => e.stopPropagation()}>
@@ -131,7 +140,11 @@ export default function Mentoring({ isOpen, onClose }: RoomModalProps) {
           <S.Cancel src={cancelIcon} onClick={onClose} />
         </S.TitleCancelContainer>
 
-        <S.RoomName placeholder="방 제목을 입력해 주세요." />
+        <S.RoomName 
+          placeholder="방 제목을 입력해 주세요." 
+          value={roomName}
+          onChange={(e) => setRoomName(e.target.value)}
+        />
 
         <S.AddMemberContainer>
           <MemberList
@@ -145,7 +158,7 @@ export default function Mentoring({ isOpen, onClose }: RoomModalProps) {
             searchSlot={<Search onSearch={setSearchValue} />}
           />
         </S.AddMemberContainer>
-        <S.DoneButton>생성</S.DoneButton>
+        <S.DoneButton onClick={handleCreate}>생성</S.DoneButton>
       </S.container>
     </S.Overlay>
   );

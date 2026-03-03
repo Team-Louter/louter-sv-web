@@ -9,14 +9,14 @@ export default function Category({ selected, onSelect }: Props) {
   return (
     <S.Container>
       <S.Item
-        active={selected === "mentor"}
+        $active={selected === "mentor"}
         onClick={() => onSelect("mentor")}
       >
         멘토
       </S.Item>
 
       <S.Item
-        active={selected === "mentee"}
+        $active={selected === "mentee"}
         onClick={() => onSelect("mentee")}
       >
         멘티
