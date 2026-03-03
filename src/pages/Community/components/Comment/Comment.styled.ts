@@ -42,6 +42,7 @@ export const Name = styled.span`
 export const CommentContent = styled.span`
     ${token.typography('body', 'sm', 'medium')};
     color: ${token.colors.text.normal};
+    white-space: pre-wrap;
 `
 
 export const UploadTime = styled.span`
