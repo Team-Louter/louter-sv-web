@@ -3,7 +3,7 @@ import * as token from "@/styles/values/token";
 
 export const body = styled.div`
   width: 100%;
-  height: 92vh;
+  /* height: 92vh; */
   ${token.flexColumn}
   justify-content: center;
   align-items: center;

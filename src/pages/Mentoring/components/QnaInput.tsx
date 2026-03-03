@@ -3,7 +3,7 @@ import * as S from "./styles/QnaInput.styled";
 import imageIcon from '../../../assets/mentoringImg/img.png';
 import codeIcon from '../../../assets/mentoringImg/code.png';
 import sendIcon from '../../../assets/mentoringImg/send.png';
-import cancelIcon from '../../../assets/mentoringImg/trash.png'
+import trashIcon from '../../../assets/mentoringImg/trash.png'
 
 const MAX_LENGTH = 700;
 
@@ -88,7 +88,7 @@ export default function QnaInput() {
             <S.ImagePreviewItem key={i}>
               <S.PreviewImg src={img.url} alt={img.name} />
               <S.RemoveButton type="button" onClick={() => handleImageRemove(i)}>
-                <S.cancelIcon src={cancelIcon}/>
+                <S.TrashIcon src={trashIcon}/>
               </S.RemoveButton>
             </S.ImagePreviewItem>
           ))}

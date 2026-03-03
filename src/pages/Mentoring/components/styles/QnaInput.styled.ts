@@ -110,6 +110,6 @@ export const RemoveButton = styled.button`
   padding: 0;
 `;
 
-export const cancelIcon = styled.img`
+export const TrashIcon = styled.img`
   width: 11px;
 `

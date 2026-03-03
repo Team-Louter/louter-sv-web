@@ -6,8 +6,9 @@ import type { AvatarItem } from "./components/types/AvatarList.types";
 import userImg from "../../assets/dummy/userImg.png";
 import QnaInput from "./components/QnaInput";
 import * as S from "./Mentoring.styled";
-import Add from "../../assets/mentoringImg/add.png"
-import Category from "./components/Category"
+import Add from "../../assets/mentoringImg/add.png";
+import Category from "./components/Category";
+import RoomModal from "./components/modal/RoomModal";
 import { useState } from "react";
 
 const dummyComments: Comment[] = [
@@ -128,10 +129,8 @@ export default function Mentoring() {
           해당하는 역할을 선택해 주세요!
         </S.CategoryWrap>
 
-        
         <S.container>
           <S.LeftArea>
-
             <S.AvatarContainer>
               <S.TitleAddContainer>
                 {role === "mentee" && "멘토"}
@@ -152,12 +151,19 @@ export default function Mentoring() {
             </S.QnaContainer>
           </S.LeftArea>
           <S.RightContainer>
-            {role === "mentee" && 
+            {role === "mentee" && (
               <S.AddContainer>
                 <S.AddButton src={Add} />
-              </S.AddContainer>}
-            {role === "mentor" && <S.EndContainer>
-              <S.EndWrap>질문에 대한 답변이 끝났나요? 답변 완료 버튼을 눌러주세요.<S.End>답변완료</S.End></S.EndWrap></S.EndContainer>}
+              </S.AddContainer>
+            )}
+            {role === "mentor" && (
+              <S.EndContainer>
+                <S.EndWrap>
+                  질문에 대한 답변이 끝났나요? 답변 완료 버튼을 눌러주세요.
+                  <S.End>답변완료</S.End>
+                </S.EndWrap>
+              </S.EndContainer>
+            )}
 
             {/* QnaList */}
             <S.QnaListWrapper>
@@ -167,6 +173,7 @@ export default function Mentoring() {
             <QnaInput />
           </S.RightContainer>
         </S.container>
+        <RoomModal />
       </S.body>
     </>
   );
