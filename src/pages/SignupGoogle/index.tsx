@@ -10,6 +10,8 @@ function SignupGoogle() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const setToken = useAuthStore((s) => s.setToken);
+  const setPendingToken = useAuthStore((s) => s.setPendingToken);
+  const clearAuth = useAuthStore((s) => s.clearAuth);
   const [studentId, setStudentId] = useState('');
   const [name, setName] = useState('');
   const [clubCode, setClubCode] = useState('');
@@ -17,10 +19,11 @@ function SignupGoogle() {
   const isDisabled = !studentId.trim() || !name.trim() || !clubCode.trim();
 
   // URL의 token을 localStorage에 저장 (API 요청 시 Bearer로 사용됨)
+  // isLoggedIn은 false 유지 — 추가정보 입력 전까지 비로그인 탑바 표시
   useEffect(() => {
     const token = searchParams.get('token');
     if (token) {
-      setToken(token);
+      setPendingToken(token);
     } else {
       toast.error('구글 인증 정보가 없습니다. 다시 시도해 주세요.');
       navigate('/auth/signin', { replace: true });
@@ -36,8 +39,12 @@ function SignupGoogle() {
         hakbun: Number(studentId),
         clubCode,
       });
+      // 추가정보 등록 완료 → 정식 로그인 상태로 전환
+      const token = localStorage.getItem('pendingToken')!;
+      localStorage.removeItem('pendingToken');
+      setToken(token);
       toast.success('회원가입이 완료되었습니다.');
-      navigate('/auth/signin');
+      navigate('/');
     } catch (err: unknown) {
       const status = (err as { response?: { status?: number } })?.response
         ?.status;
@@ -48,6 +55,10 @@ function SignupGoogle() {
               ?.data?.message ??
             '회원가입에 실패했습니다. 다시 시도해 주세요.');
       toast.error(msg);
+      if (status === 401) {
+        clearAuth();
+        navigate('/auth/signin', { replace: true });
+      }
     } finally {
       setIsLoading(false);
     }
