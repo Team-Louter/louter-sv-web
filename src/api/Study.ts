@@ -36,6 +36,12 @@ export const getStudy = async (studyId: number): Promise<StudyResponse> => {
   return response.data;
 };
 
+// 내 학습일지 목록 조회
+export const getMyStudies = async (): Promise<StudyResponse[]> => {
+  const response = await instance.get<StudyResponse[]>("/studies/me");
+  return response.data;
+};
+
 // 생성
 export const createStudy = async (body: CreateStudyRequest): Promise<StudyResponse> => {
   const response = await instance.post<StudyResponse>("/studies", body);

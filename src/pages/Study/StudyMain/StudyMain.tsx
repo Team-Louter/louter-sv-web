@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as S from "./StudyMain.styled";
 import MonthBar from "../components/MonthItem/MonthBar";
-import { getStudies, type StudyResponse } from "../../../api/Study";
+import { getMyStudies, type StudyResponse } from "../../../api/Study";
 
 const MONTHS = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
@@ -42,7 +42,7 @@ export default function StudyMain() {
       setIsLoading(true);
       setError(null);
       try {
-        const data = await getStudies();
+        const data = await getMyStudies();
         setStudies(data);
       } catch (e) {
         setError("스터디 정보를 불러오지 못했어요.");
