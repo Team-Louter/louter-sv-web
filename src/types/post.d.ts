@@ -157,3 +157,9 @@ export type ServerComment = {
   isAnonymous: boolean;
   parentId: number | null;
 };
+
+export type ServerPage = {
+  "page": number,
+  "size": number,
+  "sort": string[]
+}
