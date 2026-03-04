@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import { getUser } from "@/api/User";
 import type { User } from "@/types/user";
 
-export default function CommentWrite({ comment, onClose, isEditing = false, parentId = null }: CommentWriteProps) {
+export default function CommentWrite({ comment, onClose, isEditing = false, parentId = null, onSuccess }: CommentWriteProps) {
     const [content, setContent] = useState(comment?.content || ""); // 댓글 내용
     const [isAnonymous, setIsAnonymous] = useState<boolean>(comment?.isAnonymous || false); // 댓글 익명 게시 여부
     const { postId } = useParams();
@@ -29,6 +29,7 @@ export default function CommentWrite({ comment, onClose, isEditing = false, pare
         if (isEditing && comment?.commentId) { // 수정
             try {
                 await editComment(Number(postId), comment?.commentId, content);
+                onSuccess?.();
                 onClose?.();
             } catch (err) {
                 console.error(err);
@@ -41,6 +42,7 @@ export default function CommentWrite({ comment, onClose, isEditing = false, pare
                     parentId: parentId
                 });
                 setContent("");
+                onSuccess?.();
                 onClose?.();
             } catch (err) {
                 console.error(err);

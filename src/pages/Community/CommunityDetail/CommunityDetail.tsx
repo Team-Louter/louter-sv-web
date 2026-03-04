@@ -200,10 +200,10 @@ export default function CommunityDetail() {
                     </S.ForRow>
                     <S.Divider />
                     <S.CommentContainer>
-                        <CommentWrite />
+                        <CommentWrite onSuccess={() => getCommentsInfo(Number(postId))}/>
                         {comments.length > 0
                             ? comments.map((comment) => (
-                                <Comment comment={comment} key={comment.commentId} postId={Number(postId)}/>))
+                                <Comment comment={comment} key={comment.commentId} postId={Number(postId)} onSuccess={() => getCommentsInfo(Number(postId))}/>))
                             : <span style={{ alignSelf: 'center' }}>댓글이 없습니다.</span>
                         }
                     </S.CommentContainer>
