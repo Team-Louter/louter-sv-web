@@ -11,7 +11,7 @@ import CommunityList from '@/pages/Community/CommunityMain/CommunityMain';
 import CommunityDetail from '@/pages/Community/CommunityDetail/CommunityDetail';
 import CommunityPost from '@/pages/Community/CommunityPost/CommunityPost';
 import Mentoring from '@/pages/Mentoring/Mentoring';
-import Study from '@/pages/Study';
+import Study from '@/pages/Study/StudyMain/StudyMain';
 import StudyAdmin from '@/pages/StudyAdmin';
 import Calendar from '@/pages/Calendar/Calendar';
 import Layout from '@/layout/Layout/index';
