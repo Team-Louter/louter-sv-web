@@ -18,8 +18,11 @@ export const getAllPost = async (page: ServerPage): Promise<PostList> => {
 }
 
 // 카테고리별 게시글 가져오기
-export const getCategoryPost = async (category: string): Promise<PostList> => {
-    const response = await instance.get<PostList>(`/posts/category/${category}`);
+export const getCategoryPost = async (category: string, page: ServerPage): Promise<PostList> => {
+    const response = await instance.get<PostList>(`/posts/category/${category}`, {
+        params: page,
+        paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' })
+    });
     return response.data;
 }
 

@@ -30,7 +30,6 @@ export default function Community() {
                     "createdAt,desc"
                 ]
             });
-            console.log(data)
             setPosts(data.content);
             setMaxPage(data.totalPages);
 
@@ -42,8 +41,16 @@ export default function Community() {
     // 카테고리별 게시글 정보 가져오기
     const getCategoryPostInfo = async (category: string) => {
         try {
-            const data = await getCategoryPost(category);
+            const data = await getCategoryPost(category, {
+                page: currentPage,
+                size: 10,
+                sort: [
+                    "pinned,desc",
+                    "createdAt,desc"
+                ]
+            });
             setPosts(data.content);
+            setMaxPage(data.totalPages);
         } catch (err) {
             console.error(err);
         }
