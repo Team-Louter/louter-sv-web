@@ -45,3 +45,15 @@ export const refresh = async (): Promise<{ token: string }> => {
   const response = await instance.post<{ token: string }>('/auth/refresh');
   return response.data;
 };
+
+// 회원 탈퇴 이메일 인증코드 발송
+export const sendWithdrawalEmailCode = async (): Promise<void> => {
+  await instance.get('/me/withdrawal');
+};
+
+// 회원 탈퇴 인증코드 검증 및 탈퇴 처리
+export const verifyWithdrawalEmailCode = async (
+  inputCode: string,
+): Promise<void> => {
+  await instance.get('/me/withdrawal/verify', { params: { inputCode } });
+};
