@@ -9,6 +9,7 @@ export const Container = styled.div`
   ${token.typography("body", "md", "semibold")};
   color: ${token.colors.text.neutral};
   padding: 40px 20px;
+  gap: 5px;
 `
 
 export const ContentContainer = styled.div`
