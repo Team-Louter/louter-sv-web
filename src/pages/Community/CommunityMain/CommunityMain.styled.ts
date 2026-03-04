@@ -38,6 +38,7 @@ export const WriteButton = styled.button`
     position: fixed;
     right: 50px;
     bottom: 70px;
+    z-index: 10;
 `
 
 export const PinnedSection = styled.div`

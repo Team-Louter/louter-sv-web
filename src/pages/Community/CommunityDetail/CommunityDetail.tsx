@@ -18,6 +18,8 @@ import { CATEGORY_REVERSED, CATEGORY_TAGS_REVERSED } from "@/constants/Community
 import { renderMarkdown } from "@/utils/Markdown/MarkdownConfig";
 import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
 import { getComments } from "@/api/Comment";
+import type { User } from "@/types/user";
+import { getUser } from "@/api/User";
 
 export default function CommunityDetail() {
     const location = useLocation();
@@ -26,6 +28,7 @@ export default function CommunityDetail() {
     const { postId } = useParams();
     const [post, setPost] = useState<Post|null>(null); // 게시글 세부 정보
     const [comments, setComments] = useState<CommentType[]>([]); // 댓글 정보
+    const [userInfo, setUserInfo] = useState<User | null>(null); // 사용자 정보
 
     // 게시글 세부 정보 가져오기
     const getPostDetailInfo = async (postId: number) => {
@@ -47,9 +50,19 @@ export default function CommunityDetail() {
         }
     }
 
+    const getUserInfo = async () => {
+            try{
+                const data = await getUser();
+                setUserInfo(data);
+            } catch(err) {
+                console.error(err);
+            }
+        };
+
     useEffect(() => {
         getPostDetailInfo(Number(postId));
         getCommentsInfo(Number(postId));
+        getUserInfo();
     }, [])
 
     // 좋아요 눌림 여부 가져오기
@@ -110,7 +123,7 @@ export default function CommunityDetail() {
 
     // 케밥 아이콘 내용물
     const kebabItems = [
-        {
+        ...(userInfo?.role === 'MENTOR' || userInfo?.role === 'LEADER' ? [{
             label: isPinned ? "고정 해제" : "고정하기",
             onClick: () => {
                 const newPinned = !isPinned;
@@ -118,21 +131,21 @@ export default function CommunityDetail() {
                 togglePinPost(newPinned); 
                 setIsKebabOpen(false);
             },
-        },
-        {
+        }] : []),
+        ...(post.userId === userInfo?.userId ? [{
             label: "수정하기",
             onClick: () => {
                 navigate("/community/write", { state: { post } });
                 setIsKebabOpen(false);
             },
-        },
-        {
+        }] : []),
+        ...(post.userId === userInfo?.userId || userInfo?.role === 'MENTOR' || userInfo?.role === 'LEADER' ? [{
             label: "삭제하기",
             onClick: () => {
                 setIsCancelModalOpen(true);
                 setIsKebabOpen(false);
-            }
-        },
+            },
+        }] : []),
     ];
 
     return (
@@ -162,14 +175,16 @@ export default function CommunityDetail() {
                                     <S.ViewCount>{post.viewers}</S.ViewCount>
                                 </S.Div>
                             </S.Div>
-                            <S.KebabWrapper ref={kebabRef}>
-                                <S.KebabIcon
-                                    size={23}
-                                    color={colors.fill.slate}
-                                    onClick={() => setIsKebabOpen(prev => !prev)}
-                                />
-                                {isKebabOpen && <KebabMenu items={kebabItems} />}
-                            </S.KebabWrapper>
+                            {kebabItems.length > 0 &&
+                                <S.KebabWrapper ref={kebabRef}>
+                                    <S.KebabIcon
+                                        size={23}
+                                        color={colors.fill.slate}
+                                        onClick={() => setIsKebabOpen(prev => !prev)}
+                                    />
+                                    {isKebabOpen && <KebabMenu items={kebabItems} />}
+                                </S.KebabWrapper>
+                            }
                         </S.ForRow>
                         <S.ForRow>
                             <S.Div>
@@ -200,10 +215,10 @@ export default function CommunityDetail() {
                     </S.ForRow>
                     <S.Divider />
                     <S.CommentContainer>
-                        <CommentWrite />
+                        <CommentWrite onSuccess={() => getCommentsInfo(Number(postId))}/>
                         {comments.length > 0
                             ? comments.map((comment) => (
-                                <Comment comment={comment} key={comment.commentId} postId={Number(postId)}/>))
+                                <Comment comment={comment} key={comment.commentId} postId={Number(postId)} onSuccess={() => getCommentsInfo(Number(postId))}/>))
                             : <span style={{ alignSelf: 'center' }}>댓글이 없습니다.</span>
                         }
                     </S.CommentContainer>

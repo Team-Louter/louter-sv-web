@@ -6,29 +6,30 @@ import { useParams } from "react-router-dom";
 import { getUser } from "@/api/User";
 import type { User } from "@/types/user";
 
-export default function CommentWrite({ comment, onClose, isEditing = false, parentId = null }: CommentWriteProps) {
+export default function CommentWrite({ comment, onClose, isEditing = false, parentId = null, onSuccess }: CommentWriteProps) {
     const [content, setContent] = useState(comment?.content || ""); // 댓글 내용
     const [isAnonymous, setIsAnonymous] = useState<boolean>(comment?.isAnonymous || false); // 댓글 익명 게시 여부
     const { postId } = useParams();
-    const [userInfo, setUserInfo] = useState<User | null>(null); // 사용자 여부
+    const [userInfo, setUserInfo] = useState<User | null>(null); // 사용자 정보
 
     const isValid = content.trim().length > 0; // 내용이 한 글자라도 입력됐는지 확인
 
     // 유저 정보 가져오기
     const getUserInfo = async () => {
-            try{
-                const data = await getUser();
-                setUserInfo(data);
-            } catch(err) {
-                console.error(err);
-            }
-        };
+        try{
+            const data = await getUser();
+            setUserInfo(data);
+        } catch(err) {
+            console.error(err);
+        }
+    };
 
     // 댓글 게시 버튼 클릭 시 
     const handleSubmit = async () => {
         if (isEditing && comment?.commentId) { // 수정
             try {
                 await editComment(Number(postId), comment?.commentId, content);
+                onSuccess?.();
                 onClose?.();
             } catch (err) {
                 console.error(err);
@@ -41,6 +42,7 @@ export default function CommentWrite({ comment, onClose, isEditing = false, pare
                     parentId: parentId
                 });
                 setContent("");
+                onSuccess?.();
                 onClose?.();
             } catch (err) {
                 console.error(err);

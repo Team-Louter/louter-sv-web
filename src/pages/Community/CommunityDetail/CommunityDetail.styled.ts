@@ -6,16 +6,15 @@ export const Container = styled.div`
     background-color: ${token.colors.background.lightGray};
     width: 100%;
     height: calc(100vh - 60px);
-    ${token.flexRow};
-    justify-content: center;
-    padding: 55px 0px;
-    overflow-y: scroll;
+    overflow-y: scroll;  
 `
 
 export const ForCenter = styled.div`
     ${token.flexRow};
     gap: 20px;
     width: 90%;
+    padding: 55px 0px;
+    margin: 0 auto;
 `
 
 export const PostContainer = styled.div`
