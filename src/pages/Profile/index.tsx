@@ -12,6 +12,7 @@ import { formatDateTime } from '@/utils/FormatDate';
 import ViewIcon from '@/assets/Mypage/View.svg';
 import GoodIcon from '@/assets/Mypage/Good.svg';
 import ChatIcon from '@/assets/Mypage/Chat.svg';
+import WithdrawModal from './components/WithdrawModal/WithdrawModal';
 
 const TABS = ['내가 쓴 글', '댓글 단 글', '좋아요한 글'] as const;
 
@@ -22,6 +23,7 @@ export default function Profile() {
   const [user, setUser] = useState<User | null>(null);
   const [activeTab, setActiveTab] = useState<number>(0);
   const [posts, setPosts] = useState<MainPost[]>([]);
+  const [showWithdrawModal, setShowWithdrawModal] = useState(false);
 
   useEffect(() => {
     getUser()
@@ -49,7 +51,7 @@ export default function Profile() {
   };
 
   const handleWithdraw = () => {
-    toast.error('아직 준비 중인 기능입니다.');
+    setShowWithdrawModal(true);
   };
 
   return (
@@ -203,6 +205,9 @@ export default function Profile() {
           </S.TabContent>
         </S.Card>
       </S.Inner>
+      {showWithdrawModal && (
+        <WithdrawModal onClose={() => setShowWithdrawModal(false)} />
+      )}
     </S.PageWrapper>
   );
 }
