@@ -28,6 +28,7 @@ export default function CommunityDetail() {
     const { postId } = useParams();
     const [post, setPost] = useState<Post|null>(null); // 게시글 세부 정보
     const [comments, setComments] = useState<CommentType[]>([]); // 댓글 정보
+    const [userInfo, setUserInfo] = useState<User | null>(null); // 사용자 정보
 
     // 게시글 세부 정보 가져오기
     const getPostDetailInfo = async (postId: number) => {
@@ -75,7 +76,6 @@ export default function CommunityDetail() {
     const [isPinned, setIsPinned] = useState<boolean>(post?.pinned ?? false); // 고정된 게시글인지 여부
     const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab(); // 케밥 메뉴 관련 커스텀 훅
     const [isCancelModalOpen, setIsCancelModalOpen] = useState<boolean>(false); // 게시글 삭제 확인 모달 열림 여부
-    const [userInfo, setUserInfo] = useState<User | null>(null); // 사용자 정보
 
     // 게시글이 없을 때
     if (!post) {
@@ -175,14 +175,16 @@ export default function CommunityDetail() {
                                     <S.ViewCount>{post.viewers}</S.ViewCount>
                                 </S.Div>
                             </S.Div>
-                            <S.KebabWrapper ref={kebabRef}>
-                                <S.KebabIcon
-                                    size={23}
-                                    color={colors.fill.slate}
-                                    onClick={() => setIsKebabOpen(prev => !prev)}
-                                />
-                                {isKebabOpen && <KebabMenu items={kebabItems} />}
-                            </S.KebabWrapper>
+                            {kebabItems.length > 0 &&
+                                <S.KebabWrapper ref={kebabRef}>
+                                    <S.KebabIcon
+                                        size={23}
+                                        color={colors.fill.slate}
+                                        onClick={() => setIsKebabOpen(prev => !prev)}
+                                    />
+                                    {isKebabOpen && <KebabMenu items={kebabItems} />}
+                                </S.KebabWrapper>
+                            }
                         </S.ForRow>
                         <S.ForRow>
                             <S.Div>
