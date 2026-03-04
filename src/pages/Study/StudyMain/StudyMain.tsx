@@ -3,7 +3,7 @@ import * as S from "./StudyMain.styled";
 import MonthBar from "../components/MonthItem/MonthBar";
 import { getMyStudies, type StudyResponse } from "../../../api/Study";
 
-const MONTHS = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+const MONTHS = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 const today = new Date();
 const currentMonth = today.getMonth() + 1;
