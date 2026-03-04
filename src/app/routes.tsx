@@ -16,18 +16,25 @@ import StudyAdmin from '@/pages/StudyAdmin';
 import Calendar from '@/pages/Calendar/Calendar';
 import Layout from '@/layout/Layout/index';
 import RequireAuth from '@/components/common/RequireAuth';
+import RedirectIfAuth from '@/components/common/RedirectIfAuth';
 import NotFound from '@/pages/NotFound/NotFound';
 import GoogleOAuthCallback from '@/pages/GoogleOAuthCallback/GoogleOAuthCallback';
+import CanceledMembership from '@/pages/CanceledMembership';
 
 const Router = () => {
   return (
     <Routes>
       <Route element={<Layout />}>
-        {/* Auth / Public Pages */}
-        <Route path={'/auth/signup/check'} element={<SignupCheck />} />
-        <Route path={'/auth/signup'} element={<Signup />} />
-        <Route path={'/auth/signup/google'} element={<SignupGoogle />} />
-        <Route path={'/auth/signin'} element={<Signin />} />
+        {/* 비로그인 전용 — 로그인 상태면 메인으로 리다이렉트 */}
+        <Route element={<RedirectIfAuth />}>
+          <Route path={'/auth/signup/check'} element={<SignupCheck />} />
+          <Route path={'/auth/signup'} element={<Signup />} />
+          <Route path={'/auth/signup/google'} element={<SignupGoogle />} />
+          <Route path={'/auth/signin'} element={<Signin />} />
+        </Route>
+
+        {/* 탈퇴 완료 — state 가드로 보호 */}
+        <Route path={'/canceled'} element={<CanceledMembership />} />
 
         {/* Google OAuth 콜백 — 신규 유저 추가정보 입력 */}
         <Route path={'/extra-signup'} element={<SignupGoogle />} />
