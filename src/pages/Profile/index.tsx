@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import * as S from './Profile.styled';
 import { useAuthStore } from '@/store/authStore';
 import { logout } from '@/api/Auth';
@@ -89,6 +91,7 @@ export default function Profile() {
 
   return (
     <S.PageWrapper>
+      <SkeletonTheme baseColor="#F3F4F6" highlightColor="#e8e8e8">
       <S.Inner>
         {/* 페이지 제목 */}
         <S.PageTitle>마이페이지</S.PageTitle>
@@ -96,74 +99,112 @@ export default function Profile() {
         {/* 단일 카드 */}
         <S.Card>
           {/* 상단: 프로필 + 통계 + 버튼 */}
-          <S.CardTop>
-            {/* 프로필 이미지 + 정보 */}
-            <S.ProfileGroup>
-              <S.ProfileImageWrapper>
-                {user?.profileImageUrl ? (
-                  <S.ProfileImage
-                    src={user.profileImageUrl}
-                    alt="프로필 이미지"
-                  />
-                ) : (
-                  <S.ProfileImageFallback>
-                    {user?.userName?.charAt(0) ?? '?'}
-                  </S.ProfileImageFallback>
-                )}
-              </S.ProfileImageWrapper>
-              <S.ProfileInfo>
-                <S.ProfileName>{user?.userName ?? '-'}</S.ProfileName>
-                <S.ProfileSubInfo>
-                  {user
-                    ? `${user.grade}학년 ${user.classRoom}반 ${user.number}번`
-                    : '-'}
-                </S.ProfileSubInfo>
-                <S.EditButton onClick={() => setShowEditModal(true)}>
-                  프로필 수정
-                </S.EditButton>
-              </S.ProfileInfo>
-            </S.ProfileGroup>
+          {user === null ? (
+            /* ── 프로필 스켈레톤 ── */
+            <>
+              <S.CardTop>
+                <S.ProfileGroup>
+                  <Skeleton circle width={116} height={116} />
+                  <S.ProfileInfo>
+                    <Skeleton width={120} height={22} />
+                    <Skeleton width={160} height={16} />
+                    <Skeleton width={80} height={28} borderRadius={4} />
+                  </S.ProfileInfo>
+                </S.ProfileGroup>
+                <S.StatsGroup>
+                  {[0, 1, 2].map((i) => (
+                    <S.StatItem key={i}>
+                      <Skeleton width={40} height={24} />
+                      <Skeleton width={72} height={14} style={{ marginTop: 8 }} />
+                    </S.StatItem>
+                  ))}
+                </S.StatsGroup>
+                <S.ActionGroup>
+                  <Skeleton width={80} height={34} borderRadius={4} />
+                  <Skeleton width={80} height={34} borderRadius={4} />
+                </S.ActionGroup>
+              </S.CardTop>
+              <S.Divider />
+              <S.InfoSection>
+                <S.InfoRow>
+                  <Skeleton width={120} height={18} style={{ marginRight: 16 }} />
+                  <Skeleton width={200} height={18} />
+                </S.InfoRow>
+                <S.InfoRow>
+                  <Skeleton width={120} height={18} style={{ marginRight: 16 }} />
+                  <Skeleton width={60} height={18} />
+                </S.InfoRow>
+              </S.InfoSection>
+            </>
+          ) : (
+            /* ── 실제 프로필 ── */
+            <>
+              <S.CardTop>
+                <S.ProfileGroup>
+                  <S.ProfileImageWrapper>
+                    {user.profileImageUrl ? (
+                      <S.ProfileImage
+                        src={user.profileImageUrl}
+                        alt="프로필 이미지"
+                      />
+                    ) : (
+                      <S.ProfileImageFallback>
+                        {user.userName.charAt(0)}
+                      </S.ProfileImageFallback>
+                    )}
+                  </S.ProfileImageWrapper>
+                  <S.ProfileInfo>
+                    <S.ProfileName>{user.userName}</S.ProfileName>
+                    <S.ProfileSubInfo>
+                      {`${user.grade}학년 ${user.classRoom}반 ${user.number}번`}
+                    </S.ProfileSubInfo>
+                    <S.EditButton onClick={() => setShowEditModal(true)}>
+                      프로필 수정
+                    </S.EditButton>
+                  </S.ProfileInfo>
+                </S.ProfileGroup>
 
-            {/* 통계 */}
-            <S.StatsGroup>
-              <S.StatItem>
-                <S.StatValue>{user?.postCount ?? 0}</S.StatValue>
-                <S.StatLabel>작성한 글</S.StatLabel>
-              </S.StatItem>
-              <S.StatItem>
-                <S.StatValue>{user?.commentCount ?? 0}</S.StatValue>
-                <S.StatLabel>작성한 댓글</S.StatLabel>
-              </S.StatItem>
-              <S.StatItem>
-                <S.StatValue>{user?.likedPostCount ?? 0}</S.StatValue>
-                <S.StatLabel>좋아요한 글</S.StatLabel>
-              </S.StatItem>
-            </S.StatsGroup>
+                <S.StatsGroup>
+                  <S.StatItem>
+                    <S.StatValue>{user.postCount}</S.StatValue>
+                    <S.StatLabel>작성한 글</S.StatLabel>
+                  </S.StatItem>
+                  <S.StatItem>
+                    <S.StatValue>{user.commentCount}</S.StatValue>
+                    <S.StatLabel>작성한 댓글</S.StatLabel>
+                  </S.StatItem>
+                  <S.StatItem>
+                    <S.StatValue>{user.likedPostCount}</S.StatValue>
+                    <S.StatLabel>좋아요한 글</S.StatLabel>
+                  </S.StatItem>
+                </S.StatsGroup>
 
-            {/* 로그아웃 / 회원 탈퇴 */}
-            <S.ActionGroup>
-              <S.ActionButton onClick={handleLogout}>로그아웃</S.ActionButton>
-              <S.ActionButton $danger onClick={handleWithdraw}>
-                회원 탈퇴
-              </S.ActionButton>
-            </S.ActionGroup>
-          </S.CardTop>
+                <S.ActionGroup>
+                  <S.ActionButton onClick={handleLogout}>
+                    로그아웃
+                  </S.ActionButton>
+                  <S.ActionButton $danger onClick={handleWithdraw}>
+                    회원 탈퇴
+                  </S.ActionButton>
+                </S.ActionGroup>
+              </S.CardTop>
 
-          <S.Divider />
+              <S.Divider />
 
-          {/* 이메일 / 받은 좋아요 */}
-          <S.InfoSection>
-            <S.InfoRow>
-              <S.InfoLabel>이메일(Email)</S.InfoLabel>
-              <S.InfoValue>{user?.userEmail ?? '-'}</S.InfoValue>
-            </S.InfoRow>
-            <S.InfoRow>
-              <S.InfoLabel>받은 좋아요 개수</S.InfoLabel>
-              <S.InfoValue $accent>
-                {(user?.receivedLikeCount ?? 0).toLocaleString()}
-              </S.InfoValue>
-            </S.InfoRow>
-          </S.InfoSection>
+              <S.InfoSection>
+                <S.InfoRow>
+                  <S.InfoLabel>이메일(Email)</S.InfoLabel>
+                  <S.InfoValue>{user.userEmail}</S.InfoValue>
+                </S.InfoRow>
+                <S.InfoRow>
+                  <S.InfoLabel>받은 좋아요 개수</S.InfoLabel>
+                  <S.InfoValue $accent>
+                    {user.receivedLikeCount.toLocaleString()}
+                  </S.InfoValue>
+                </S.InfoRow>
+              </S.InfoSection>
+            </>
+          )}
 
           {/* 탭 */}
           <S.TabBar>
@@ -182,7 +223,22 @@ export default function Profile() {
           {/* 글 목록 */}
           <S.TabContent>
             {loading ? (
-              <S.EmptyMessage>불러오는 중...</S.EmptyMessage>
+              <S.PostList>
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <S.PostItem key={i} style={{ cursor: 'default' }}>
+                    <S.PostLeft>
+                      <Skeleton width={56} height={22} borderRadius={50} />
+                      <Skeleton width={260} height={16} />
+                    </S.PostLeft>
+                    <S.PostMeta>
+                      <Skeleton width={40} height={14} />
+                      <Skeleton width={40} height={14} />
+                      <Skeleton width={40} height={14} />
+                      <Skeleton width={80} height={14} />
+                    </S.PostMeta>
+                  </S.PostItem>
+                ))}
+              </S.PostList>
             ) : posts.length === 0 ? (
               <S.EmptyMessage>
                 {activeTab === 0
@@ -242,6 +298,7 @@ export default function Profile() {
           </S.TabContent>
         </S.Card>
       </S.Inner>
+      </SkeletonTheme>
       {showWithdrawModal && (
         <WithdrawModal onClose={() => setShowWithdrawModal(false)} />
       )}
