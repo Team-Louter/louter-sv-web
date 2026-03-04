@@ -16,19 +16,21 @@ export const updateProfile = async (
 };
 
 // 사용자가 작성한 글 가져오기
-export const getMyPost = async (): Promise<MyPost> => {
-  const response = await instance.get<MyPost>('/me/posts');
+export const getMyPost = async (signal?: AbortSignal): Promise<MyPost> => {
+  const response = await instance.get<MyPost>('/me/posts', { signal });
   return response.data;
 };
 
 // 사용자가 댓글 단 글 가져오기
-export const getCommentedPost = async (): Promise<MyPost> => {
-  const response = await instance.get<MyPost>('/me/comments');
+export const getCommentedPost = async (
+  signal?: AbortSignal,
+): Promise<MyPost> => {
+  const response = await instance.get<MyPost>('/me/comments', { signal });
   return response.data;
 };
 
 // 사용자가 좋아요한 글 가져오기
-export const getLikedPost = async (): Promise<MyPost> => {
-  const response = await instance.get<MyPost>('/me/hearts');
+export const getLikedPost = async (signal?: AbortSignal): Promise<MyPost> => {
+  const response = await instance.get<MyPost>('/me/hearts', { signal });
   return response.data;
 };
