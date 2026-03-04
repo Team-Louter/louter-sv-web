@@ -18,6 +18,8 @@ import { CATEGORY_REVERSED, CATEGORY_TAGS_REVERSED } from "@/constants/Community
 import { renderMarkdown } from "@/utils/Markdown/MarkdownConfig";
 import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
 import { getComments } from "@/api/Comment";
+import type { User } from "@/types/user";
+import { getUser } from "@/api/User";
 
 export default function CommunityDetail() {
     const location = useLocation();
@@ -47,9 +49,19 @@ export default function CommunityDetail() {
         }
     }
 
+    const getUserInfo = async () => {
+            try{
+                const data = await getUser();
+                setUserInfo(data);
+            } catch(err) {
+                console.error(err);
+            }
+        };
+
     useEffect(() => {
         getPostDetailInfo(Number(postId));
         getCommentsInfo(Number(postId));
+        getUserInfo();
     }, [])
 
     // 좋아요 눌림 여부 가져오기
@@ -63,6 +75,7 @@ export default function CommunityDetail() {
     const [isPinned, setIsPinned] = useState<boolean>(post?.pinned ?? false); // 고정된 게시글인지 여부
     const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab(); // 케밥 메뉴 관련 커스텀 훅
     const [isCancelModalOpen, setIsCancelModalOpen] = useState<boolean>(false); // 게시글 삭제 확인 모달 열림 여부
+    const [userInfo, setUserInfo] = useState<User | null>(null); // 사용자 정보
 
     // 게시글이 없을 때
     if (!post) {
@@ -110,7 +123,7 @@ export default function CommunityDetail() {
 
     // 케밥 아이콘 내용물
     const kebabItems = [
-        {
+        ...(userInfo?.role === 'MENTOR' || userInfo?.role === 'LEADER' ? [{
             label: isPinned ? "고정 해제" : "고정하기",
             onClick: () => {
                 const newPinned = !isPinned;
@@ -118,21 +131,21 @@ export default function CommunityDetail() {
                 togglePinPost(newPinned); 
                 setIsKebabOpen(false);
             },
-        },
-        {
+        }] : []),
+        ...(post.userId === userInfo?.userId ? [{
             label: "수정하기",
             onClick: () => {
                 navigate("/community/write", { state: { post } });
                 setIsKebabOpen(false);
             },
-        },
-        {
+        }] : []),
+        ...(post.userId === userInfo?.userId || userInfo?.role === 'MENTOR' || userInfo?.role === 'LEADER' ? [{
             label: "삭제하기",
             onClick: () => {
                 setIsCancelModalOpen(true);
                 setIsKebabOpen(false);
-            }
-        },
+            },
+        }] : []),
     ];
 
     return (

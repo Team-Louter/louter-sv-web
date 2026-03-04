@@ -102,6 +102,7 @@ export type Post = {
   isHearted: boolean;
   pinned: boolean;
   tag: string;
+  userId: number;
   files: PostFile[];
 };
 
@@ -137,6 +138,7 @@ export type ServerFile = {
 
 export type Comment = {
   "commentId": number,
+  "userId": number,
   "userName": string,
   "userProfileImageUrl": string,
   "content": string,
