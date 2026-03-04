@@ -139,7 +139,9 @@ export default function CommunityPost() {
                     content,
                     isAnonymous,
                     category: selectedCategory,
-                    tag: CATEGORY_TAGS[selectedCategory]?.[selectedTag] ?? "",
+                    tag: selectedTag
+                        ? CATEGORY_TAGS[selectedCategory]?.[selectedTag] ?? null
+                        : null,
                     files: usedFiles,
                 });
                 navigate(-1);
