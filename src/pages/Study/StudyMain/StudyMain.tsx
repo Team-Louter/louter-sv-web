@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import * as S from "./StudyMain.styled";
 import MonthBar from "../components/MonthBar/MonthBar";
-import StudyModal from "../components/StudyModal/StudyModal";
+// import StudyModal from "../components/StudyModal/StudyModal";
 import { getStudy, type StudyResponse } from "../../../api/Study";
 
 // TODO: 백엔드 API 완성 후 제거
@@ -64,7 +64,6 @@ export default function StudyMain() {
           studyId={studyData.studyId}
         />
       </S.container>
-      <StudyModal/>
     </>
   );
 }
