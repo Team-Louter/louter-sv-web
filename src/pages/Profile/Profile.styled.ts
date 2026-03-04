@@ -242,11 +242,13 @@ export const TabContent = styled.div`
   padding: 8px 32px 32px;
   ${token.flexColumn}
   justify-content: flex-start;
-  overflow-y: auto;  &::-webkit-scrollbar {
+  overflow-y: auto;
+  &::-webkit-scrollbar {
     display: none;
   }
   -ms-overflow-style: none;
-  scrollbar-width: none;`;
+  scrollbar-width: none;
+`;
 
 export const PostList = styled.ul`
   list-style: none;
@@ -310,7 +312,11 @@ export const PostMeta = styled.div`
 export const MetaItem = styled.span<{ $red?: boolean; $yellow?: boolean }>`
   ${token.typography('caption', 'lg', 'medium')}
   color: ${({ $red, $yellow }) =>
-    $red ? '#E53935' : $yellow ? token.colors.main.yellow : token.colors.text.lightGray};
+    $red
+      ? '#E53935'
+      : $yellow
+        ? token.colors.main.yellow
+        : token.colors.text.lightGray};
   ${token.flexRow}
   align-items: center;
   gap: 3px;
