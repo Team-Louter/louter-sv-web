@@ -7,6 +7,8 @@ import KebabMenu from "../KebabMenu/KebabMenu";
 import { useKebab } from "@/hooks/useKebab";
 import { deleteComment, getReplies } from "@/api/Comment";
 import { IoIosArrowBack } from "react-icons/io";
+import type { User } from "@/types/user";
+import { getUser } from "@/api/User";
 
 export default function Comment({ comment, postId, onSuccess }: commentProps) {
     const [showReplyWrite, setShowReplyWrite] = useState(false); // 답글 작성 여부
@@ -14,6 +16,16 @@ export default function Comment({ comment, postId, onSuccess }: commentProps) {
     const [isEditing, setIsEditing] = useState(false); // 댓글 수정 여부
     const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab(); // 케밥 메뉴 관련 훅
     const [replies, setReplies] = useState<Comment[]>([]); // 댓글들
+    const [userInfo, setUserInfo] = useState<User | null>(null); // 사용자 정보
+
+    const getUserInfo = async () => {
+        try{
+            const data = await getUser();
+            setUserInfo(data);
+        } catch(err) {
+            console.error(err);
+        }
+    };
 
     // 댓글 목록 정보 가져오기
     const getRepliesInfo = async () => {
@@ -38,24 +50,25 @@ export default function Comment({ comment, postId, onSuccess }: commentProps) {
 
     useEffect(() => {
         getRepliesInfo();
+        getUserInfo();
     }, [])
 
     // 케밥 메뉴 내용물
     const kebabItems = [
-        {
+        ...(comment.userId === userInfo?.userId ? [{
             label: "수정하기",
             onClick: () => {
                 setIsEditing(true);
                 setIsKebabOpen(false);
             },
-        },
-        {
+        }] : []),
+        ...(comment.userId === userInfo?.userId || userInfo?.role === 'MENTOR' || userInfo?.role === 'LEADER' ? [{
             label: "삭제하기",
             onClick: () => {
                 setIsKebabOpen(false);
                 deleteCommentInfo();
             },
-        },
+        }] : []),
     ];
 
     // 댓글 수정 시 댓글 작성 컴포넌트 렌더링
@@ -92,10 +105,12 @@ export default function Comment({ comment, postId, onSuccess }: commentProps) {
                         : <></> }
                     </S.ForColumn>
                 </S.Div>
-                <S.KebabWrapper ref={kebabRef}>
-                    <S.KebabIcon onClick={() => setIsKebabOpen(prev => !prev)} />
-                    {isKebabOpen && <KebabMenu items={kebabItems} />}
-                </S.KebabWrapper>
+                {kebabItems.length > 0 &&
+                    <S.KebabWrapper ref={kebabRef}>
+                        <S.KebabIcon onClick={() => setIsKebabOpen(prev => !prev)} />
+                        {isKebabOpen && <KebabMenu items={kebabItems} />}
+                    </S.KebabWrapper>
+                }
             </S.ForRow>
             {showReplyWrite && (
                 <div style={{ marginLeft: 40, marginTop: 8 }}>

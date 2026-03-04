@@ -9,6 +9,7 @@ export type User = {
     "majors": string[],
     "githubUrl": string,
     "linkedinUrl": string,
+    "role": string,
     "postCount": number,
     "commentCount": number,
     "likedPostCount": number,
