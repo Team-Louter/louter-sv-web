@@ -69,6 +69,7 @@ export default function CommunityDetail() {
     useEffect(() => {
         if (post) {
             setIsLiked(post.isHearted ?? false);
+            setIsPinned(post.pinned ?? false);
         }
     }, [post]);
 
