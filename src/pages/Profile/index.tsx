@@ -130,8 +130,6 @@ export default function Profile() {
             </S.InfoRow>
           </S.InfoSection>
 
-          <S.Divider />
-
           {/* 탭 */}
           <S.TabBar>
             {TABS.map((tab, idx) => (
@@ -141,46 +139,49 @@ export default function Profile() {
                 onClick={() => setActiveTab(idx)}
               >
                 {tab}
+                <S.TabIndicator $active={activeTab === idx} />
               </S.TabItem>
             ))}
           </S.TabBar>
 
           {/* 글 목록 */}
-          {posts.length === 0 ? (
-            <S.EmptyMessage>게시글이 없습니다.</S.EmptyMessage>
-          ) : (
-            <S.PostList>
-              {posts.map((post) => (
-                <S.PostItem
-                  key={post.postId}
-                  onClick={() => navigate(`/community/${post.postId}`)}
-                >
-                  <S.PostLeft>
-                    <S.CategoryBadge>
-                      {CATEGORY_REVERSED[post.postCategory] ??
-                        post.postCategory}
-                    </S.CategoryBadge>
-                    <S.PostTitle>{post.postTitle}</S.PostTitle>
-                  </S.PostLeft>
-                  <S.PostMeta>
-                    <S.MetaItem>
-                      <FaEye size={11} />
-                      {post.viewers.toLocaleString()}
-                    </S.MetaItem>
-                    <S.MetaItem $red>
-                      <FaHeart size={11} />
-                      {post.likeCount.toLocaleString()}
-                    </S.MetaItem>
-                    <S.MetaItem $red>
-                      <FaCommentAlt size={11} />
-                      {post.commentCount.toLocaleString()}
-                    </S.MetaItem>
-                    <S.MetaItem>{formatDate(post.createdAt)}</S.MetaItem>
-                  </S.PostMeta>
-                </S.PostItem>
-              ))}
-            </S.PostList>
-          )}
+          <S.TabContent>
+            {posts.length === 0 ? (
+              <S.EmptyMessage>작성한 게시글이 없습니다</S.EmptyMessage>
+            ) : (
+              <S.PostList>
+                {posts.map((post) => (
+                  <S.PostItem
+                    key={post.postId}
+                    onClick={() => navigate(`/community/${post.postId}`)}
+                  >
+                    <S.PostLeft>
+                      <S.CategoryBadge>
+                        {CATEGORY_REVERSED[post.postCategory] ??
+                          post.postCategory}
+                      </S.CategoryBadge>
+                      <S.PostTitle>{post.postTitle}</S.PostTitle>
+                    </S.PostLeft>
+                    <S.PostMeta>
+                      <S.MetaItem>
+                        <FaEye size={11} />
+                        {post.viewers.toLocaleString()}
+                      </S.MetaItem>
+                      <S.MetaItem $red>
+                        <FaHeart size={11} />
+                        {post.likeCount.toLocaleString()}
+                      </S.MetaItem>
+                      <S.MetaItem $red>
+                        <FaCommentAlt size={11} />
+                        {post.commentCount.toLocaleString()}
+                      </S.MetaItem>
+                      <S.MetaItem>{formatDate(post.createdAt)}</S.MetaItem>
+                    </S.PostMeta>
+                  </S.PostItem>
+                ))}
+              </S.PostList>
+            )}
+          </S.TabContent>
         </S.Card>
       </S.Inner>
     </S.PageWrapper>

@@ -10,7 +10,7 @@ export const PageWrapper = styled.div`
 
 export const Inner = styled.div`
   width: 100%;
-  max-width: 1200px;
+  max-width: 1300px;
   height: 100%;
   margin: 0 auto;
   padding: 0 24px;
@@ -30,32 +30,34 @@ export const Card = styled.div`
   background-color: ${token.colors.main.white};
   border-radius: ${token.shapes.medium};
   border: 0.5px solid ${token.colors.line.light};
-  ${token.elevation('black_1')}
+  ${token.elevation('black_2')}
   height: 100%;
+  padding: 16px 0;
   overflow: hidden;
 `;
 
 /* ─── 카드 상단: 프로필 + 통계 + 버튼 ─── */
 export const CardTop = styled.div`
   ${token.flexRow}
-  align-items: flex-start;
-  padding: 36px 40px;
+  align-items: center;
+  padding: 48px 64px 32px;
 `;
 
 export const ProfileGroup = styled.div`
   ${token.flexRow}
-  align-items: flex-start;
-  gap: 20px;
+  align-items: center;
+  gap: 24px;
   flex-shrink: 0;
 `;
 
 export const ProfileImageWrapper = styled.div`
-  width: 80px;
-  height: 80px;
+  width: 116px;
+  height: 116px;
   border-radius: 50%;
   overflow: hidden;
-  background-color: ${token.colors.fill.f3};
-  border: 3px solid ${token.colors.main.yellow};
+  background-color: ${token.colors.fill.white};
+  border: 4px solid ${token.colors.fill.white};
+  ${token.elevation('black_2')}
   flex-shrink: 0;
 `;
 
@@ -69,35 +71,34 @@ export const ProfileImageFallback = styled.div`
   width: 100%;
   height: 100%;
   ${token.flexCenter}
-  background-color: ${token.colors.accent.secondary3};
+  background-color: ${token.colors.fill.white};
   ${token.typography('heading', 'md', 'bold')}
   color: ${token.colors.text.dark};
 `;
 
 export const ProfileInfo = styled.div`
   ${token.flexColumn}
-  gap: 6px;
-  padding-top: 4px;
+  gap: 8px;
 `;
 
 export const ProfileName = styled.span`
-  ${token.typography('heading', 'sm', 'bold')}
-  color: ${token.colors.text.strong};
+  ${token.typography('heading', 'lg', 'bold')}
+  color: ${token.colors.text.dark};
+  line-height: 1;
 `;
 
 export const ProfileSubInfo = styled.span`
-  ${token.typography('body', 'sm', 'regular')}
-  color: ${token.colors.text.neutral};
+  ${token.typography('body', 'sm', 'medium')}
+  color: ${token.colors.text.dark};
 `;
 
 export const EditButton = styled.button`
-  margin-top: 4px;
   padding: 5px 14px;
-  border-radius: ${token.shapes.xsmall};
-  border: 1px solid ${token.colors.line.normal};
+  border-radius: 4px;
+  border: 1px solid ${token.colors.text.lightGray};
   background-color: ${token.colors.main.white};
-  ${token.typography('body', 'sm', 'medium')}
-  color: ${token.colors.text.neutral};
+  ${token.typography('body', 'sm', 'bold')}
+  color: ${token.colors.text.dark};
   cursor: pointer;
   white-space: nowrap;
   align-self: flex-start;
@@ -113,25 +114,26 @@ export const StatsGroup = styled.div`
   ${token.flexRow}
   gap: 40px;
   align-items: center;
-  margin-left: 120px;
+  margin-left: 112px;
 `;
 
 export const StatItem = styled.div`
   ${token.flexColumn}
-  align-items: center;
+  align-items: left;
   gap: 4px;
 `;
 
 export const StatValue = styled.span`
-  ${token.typography('heading', 'xl', 'bold')}
-  color: ${token.colors.text.strong};
+  ${token.typography('heading', 'md', 'bold')}
+  color: ${token.colors.text.dark};
   line-height: 1;
 `;
 
 export const StatLabel = styled.span`
-  ${token.typography('body', 'sm', 'regular')}
-  color: ${token.colors.text.neutral};
-  margin-top: 4px;
+  ${token.typography('body', 'sm', 'medium')}
+  color: ${token.colors.text.dark};
+  margin-top: 8px;
+  min-width: 80px;
 `;
 
 /* ─── 우측 버튼 ─── */
@@ -145,13 +147,13 @@ export const ActionGroup = styled.div`
 `;
 
 export const ActionButton = styled.button<{ $danger?: boolean }>`
-  padding: 7px 16px;
-  border-radius: ${token.shapes.xsmall};
-  border: 1px solid
-    ${({ $danger }) => ($danger ? '#E53935' : token.colors.line.normal)};
+  padding: 6px 18px;
+  border-radius: 4px;
+  border: 1px solid ${token.colors.text.lightGray};
   background-color: ${token.colors.main.white};
-  ${token.typography('body', 'sm', 'medium')}
-  color: ${({ $danger }) => ($danger ? '#E53935' : token.colors.text.neutral)};
+  ${token.typography('body', 'sm', 'bold')}
+  color: ${({ $danger }) =>
+    $danger ? token.colors.calendar.red : token.colors.text.neutral};
   cursor: pointer;
   transition:
     background-color 0.15s,
@@ -167,14 +169,15 @@ export const ActionButton = styled.button<{ $danger?: boolean }>`
 export const Divider = styled.hr`
   margin: 0;
   border: none;
-  border-top: 1px solid ${token.colors.line.normal};
+  border: 1px solid ${token.colors.line.light};
+  margin: 0 32px;
 `;
 
 /* ─── 추가 정보 섹션 ─── */
 export const InfoSection = styled.div`
-  padding: 20px 36px;
+  padding: 32px 48px 64px;
   ${token.flexColumn}
-  gap: 10px;
+  gap: 24px;
 `;
 
 export const InfoRow = styled.div`
@@ -184,46 +187,67 @@ export const InfoRow = styled.div`
 `;
 
 export const InfoLabel = styled.span`
-  ${token.typography('body', 'sm', 'regular')}
-  color: ${token.colors.text.neutral};
-  min-width: 130px;
+  ${token.typography('body', 'lg', 'medium')}
+  color: ${token.colors.text.dark};
+  margin-right: 16px;
 `;
 
 export const InfoValue = styled.span<{ $accent?: boolean }>`
-  ${token.typography('body', 'sm', 'regular')}
+  ${token.typography('heading', 'sm', 'medium')}
   color: ${({ $accent }) =>
-    $accent ? token.colors.text.gold : token.colors.text.dark};
+    $accent ? token.colors.text.gold : token.colors.text.coolGray};
   font-weight: ${({ $accent }) => ($accent ? 600 : 400)};
 `;
 
 /* ─── 탭 ─── */
 export const TabBar = styled.div`
   ${token.flexRow}
-  border-bottom: 1px solid ${token.colors.line.normal};
-  padding: 0 16px;
+  border-bottom: 3px solid ${token.colors.line.light};
+  margin: 0 32px;
 `;
 
 export const TabItem = styled.button<{ $active: boolean }>`
-  padding: 14px 20px;
+  position: relative;
+  padding: 16px 32px;
   border: none;
-  border-bottom: 2px solid
-    ${({ $active }) => ($active ? token.colors.main.yellow : 'transparent')};
+  border-bottom: none;
   background: none;
   cursor: pointer;
   ${token.typography('body', 'md', 'medium')}
   color: ${({ $active }) =>
     $active ? token.colors.text.strong : token.colors.text.neutral};
   font-weight: ${({ $active }) => ($active ? 700 : 500)};
-  transition:
-    color 0.15s,
-    border-color 0.15s;
+  transition: color 0.15s;
 
   &:hover {
     color: ${token.colors.text.dark};
   }
 `;
 
+export const TabIndicator = styled.div<{ $active: boolean }>`
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: ${({ $active }) =>
+    $active ? token.colors.main.yellow : 'transparent'};
+  border-radius: 2px 2px 0 0;
+  transition: background-color 0.15s;
+`;
+
 /* ─── 글 목록 ─── */
+export const TabContent = styled.div`
+  height: 200px;
+  padding: 8px 32px 32px;
+  ${token.flexColumn}
+  justify-content: flex-start;
+  overflow-y: auto;  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;`;
+
 export const PostList = styled.ul`
   list-style: none;
   margin: 0;
@@ -292,8 +316,9 @@ export const MetaItem = styled.span<{ $red?: boolean }>`
 `;
 
 export const EmptyMessage = styled.div`
+  flex: 1;
   ${token.flexCenter}
   padding: 60px 0;
-  ${token.typography('body', 'md', 'regular')}
-  color: ${token.colors.text.lightGray};
+  ${token.typography('body', 'md', 'medium')}
+  color: ${token.colors.text.coolGray};
 `;
