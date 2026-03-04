@@ -13,6 +13,7 @@ import ViewIcon from '@/assets/Mypage/View.svg';
 import GoodIcon from '@/assets/Mypage/Good.svg';
 import ChatIcon from '@/assets/Mypage/Chat.svg';
 import WithdrawModal from './components/WithdrawModal/WithdrawModal';
+import EditProfileModal from './components/EditProfileModal/EditProfileModal';
 
 const TABS = ['내가 쓴 글', '댓글 단 글', '좋아요한 글'] as const;
 
@@ -22,8 +23,9 @@ export default function Profile() {
 
   const [user, setUser] = useState<User | null>(null);
   const [activeTab, setActiveTab] = useState<number>(0);
-  const [posts, setPosts] = useState<MainPost[]>([]);
+  const [tabCache, setTabCache] = useState<Record<number, MainPost[]>>({});
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   useEffect(() => {
     getUser()
@@ -32,11 +34,42 @@ export default function Profile() {
   }, []);
 
   useEffect(() => {
+    // 이미 캐시된 탭이면 재요청하지 않음
+    if (tabCache[activeTab] !== undefined) return;
+
+    const controller = new AbortController();
     const fetchFn = [getMyPost, getCommentedPost, getLikedPost][activeTab];
-    fetchFn()
-      .then((data) => setPosts(data.content))
-      .catch(() => setPosts([]));
-  }, [activeTab]);
+
+    fetchFn(controller.signal)
+      .then((data) => {
+        // 댓글 탭(1): 같은 글에 댓글 여러 개 → commentId 기준 중복 제거
+        // 나머지 탭: postId 기준 중복 제거
+        const seen = new Set<string>();
+        const deduped = data.content.filter((post) => {
+          const uid =
+            activeTab === 1
+              ? `${post.postId}-${post.commentId ?? post.postId}`
+              : String(post.postId);
+          if (seen.has(uid)) return false;
+          seen.add(uid);
+          return true;
+        });
+        setTabCache((prev) => ({ ...prev, [activeTab]: deduped }));
+      })
+      .catch((err) => {
+        if (err?.code === 'ERR_CANCELED' || err?.name === 'CanceledError')
+          return;
+        setTabCache((prev) => ({ ...prev, [activeTab]: [] }));
+      });
+
+    return () => {
+      controller.abort();
+    };
+  }, [activeTab]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // tabCache에 해당 탭 데이터가 없으면 로딩 중
+  const posts: MainPost[] = tabCache[activeTab] ?? [];
+  const loading = tabCache[activeTab] === undefined;
 
   const handleLogout = async () => {
     try {
@@ -85,9 +118,7 @@ export default function Profile() {
                     ? `${user.grade}학년 ${user.classRoom}반 ${user.number}번`
                     : '-'}
                 </S.ProfileSubInfo>
-                <S.EditButton
-                  onClick={() => toast.error('아직 준비 중인 기능입니다.')}
-                >
+                <S.EditButton onClick={() => setShowEditModal(true)}>
                   프로필 수정
                 </S.EditButton>
               </S.ProfileInfo>
@@ -150,7 +181,9 @@ export default function Profile() {
 
           {/* 글 목록 */}
           <S.TabContent>
-            {posts.length === 0 ? (
+            {loading ? (
+              <S.EmptyMessage>불러오는 중...</S.EmptyMessage>
+            ) : posts.length === 0 ? (
               <S.EmptyMessage>
                 {activeTab === 0
                   ? '작성한 게시글이 없습니다'
@@ -162,7 +195,11 @@ export default function Profile() {
               <S.PostList>
                 {posts.map((post) => (
                   <S.PostItem
-                    key={post.postId}
+                    key={
+                      activeTab === 1
+                        ? `${post.postId}-${post.commentId ?? post.postId}`
+                        : post.postId
+                    }
                     onClick={() => navigate(`/community/${post.postId}`)}
                   >
                     <S.PostLeft>
@@ -207,6 +244,17 @@ export default function Profile() {
       </S.Inner>
       {showWithdrawModal && (
         <WithdrawModal onClose={() => setShowWithdrawModal(false)} />
+      )}
+      {showEditModal && user && (
+        <EditProfileModal
+          user={user}
+          onClose={() => setShowEditModal(false)}
+          onUpdated={() =>
+            getUser()
+              .then(setUser)
+              .catch(() => toast.error('사용자 정보를 불러오지 못했습니다.'))
+          }
+        />
       )}
     </S.PageWrapper>
   );
