@@ -266,3 +266,45 @@ export const CheckboxLabel = styled.label`
     }
 `
 
+export const LinkedEventBanner = styled.div<{ $color: string }>`
+    width: 100%;
+    background-color: ${token.colors.background.lightGray};
+    border-left: 4px solid ${({ $color }) => $color};
+    border-radius: ${token.shapes.small};
+    padding: 16px 20px;
+    ${token.flexColumn};
+    gap: 10px;
+`
+
+export const LinkedEventHeader = styled.div`
+    ${token.flexRow};
+    align-items: center;
+    gap: 8px;
+`
+
+export const LinkedEventTitle = styled.span`
+    ${token.typography('caption', 'lg', 'semibold')};
+    color: ${token.colors.text.neutral};
+`
+
+export const LinkedEventInfo = styled.div`
+    ${token.flexColumn};
+    gap: 4px;
+    padding-left: 22px;
+`
+
+export const LinkedEventName = styled.span`
+    ${token.typography('body', 'md', 'semibold')};
+    color: ${token.colors.text.strong};
+`
+
+export const LinkedEventDate = styled.span`
+    ${token.typography('caption', 'lg', 'medium')};
+    color: ${token.colors.text.neutral};
+`
+
+export const LinkedEventAssignee = styled.span`
+    ${token.typography('caption', 'lg', 'medium')};
+    color: ${token.colors.text.neutral};
+`
+

@@ -5,8 +5,10 @@ import { IoIosArrowBack } from "react-icons/io";
 import { colors } from "@/styles/values/_foundation";
 import { MdRemoveRedEye } from "react-icons/md";
 import { FaRegHeart, FaHeart, FaRegComment } from "react-icons/fa6";
+import { FaFlag } from "react-icons/fa6";
 import { useEffect, useState } from "react";
-import { formatDateTime } from "@/utils/FormatDate";
+import { formatDateTime, getDateRange } from "@/utils/FormatDate";
+import { formatAssignees } from "@/utils/FormatAssignee";
 import Comment from "../components/Comment/Comment";
 import CommentWrite from "../components/CommentWrite/CommentWrite";
 import KebabMenu from "../components/KebabMenu/KebabMenu";
@@ -24,6 +26,7 @@ import { getUser } from "@/api/User";
 export default function CommunityDetail() {
     const location = useLocation();
     const selectedCategory = location.state?.selectedCategory ?? "전체"; // 선택된 카테고리
+    const linkedEvent = location.state?.linkedEvent ?? null; // 캘린더에서 넘어온 연결 일정 정보
     const navigate = useNavigate();
     const { postId } = useParams();
     const [post, setPost] = useState<Post|null>(null); // 게시글 세부 정보
@@ -195,6 +198,25 @@ export default function CommunityDetail() {
                         </S.ForRow>
                     </S.TopContainer>
                     <S.Divider />
+                    {linkedEvent && (
+                      <S.LinkedEventBanner $color={linkedEvent.color || '#FFD600'}>
+                        <S.LinkedEventHeader>
+                          <FaFlag size={14} color={linkedEvent.color || '#FFD600'} />
+                          <S.LinkedEventTitle>연결된 일정</S.LinkedEventTitle>
+                        </S.LinkedEventHeader>
+                        <S.LinkedEventInfo>
+                          <S.LinkedEventName>{linkedEvent.title}</S.LinkedEventName>
+                          <S.LinkedEventDate>
+                            {getDateRange(linkedEvent.start, linkedEvent.end)}
+                          </S.LinkedEventDate>
+                          {linkedEvent.assignees && linkedEvent.assignees.length > 0 && (
+                            <S.LinkedEventAssignee>
+                              담당: {formatAssignees(linkedEvent.assignees)}
+                            </S.LinkedEventAssignee>
+                          )}
+                        </S.LinkedEventInfo>
+                      </S.LinkedEventBanner>
+                    )}
                     <S.ContentContainer dangerouslySetInnerHTML={{ __html: renderMarkdown(post.postContent) }} />
                     <S.ForRow>
                         <S.Div>

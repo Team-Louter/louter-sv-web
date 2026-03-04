@@ -3,6 +3,7 @@ import { CardContainer, DetailRow, DetailLabel, DetailValue } from './EventDetai
 import type { EventDetailCardProps } from '@/types/fullCalendar';
 import { getDateRange } from '@/utils/FormatDate';
 import { formatAssignees } from '@/utils/FormatAssignee';
+import { parsePostLinks } from '@/utils/ParsePostLink';
 
 const EventDetailCard: React.FC<EventDetailCardProps> = ({ event, position, onClose }) => {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -45,7 +46,9 @@ const EventDetailCard: React.FC<EventDetailCardProps> = ({ event, position, onCl
 
       <DetailRow>
         <DetailLabel>설명</DetailLabel>
-        <DetailValue>{event.extendedProps?.description || '-'}</DetailValue>
+        <DetailValue>
+          {parsePostLinks(event.extendedProps?.description || '', event)}
+        </DetailValue>
       </DetailRow>
     </CardContainer>
   );
