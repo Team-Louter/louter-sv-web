@@ -18,6 +18,7 @@ import Layout from '@/layout/Layout/index';
 import RequireAuth from '@/components/common/RequireAuth';
 import NotFound from '@/pages/NotFound/NotFound';
 import GoogleOAuthCallback from '@/pages/GoogleOAuthCallback/GoogleOAuthCallback';
+import CanceledMembership from '@/pages/CanceledMembership';
 
 const Router = () => {
   return (
@@ -28,6 +29,7 @@ const Router = () => {
         <Route path={'/auth/signup'} element={<Signup />} />
         <Route path={'/auth/signup/google'} element={<SignupGoogle />} />
         <Route path={'/auth/signin'} element={<Signin />} />
+        <Route path={'/canceled'} element={<CanceledMembership />} />
 
         {/* Google OAuth 콜백 — 신규 유저 추가정보 입력 */}
         <Route path={'/extra-signup'} element={<SignupGoogle />} />
