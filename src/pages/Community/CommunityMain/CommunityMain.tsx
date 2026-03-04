@@ -25,8 +25,12 @@ export default function Community() {
             const data = await getAllPost({
                 page: currentPage,
                 size: 10,
-                sort: ["createdAt", "desc"]
+                sort: [
+                    "pinned,desc",
+                    "createdAt,desc"
+                ]
             });
+            console.log(data)
             setPosts(data.content);
             setMaxPage(data.totalPages);
 

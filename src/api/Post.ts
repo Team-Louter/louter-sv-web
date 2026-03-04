@@ -1,5 +1,6 @@
 import type { HotPost, Post, PostList, ServerPage, ServerPost } from "@/types/post";
 import instance from "./Axios";
+import qs from 'qs';
 
 // 인기글 가져오기
 export const getHotPost = async (): Promise<HotPost[]> => {
@@ -9,7 +10,10 @@ export const getHotPost = async (): Promise<HotPost[]> => {
 
 // 전체 게시글 가져오기
 export const getAllPost = async (page: ServerPage): Promise<PostList> => {
-    const response = await instance.get<PostList>("/posts", {params: page});
+    const response = await instance.get<PostList>("/posts", {
+        params: page,
+        paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' })
+    });
     return response.data;
 }
 
