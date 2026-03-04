@@ -274,6 +274,12 @@ export const LinkedEventBanner = styled.div<{ $color: string }>`
     padding: 16px 20px;
     ${token.flexColumn};
     gap: 10px;
+    cursor: pointer;
+    transition: background-color 0.15s;
+
+    &:hover {
+        background-color: ${token.colors.accent.assistive4};
+    }
 `
 
 export const LinkedEventHeader = styled.div`

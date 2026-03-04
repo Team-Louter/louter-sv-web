@@ -214,7 +214,7 @@ export default function CommunityDetail() {
                     </S.TopContainer>
                     <S.Divider />
                     {linkedEvents.length > 0 && linkedEvents.map((ev) => (
-                      <S.LinkedEventBanner key={ev.scheduleId} $color={ev.color || '#FFD600'}>
+                      <S.LinkedEventBanner key={ev.scheduleId} $color={ev.color || '#FFD600'} onClick={() => navigate('/calendar')}>
                         <S.LinkedEventHeader>
                           <FaFlag size={14} color={ev.color || '#FFD600'} />
                           <S.LinkedEventTitle>연결된 일정</S.LinkedEventTitle>
