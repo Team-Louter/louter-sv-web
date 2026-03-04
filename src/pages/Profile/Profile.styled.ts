@@ -149,7 +149,7 @@ export const ActionGroup = styled.div`
 export const ActionButton = styled.button<{ $danger?: boolean }>`
   padding: 6px 18px;
   border-radius: 4px;
-  border: 1px solid ${token.colors.text.lightGray};
+  border: 1px solid ${token.colors.line.normal};
   background-color: ${token.colors.main.white};
   ${token.typography('body', 'sm', 'bold')}
   color: ${({ $danger }) =>
