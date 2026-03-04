@@ -47,7 +47,7 @@ const EventDetailCard: React.FC<EventDetailCardProps> = ({ event, position, onCl
       <DetailRow>
         <DetailLabel>설명</DetailLabel>
         <DetailValue>
-          {parsePostLinks(event.extendedProps?.description || '', event)}
+          {parsePostLinks(event.extendedProps?.description || '')}
         </DetailValue>
       </DetailRow>
     </CardContainer>

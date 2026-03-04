@@ -1,5 +1,4 @@
 import React from 'react';
-import type { EventInput } from '@fullcalendar/core';
 import PostLinkChip from '@/components/common/Calendar/PostLinkChip';
 
 /**
@@ -7,8 +6,7 @@ import PostLinkChip from '@/components/common/Calendar/PostLinkChip';
  * 아이콘 + 제목 + 게시판이름(회색) 형태로 표시됩니다.
  */
 export const parsePostLinks = (
-  text: string,
-  event?: EventInput | null
+  text: string
 ): React.ReactNode[] => {
   if (!text) return ['-'];
 
@@ -18,7 +16,7 @@ export const parsePostLinks = (
     const match = part.match(/^#(\d+)$/);
     if (match) {
       const postId = match[1];
-      return <PostLinkChip key={index} postId={postId} event={event} />;
+      return <PostLinkChip key={index} postId={postId} />;
     }
     return <span key={index}>{part}</span>;
   });

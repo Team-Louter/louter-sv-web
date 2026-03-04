@@ -22,16 +22,18 @@ import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
 import { getComments } from "@/api/Comment";
 import type { User } from "@/types/user";
 import { getUser } from "@/api/User";
+import { getEvent } from "@/api/Event";
+import type { Event as ScheduleEvent } from "@/types/fullCalendar";
 
 export default function CommunityDetail() {
     const location = useLocation();
     const selectedCategory = location.state?.selectedCategory ?? "전체"; // 선택된 카테고리
-    const linkedEvent = location.state?.linkedEvent ?? null; // 캘린더에서 넘어온 연결 일정 정보
     const navigate = useNavigate();
     const { postId } = useParams();
     const [post, setPost] = useState<Post|null>(null); // 게시글 세부 정보
     const [comments, setComments] = useState<CommentType[]>([]); // 댓글 정보
     const [userInfo, setUserInfo] = useState<User | null>(null); // 사용자 정보
+    const [linkedEvents, setLinkedEvents] = useState<ScheduleEvent[]>([]); // 연결된 일정 목록
 
     // 게시글 세부 정보 가져오기
     const getPostDetailInfo = async (postId: number) => {
@@ -62,10 +64,23 @@ export default function CommunityDetail() {
             }
         };
 
+    // 이 게시글을 참조(#postId)하는 일정 찾기
+    const findLinkedEvents = async (currentPostId: number) => {
+        try {
+            const events = await getEvent();
+            const pattern = new RegExp(`#${currentPostId}(?:\\D|$)`);
+            const matched = events.filter(ev => pattern.test(ev.content));
+            setLinkedEvents(matched);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     useEffect(() => {
         getPostDetailInfo(Number(postId));
         getCommentsInfo(Number(postId));
         getUserInfo();
+        findLinkedEvents(Number(postId));
     }, [])
 
     // 좋아요 눌림 여부 가져오기
@@ -198,25 +213,26 @@ export default function CommunityDetail() {
                         </S.ForRow>
                     </S.TopContainer>
                     <S.Divider />
-                    {linkedEvent && (
-                      <S.LinkedEventBanner $color={linkedEvent.color || '#FFD600'}>
+                    {linkedEvents.length > 0 && linkedEvents.map((ev) => (
+                      <S.LinkedEventBanner key={ev.scheduleId} $color={ev.color || '#FFD600'}>
                         <S.LinkedEventHeader>
-                          <FaFlag size={14} color={linkedEvent.color || '#FFD600'} />
+                          <FaFlag size={14} color={ev.color || '#FFD600'} />
                           <S.LinkedEventTitle>연결된 일정</S.LinkedEventTitle>
                         </S.LinkedEventHeader>
                         <S.LinkedEventInfo>
-                          <S.LinkedEventName>{linkedEvent.title}</S.LinkedEventName>
+                          <S.LinkedEventName>{ev.title}</S.LinkedEventName>
                           <S.LinkedEventDate>
-                            {getDateRange(linkedEvent.start, linkedEvent.end)}
+                            {getDateRange(ev.startDate, ev.endDate)}
                           </S.LinkedEventDate>
-                          {linkedEvent.assignees && linkedEvent.assignees.length > 0 && (
+                          {ev.users && ev.users.length > 0 && (
                             <S.LinkedEventAssignee>
-                              담당: {formatAssignees(linkedEvent.assignees)}
+                              담당: {formatAssignees(ev.users)}
                             </S.LinkedEventAssignee>
                           )}
                         </S.LinkedEventInfo>
                       </S.LinkedEventBanner>
-                    )}
+                    ))
+                    }
                     <S.ContentContainer dangerouslySetInnerHTML={{ __html: renderMarkdown(post.postContent) }} />
                     <S.ForRow>
                         <S.Div>

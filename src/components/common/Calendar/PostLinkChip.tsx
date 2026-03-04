@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { EventInput } from '@fullcalendar/core';
 import { getPostDetail } from '@/api/Post';
 import type { Post } from '@/types/post';
 import { CATEGORY_REVERSED } from '@/constants/Community';
@@ -69,10 +68,9 @@ const ChipLoading = styled.span`
 
 interface PostLinkChipProps {
   postId: string;
-  event?: EventInput | null;
 }
 
-export default function PostLinkChip({ postId, event }: PostLinkChipProps) {
+export default function PostLinkChip({ postId }: PostLinkChipProps) {
   const navigate = useNavigate();
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
@@ -93,19 +91,7 @@ export default function PostLinkChip({ postId, event }: PostLinkChipProps) {
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    navigate(`/community/${postId}`, {
-      state: event ? {
-        linkedEvent: {
-          title: event.title,
-          start: event.start,
-          end: event.end,
-          color: event.color,
-          scheduleId: event.scheduleId,
-          description: event.extendedProps?.description,
-          assignees: event.extendedProps?.assignees,
-        }
-      } : undefined,
-    });
+    navigate(`/community/${postId}`);
   };
 
   if (loading) {
