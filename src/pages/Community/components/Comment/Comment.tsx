@@ -8,7 +8,7 @@ import { useKebab } from "@/hooks/useKebab";
 import { deleteComment, getReplies } from "@/api/Comment";
 import { IoIosArrowBack } from "react-icons/io";
 
-export default function Comment({ comment, postId }: commentProps) {
+export default function Comment({ comment, postId, onSuccess }: commentProps) {
     const [showReplyWrite, setShowReplyWrite] = useState(false); // 답글 작성 여부
     const [showReplies, setShowReplies] = useState(false); // 답글 조회 여부
     const [isEditing, setIsEditing] = useState(false); // 댓글 수정 여부
@@ -63,7 +63,7 @@ export default function Comment({ comment, postId }: commentProps) {
                 comment={comment}
                 onClose={() => setIsEditing(false)}
                 isEditing
-                
+                onSuccess={onSuccess}
             />
         );
     }
