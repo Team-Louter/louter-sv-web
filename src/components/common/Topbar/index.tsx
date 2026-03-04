@@ -8,6 +8,7 @@ import { toast } from '@/store/toastStore';
 const NAV_ITEMS = [
   { label: '커뮤니티', path: '/community' },
   { label: '캘린더', path: '/calendar' },
+  { label: '프로젝트', path: '/project' },
   { label: '학습 관리', path: '/study' },
   { label: '멘토링', path: '/mentoring' },
   { label: '마이페이지', path: '/me' },

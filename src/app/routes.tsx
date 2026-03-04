@@ -19,9 +19,30 @@ import RequireAuth from '@/components/common/RequireAuth';
 import NotFound from '@/pages/NotFound/NotFound';
 import GoogleOAuthCallback from '@/pages/GoogleOAuthCallback/GoogleOAuthCallback';
 
+// Project 페이지 import
+import ProjectList from '@/pages/Project/ProjectList/ProjectList';
+import ProjectLayout from '@/pages/Project/ProjectDetail/ProjectLayout';
+import ProjectOverview from '@/pages/Project/ProjectDetail/Overview/ProjectOverview';
+import ProjectDiagram from '@/pages/Project/ProjectDetail/Diagram/ProjectDiagram';
+import DiagramEditor from '@/pages/Project/DiagramEditor/DiagramEditor';
+import ProjectSchema from '@/pages/Project/ProjectDetail/Schema/ProjectSchema';
+import ProjectSchemaDetail from '@/pages/Project/ProjectDetail/Schema/ProjectSchemaDetail';
+import SchemaEditor from '@/pages/Project/SchemaEditor/SchemaEditor';
+import ProjectDocs from '@/pages/Project/ProjectDetail/Docs/ProjectDocs';
+import ProjectDocDetail from '@/pages/Project/ProjectDetail/Docs/ProjectDocDetail';
+import ProjectDocEdit from '@/pages/Project/ProjectDetail/Docs/ProjectDocEdit';
+import ProjectTasks from '@/pages/Project/ProjectDetail/Tasks/ProjectTasks';
+import ProjectProgress from '@/pages/Project/ProjectDetail/Progress/ProjectProgress';
+
 const Router = () => {
   return (
     <Routes>
+      {/* 풀스크린 에디터 — Layout 없이 렌더링 */}
+      <Route element={<RequireAuth />}>
+        <Route path={'/project/:projectId/diagram/:diagramId'} element={<DiagramEditor />} />
+        <Route path={'/project/:projectId/schema/:schemaId'} element={<SchemaEditor />} />
+      </Route>
+
       <Route element={<Layout />}>
         {/* Auth / Public Pages */}
         <Route path={'/auth/signup/check'} element={<SignupCheck />} />
@@ -54,6 +75,20 @@ const Router = () => {
 
           {/* Calendar */}
           <Route path={'/calendar'} element={<Calendar />} />
+
+          {/* Project */}
+          <Route path={'/project'} element={<ProjectList />} />
+          <Route path={'/project/:projectId'} element={<ProjectLayout />}>
+            <Route index element={<ProjectOverview />} />
+            <Route path={'diagram'} element={<ProjectDiagram />} />
+            <Route path={'schema'} element={<ProjectSchema />} />
+            <Route path={'docs'} element={<ProjectDocs />} />
+            <Route path={'docs/:docId'} element={<ProjectDocDetail />} />
+            <Route path={'docs/new'} element={<ProjectDocEdit />} />
+            <Route path={'docs/:docId/edit'} element={<ProjectDocEdit />} />
+            <Route path={'tasks'} element={<ProjectTasks />} />
+            <Route path={'progress'} element={<ProjectProgress />} />
+          </Route>
         </Route>
       </Route>
 

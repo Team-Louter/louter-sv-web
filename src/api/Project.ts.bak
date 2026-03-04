@@ -1,0 +1,421 @@
+import type {
+  Project,
+  Diagram,
+  DbSchema,
+  DocNode,
+  ProjectDoc,
+  DocVersion,
+  Task,
+  ServerTask,
+  TaskStatus,
+  Epic,
+  Sprint,
+} from '@/types/project';
+import instance from './Axios';
+
+// ─── 프로젝트 ────────────────────────────────────────────────
+
+/** 내 프로젝트 목록 조회 */
+export const getProjects = async (): Promise<Project[]> => {
+  const response = await instance.get<Project[]>('/projects');
+  return response.data;
+};
+
+/** 프로젝트 생성 */
+export const createProject = async (
+  data: Pick<Project, 'title' | 'description'>
+): Promise<Project> => {
+  const response = await instance.post<Project>('/projects', data);
+  return response.data;
+};
+
+/** 프로젝트 상세 조회 */
+export const getProject = async (projectId: number): Promise<Project> => {
+  const response = await instance.get<Project>(`/projects/${projectId}`);
+  return response.data;
+};
+
+/** 프로젝트 수정 */
+export const updateProject = async (
+  projectId: number,
+  data: Pick<Project, 'title' | 'description'>
+): Promise<void> => {
+  await instance.put(`/projects/${projectId}`, data);
+};
+
+/** 프로젝트 삭제 */
+export const deleteProject = async (projectId: number): Promise<void> => {
+  await instance.delete(`/projects/${projectId}`);
+};
+
+/** 팀원 초대 */
+export const inviteMember = async (
+  projectId: number,
+  userId: number,
+  role: string
+): Promise<void> => {
+  await instance.post(`/projects/${projectId}/members`, { userId, role });
+};
+
+/** 팀원 제거 */
+export const removeMember = async (
+  projectId: number,
+  userId: number
+): Promise<void> => {
+  await instance.delete(`/projects/${projectId}/members/${userId}`);
+};
+
+// ─── 다이어그램 ──────────────────────────────────────────────
+
+/** 다이어그램 목록 */
+export const getDiagrams = async (projectId: number): Promise<Diagram[]> => {
+  const response = await instance.get<Diagram[]>(
+    `/projects/${projectId}/diagrams`
+  );
+  return response.data;
+};
+
+/** 다이어그램 생성 */
+export const createDiagram = async (
+  projectId: number,
+  data: Pick<Diagram, 'title' | 'type' | 'data'> & { description?: string | null }
+): Promise<Diagram> => {
+  const response = await instance.post<Diagram>(
+    `/projects/${projectId}/diagrams`,
+    data
+  );
+  return response.data;
+};
+
+/** 다이어그램 상세 */
+export const getDiagram = async (
+  projectId: number,
+  diagramId: number
+): Promise<Diagram> => {
+  const response = await instance.get<Diagram>(
+    `/projects/${projectId}/diagrams/${diagramId}`
+  );
+  return response.data;
+};
+
+/** 다이어그램 저장 */
+export const updateDiagram = async (
+  projectId: number,
+  diagramId: number,
+  data: Partial<Pick<Diagram, 'title' | 'data'>>
+): Promise<void> => {
+  await instance.put(`/projects/${projectId}/diagrams/${diagramId}`, data);
+};
+
+/** 다이어그램 삭제 */
+export const deleteDiagram = async (
+  projectId: number,
+  diagramId: number
+): Promise<void> => {
+  await instance.delete(`/projects/${projectId}/diagrams/${diagramId}`);
+};
+
+// ─── DB 스키마 ───────────────────────────────────────────────
+
+/** 스키마 목록 */
+export const getSchemas = async (projectId: number): Promise<DbSchema[]> => {
+  const response = await instance.get<DbSchema[]>(
+    `/projects/${projectId}/schemas`
+  );
+  return response.data;
+};
+
+/** 스키마 생성 */
+export const createSchema = async (
+  projectId: number,
+  data: Pick<DbSchema, 'title' | 'tables' | 'relations' | 'dialect'> & { description?: string | null }
+): Promise<DbSchema> => {
+  const response = await instance.post<DbSchema>(
+    `/projects/${projectId}/schemas`,
+    data
+  );
+  return response.data;
+};
+
+/** 스키마 상세 */
+export const getSchema = async (
+  projectId: number,
+  schemaId: number
+): Promise<DbSchema> => {
+  const response = await instance.get<DbSchema>(
+    `/projects/${projectId}/schemas/${schemaId}`
+  );
+  return response.data;
+};
+
+/** 스키마 저장 */
+export const updateSchema = async (
+  projectId: number,
+  schemaId: number,
+  data: Partial<Pick<DbSchema, 'title' | 'tables' | 'relations' | 'dialect'>>
+): Promise<void> => {
+  await instance.put(`/projects/${projectId}/schemas/${schemaId}`, data);
+};
+
+/** 스키마 삭제 */
+export const deleteSchema = async (
+  projectId: number,
+  schemaId: number
+): Promise<void> => {
+  await instance.delete(`/projects/${projectId}/schemas/${schemaId}`);
+};
+
+/** DDL 코드 반환 */
+export const getSchemaDdl = async (
+  projectId: number,
+  schemaId: number
+): Promise<string> => {
+  const response = await instance.get<string>(
+    `/projects/${projectId}/schemas/${schemaId}/ddl`
+  );
+  return response.data;
+};
+
+/** DDL 내보내기 (별칭) */
+export const exportDDL = async (
+  projectId: number,
+  schemaId: number,
+  _dialect?: string
+): Promise<string> => getSchemaDdl(projectId, schemaId);
+
+// ─── 문서 ────────────────────────────────────────────────────
+
+/** 문서 트리 목록 */
+export const getDocTree = async (projectId: number): Promise<DocNode[]> => {
+  const response = await instance.get<DocNode[]>(
+    `/projects/${projectId}/docs`
+  );
+  return response.data;
+};
+
+/** 문서 생성 */
+export const createDoc = async (
+  projectId: number,
+  data: { title: string; content: string; parentFolderId: number | null }
+): Promise<ProjectDoc> => {
+  const response = await instance.post<ProjectDoc>(
+    `/projects/${projectId}/docs`,
+    data
+  );
+  return response.data;
+};
+
+/** 문서 상세 */
+export const getDoc = async (
+  projectId: number,
+  docId: number
+): Promise<ProjectDoc> => {
+  const response = await instance.get<ProjectDoc>(
+    `/projects/${projectId}/docs/${docId}`
+  );
+  return response.data;
+};
+
+/** 문서 수정 */
+export const updateDoc = async (
+  projectId: number,
+  docId: number,
+  data: { title: string; content: string }
+): Promise<void> => {
+  await instance.put(`/projects/${projectId}/docs/${docId}`, data);
+};
+
+/** 문서 삭제 */
+export const deleteDoc = async (
+  projectId: number,
+  docId: number
+): Promise<void> => {
+  await instance.delete(`/projects/${projectId}/docs/${docId}`);
+};
+
+/** 버전 목록 */
+export const getDocVersions = async (
+  projectId: number,
+  docId: number
+): Promise<DocVersion[]> => {
+  const response = await instance.get<DocVersion[]>(
+    `/projects/${projectId}/docs/${docId}/versions`
+  );
+  return response.data;
+};
+
+/** 버전 복원 */
+export const restoreDocVersion = async (
+  projectId: number,
+  docId: number,
+  versionId: number
+): Promise<void> => {
+  await instance.post(
+    `/projects/${projectId}/docs/${docId}/restore/${versionId}`
+  );
+};
+
+/** 폴더 생성 */
+export const createFolder = async (
+  projectId: number,
+  data: { name: string; parentId: number | null }
+): Promise<void> => {
+  await instance.post(`/projects/${projectId}/folders`, data);
+};
+
+/** 폴더 수정 */
+export const updateFolder = async (
+  projectId: number,
+  folderId: number,
+  data: { name: string }
+): Promise<void> => {
+  await instance.put(`/projects/${projectId}/folders/${folderId}`, data);
+};
+
+/** 폴더 삭제 */
+export const deleteFolder = async (
+  projectId: number,
+  folderId: number
+): Promise<void> => {
+  await instance.delete(`/projects/${projectId}/folders/${folderId}`);
+};
+
+// ─── TASK ────────────────────────────────────────────────────
+
+/** TASK 목록 (필터 쿼리 지원) */
+export const getTasks = async (
+  projectId: number,
+  params?: {
+    assigneeId?: number;
+    status?: TaskStatus;
+    priority?: string;
+    epicId?: number;
+    sprintId?: number;
+  }
+): Promise<Task[]> => {
+  const response = await instance.get<Task[]>(
+    `/projects/${projectId}/tasks`,
+    { params }
+  );
+  return response.data;
+};
+
+/** TASK 생성 */
+export const createTask = async (
+  projectId: number,
+  data: ServerTask
+): Promise<Task> => {
+  const response = await instance.post<Task>(
+    `/projects/${projectId}/tasks`,
+    data
+  );
+  return response.data;
+};
+
+/** TASK 상세 */
+export const getTask = async (
+  projectId: number,
+  taskId: number
+): Promise<Task> => {
+  const response = await instance.get<Task>(
+    `/projects/${projectId}/tasks/${taskId}`
+  );
+  return response.data;
+};
+
+/** TASK 수정 */
+export const updateTask = async (
+  projectId: number,
+  taskId: number,
+  data: Partial<ServerTask>
+): Promise<void> => {
+  await instance.put(`/projects/${projectId}/tasks/${taskId}`, data);
+};
+
+/** TASK 상태 변경 */
+export const updateTaskStatus = async (
+  projectId: number,
+  taskId: number,
+  status: TaskStatus
+): Promise<void> => {
+  await instance.patch(`/projects/${projectId}/tasks/${taskId}/status`, {
+    status,
+  });
+};
+
+/** TASK 삭제 */
+export const deleteTask = async (
+  projectId: number,
+  taskId: number
+): Promise<void> => {
+  await instance.delete(`/projects/${projectId}/tasks/${taskId}`);
+};
+
+// ─── Epic / Sprint ───────────────────────────────────────────
+
+/** Epic 목록 */
+export const getEpics = async (projectId: number): Promise<Epic[]> => {
+  const response = await instance.get<Epic[]>(
+    `/projects/${projectId}/epics`
+  );
+  return response.data;
+};
+
+/** Epic 생성 */
+export const createEpic = async (
+  projectId: number,
+  data: Pick<Epic, 'title' | 'description' | 'colorTag' | 'startDate' | 'endDate'>
+): Promise<Epic> => {
+  const response = await instance.post<Epic>(
+    `/projects/${projectId}/epics`,
+    data
+  );
+  return response.data;
+};
+
+/** Epic 수정 */
+export const updateEpic = async (
+  projectId: number,
+  epicId: number,
+  data: Partial<Pick<Epic, 'title' | 'description' | 'colorTag' | 'startDate' | 'endDate'>>
+): Promise<void> => {
+  await instance.put(`/projects/${projectId}/epics/${epicId}`, data);
+};
+
+/** Epic 삭제 */
+export const deleteEpic = async (
+  projectId: number,
+  epicId: number
+): Promise<void> => {
+  await instance.delete(`/projects/${projectId}/epics/${epicId}`);
+};
+
+/** Sprint 목록 */
+export const getSprints = async (projectId: number): Promise<Sprint[]> => {
+  const response = await instance.get<Sprint[]>(
+    `/projects/${projectId}/sprints`
+  );
+  return response.data;
+};
+
+/** Sprint 생성 */
+export const createSprint = async (
+  projectId: number,
+  data: Pick<Sprint, 'title' | 'startDate' | 'endDate' | 'epicId'>
+): Promise<Sprint> => {
+  const response = await instance.post<Sprint>(
+    `/projects/${projectId}/sprints`,
+    data
+  );
+  return response.data;
+};
+
+/** Sprint 완료 */
+export const completeSprint = async (
+  projectId: number,
+  sprintId: number
+): Promise<void> => {
+  await instance.patch(
+    `/projects/${projectId}/sprints/${sprintId}/complete`
+  );
+};
