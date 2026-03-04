@@ -20,7 +20,7 @@ const ChipWrapper = styled.span`
   cursor: pointer;
   transition: background 0.15s;
   vertical-align: middle;
-  margin: 0 2px;
+  margin: 0 2px 0 0;
 
   &:hover {
     background: ${token.colors.accent.assistive4};
@@ -59,7 +59,7 @@ const ChipLoading = styled.span`
   border-radius: 6px;
   padding: 3px 10px;
   vertical-align: middle;
-  margin: 0 2px;
+  margin: 0 2px 0 0;
   ${token.typography('caption', 'lg', 'medium')};
   color: ${token.colors.text.disabled};
 `
