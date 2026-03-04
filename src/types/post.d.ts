@@ -141,6 +141,7 @@ export type ServerFile = {
 
 export type Comment = {
   commentId: number;
+  userId: number;
   userName: string;
   userProfileImageUrl: string;
   content: string;

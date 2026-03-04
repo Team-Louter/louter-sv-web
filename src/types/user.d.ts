@@ -2,6 +2,7 @@ export type User = {
   userId: number;
   userName: string;
   userEmail: string;
+  role: string;
   grade: number;
   classRoom: number;
   number: number;
