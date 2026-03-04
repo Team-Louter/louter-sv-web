@@ -5,7 +5,8 @@ import type { Member } from "@/types/member";
 import { getInitialStartDate, getInitialEndDate } from "@/utils/FormatDate";
 import { getScheduleTarget } from "@/utils/FormatAssignee";
 import DateInputField from "./DateInputField";
-import { TextAreaField, TextInputField } from "./TextInputField";
+import { TextInputField } from "./TextInputField";
+import PostMentionField from "./PostMention";
 import { calendarHighlight } from "@/constants/CalendarHighlight";
 import MemberDropdown from "./MemberDropdown";
 import { createEvent, deleteEvent, editEvent, getEvent } from "@/api/Event";
@@ -157,11 +158,11 @@ export default function EventEditModal({ selectedDate, selectedEndDate, setIsMod
                     </S.ColorContainer>
                 </S.ForRow>
 
-                <TextAreaField
+                <PostMentionField
                     label="내용"
                     value={content}
                     onChange={setContent}
-                    placeholder="내용을 입력하세요."
+                    placeholder="내용을 입력하세요. #으로 게시글을 연결할 수 있습니다."
                     showLetterCount={250}
                 />
 
