@@ -169,7 +169,13 @@ function EditProfileModal({ user, onClose, onUpdated }: Props) {
               $hasSelection={majors.length > 0}
               onClick={() => setShowMajorMenu((v) => !v)}
             >
-              <span>{majors.length > 0 ? majors.join(', ') : '전공 선택'}</span>
+              <span>
+                {majors.length === 0
+                  ? '전공 선택'
+                  : majors.length <= 2
+                    ? majors.join(', ')
+                    : `${majors.slice(0, 2).join(', ')} 외 ${majors.length - 2}개`}
+              </span>
               <S.MajorArrow $isOpen={showMajorMenu}>
                 <IoIosArrowBack />
               </S.MajorArrow>
