@@ -4,22 +4,10 @@ import * as S from './EditProfileModal.styled';
 import CropModal from './CropModal';
 import { useCropImage } from './useCropImage';
 import { useEditProfile } from './useEditProfile';
+import { MAJOR_OPTIONS } from '@/constants/Member';
 import type { User } from '@/types/user';
 import GithubImg from '@/assets/Mypage/github.svg';
 import LinkedinImg from '@/assets/Mypage/linkedin.svg';
-
-/* ─── 전공 목록 ─── */
-const MAJOR_OPTIONS = [
-  'BACKEND',
-  'FRONTEND',
-  'DESIGN',
-  'IOS',
-  'ANDROID',
-  'SECURITY',
-  'GAME',
-  'AI',
-  'EMBEDDED',
-] as const;
 
 type Props = {
   user: User;
