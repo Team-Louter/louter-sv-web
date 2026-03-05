@@ -11,8 +11,9 @@ export const getUser = async (): Promise<User> => {
 // 프로필 수정
 export const updateProfile = async (
   data: UpdateProfileRequest,
-): Promise<void> => {
-  await instance.put('/me/profile', data);
+): Promise<User> => {
+  const response = await instance.put<User>('/me/profile', data);
+  return response.data;
 };
 
 // 사용자가 작성한 글 가져오기
