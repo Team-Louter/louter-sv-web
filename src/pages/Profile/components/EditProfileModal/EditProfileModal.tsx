@@ -9,13 +9,13 @@ import type { User } from '@/types/user';
 import GithubImg from '@/assets/Mypage/github.svg';
 import LinkedinImg from '@/assets/Mypage/linkedin.svg';
 
-type Props = {
+type EditProfileModalProps = {
   user: User;
   onClose: () => void;
   onUpdated: (updated: User) => void;
 };
 
-function EditProfileModal({ user, onClose, onUpdated }: Props) {
+function EditProfileModal({ user, onClose, onUpdated }: EditProfileModalProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
