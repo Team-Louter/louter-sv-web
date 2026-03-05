@@ -314,6 +314,26 @@ export default function Profile() {
                         </S.SocialRow>
                       )}
                       <S.ButtonRow>
+                        {user.role === 'LEADER' && (
+                          <S.ActionButton
+                            $variant="admin"
+                            onClick={() =>
+                              toast.warning('아직 완성되지 않은 기능입니다.')
+                            }
+                          >
+                            멤버 관리
+                          </S.ActionButton>
+                        )}
+                        {(user.role === 'LEADER' || user.role === 'MENTOR') && (
+                          <S.ActionButton
+                            $variant="mentor"
+                            onClick={() =>
+                              toast.warning('아직 완성되지 않은 기능입니다.')
+                            }
+                          >
+                            멘티 관리
+                          </S.ActionButton>
+                        )}
                         <S.ActionButton onClick={handleLogout}>
                           로그아웃
                         </S.ActionButton>

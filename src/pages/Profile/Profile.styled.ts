@@ -149,7 +149,7 @@ export const StatLabel = styled.span`
 /* ─── 우측 버튼 ─── */
 export const ActionGroup = styled.div`
   ${token.flexColumn}
-  gap: 8px;
+  gap: 12px;
   flex-shrink: 0;
   margin-left: auto;
   align-self: flex-end;
@@ -182,22 +182,47 @@ export const ButtonRow = styled.div`
   gap: 8px;
 `;
 
-export const ActionButton = styled.button<{ $danger?: boolean }>`
+export const ActionButton = styled.button<{
+  $danger?: boolean;
+  $variant?: 'admin' | 'mentor';
+}>`
   padding: 6px 18px;
   border-radius: 4px;
-  border: 1px solid ${token.colors.line.normal};
-  background-color: ${token.colors.main.white};
+  border: ${({ $variant }) =>
+    $variant === 'admin'
+      ? 'none'
+      : $variant === 'mentor'
+        ? 'none'
+        : `1px solid ${token.colors.line.normal}`};
+  background-color: ${({ $variant }) =>
+    $variant === 'admin'
+      ? '#2D2D2D'
+      : $variant === 'mentor'
+        ? token.colors.main.yellow
+        : token.colors.main.white};
   ${token.typography('body', 'sm', 'bold')}
-  color: ${({ $danger }) =>
-    $danger ? token.colors.calendar.red : token.colors.text.neutral};
+  color: ${({ $danger, $variant }) =>
+    $variant === 'admin'
+      ? token.colors.main.yellow
+      : $variant === 'mentor'
+        ? token.colors.text.dark
+        : $danger
+          ? token.colors.calendar.red
+          : token.colors.text.neutral};
   cursor: pointer;
   transition:
     background-color 0.15s,
     color 0.15s;
 
   &:hover {
-    background-color: ${({ $danger }) =>
-      $danger ? '#FFF0F0' : token.colors.fill.f3};
+    background-color: ${({ $danger, $variant }) =>
+      $variant === 'admin'
+        ? '#1a1a1a'
+        : $variant === 'mentor'
+          ? token.colors.accent.secondary1
+          : $danger
+            ? '#FFF0F0'
+            : token.colors.fill.f3};
   }
 `;
 
