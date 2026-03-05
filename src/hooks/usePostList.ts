@@ -8,7 +8,7 @@ export const usePostList = (selectedCategory: string, currentPage: number) => {
         const [maxPage, setMaxPage] = useState<number>(0);
     
         useEffect(() => {
-            const fetchPosts = async () => {
+            const getPostsInfo = async () => {
                 try {
                     const data = selectedCategory === '전체'
                         ? await getAllPost({
@@ -27,7 +27,7 @@ export const usePostList = (selectedCategory: string, currentPage: number) => {
                 }
             };
             
-            fetchPosts();
+            getPostsInfo();
         }, [selectedCategory, currentPage])
     
         // 고정된 게시글과 고정되지 않은 게시글 분리
