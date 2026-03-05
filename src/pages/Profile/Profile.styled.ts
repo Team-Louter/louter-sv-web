@@ -1,17 +1,26 @@
 import styled from 'styled-components';
 import * as token from '@/styles/values/token';
 
+export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 80rem;
+  background-color: ${token.colors.main.white};
+  overflow-y: auto;
+`;
+
 export const PageWrapper = styled.div`
   ${token.flexColumn}
-  min-height: 100vh;
+  /* min-height: 100vh; */
   background-color: ${token.colors.fill.white};
-  padding: 40px 0 80px;
+  padding: 60px 0 80px;
 `;
 
 export const Inner = styled.div`
   width: 100%;
   max-width: 1300px;
-  height: 100%;
+  /* height: 100%; */
   margin: 0 auto;
   padding: 0 24px;
   ${token.flexColumn}
@@ -34,6 +43,7 @@ export const Card = styled.div`
   height: 100%;
   padding: 16px 0;
   overflow: hidden;
+  zoom: 0.9;
 `;
 
 /* ─── 카드 상단: 프로필 + 통계 + 버튼 ─── */
@@ -157,7 +167,7 @@ export const SocialLink = styled.a`
   ${token.flexRow}
   align-items: center;
   gap: 4px;
-  ${token.typography('body', 'sm', 'medium')}
+  ${token.typography('body', 'sm', 'semibold')}
   color: ${token.colors.fill.slate};
   text-decoration: none;
   transition: color 0.15s;
@@ -278,7 +288,7 @@ export const TabIndicator = styled.div<{ $active: boolean }>`
 
 /* ─── 글 목록 ─── */
 export const TabContent = styled.div`
-  height: 200px;
+  height: 300px;
   padding: 8px 32px 32px;
   ${token.flexColumn}
   justify-content: flex-start;
