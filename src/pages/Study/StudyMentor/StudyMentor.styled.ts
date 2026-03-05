@@ -3,9 +3,9 @@ import * as token from "@/styles/values/token";
 
 export const Container = styled.div`
   width: 100%;
-  min-height: calc(100vh - 60px);  /* height → min-height */
+  min-height: calc(100vh - 60px);
   ${token.flexColumn}
-  align-items: center;             /* justify-content: center 제거 */
+  align-items: center;
   background-color: ${token.colors.background.lightGray};
   padding: 40px;
   box-sizing: border-box;
@@ -21,13 +21,15 @@ export const NavHeader = styled.div`
 `;
 
 export const NavTitle = styled.h2`
-  ${token.typography("body", "lg", "bold")}
+  ${token.typography("heading", "md", "semibold")}
   color: ${token.colors.text.strong};
   min-width: 150px;
   text-align: center;
 `;
 
 export const NavButton = styled.button`
+  width: 17px;
+  height: 30px;
   background: none;
   border: none;
   cursor: pointer;

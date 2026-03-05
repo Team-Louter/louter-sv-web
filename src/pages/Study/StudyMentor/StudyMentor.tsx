@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import Post from "../components/StudyPost/StudyPost";
 import * as S from "./StudyMentor.styled";
 import { getStudies, type StudyResponse } from "@/api/Study";
-import LeftArrow from "@/assets/AuthImg/arrow.svg"; // 적절한 화살표 아이콘 사용
+import LeftArrow from "../../../assets/study/Arrow.png";
 import StudyModal from "../components/StudyModal/StudyModal";
 
 export default function StudyMentor() {
