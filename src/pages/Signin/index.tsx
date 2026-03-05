@@ -10,12 +10,12 @@ import { useAuthStore } from '@/store/authStore';
 function Signin() {
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
+  const fetchUser = useAuthStore((state) => state.fetchUser);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const isDisabled = !email.trim() || !password.trim() || isLoading;
 
-  // 로그인 API 호출 후 성공 시 메인으로 이동
   const handleLogin = async () => {
     setIsLoading(true);
     try {
@@ -25,6 +25,7 @@ function Signin() {
         userProvider: 'SELF',
       });
       setAuth(data);
+      await fetchUser();
       navigate('/');
     } catch (err: unknown) {
       const status = (err as { response?: { status?: number } })?.response
@@ -40,7 +41,6 @@ function Signin() {
     }
   };
 
-  // 회원가입 페이지(약관 동의)로 이동하는 핸들러
   const handleSignup = () => {
     navigate('/auth/signup/check');
   };

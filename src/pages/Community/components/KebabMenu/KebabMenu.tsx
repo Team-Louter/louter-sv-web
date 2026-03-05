@@ -1,5 +1,8 @@
-import type { KebabMenuProps } from "@/types/community";
 import * as S from "./KebabMenu.styled";
+
+type KebabMenuProps = {
+    items: { label: string; onClick: () => void }[];
+};
 
 export default function KebabMenu({ items }: KebabMenuProps) {
     return (

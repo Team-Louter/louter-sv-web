@@ -7,45 +7,49 @@ import CategoryDropdown from "../components/CategoryDropdown/CategoryDropdown";
 import Markdown from "../components/Markdown/Markdown";
 import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
 import { renderMarkdown } from "@/utils/Markdown/MarkdownConfig";
-import { MAX_LENGTH, insertAtCursor, processListEnter } from "@/utils/Markdown/Editor";
-import { createPostInfo, editPostInfo, uploadFile } from "@/api/Post";
+import { MAX_LENGTH, processListEnter } from "@/utils/Markdown/Editor";
+import { uploadFile } from "@/api/Post";
 import type { ServerFile } from "@/types/post";
+import { usePostEditor } from "@/hooks/usePostEditor";
+import { useMarkdownEditor } from "@/hooks/useMarkdownEditor";
 
 export default function CommunityPost() {
     const navigate = useNavigate();
     const location = useLocation();
-    const editPost = location.state?.post; // 수정할 게시글 정보
+    const editPost = location.state?.post;
 
-    const [selectedCategory, setSelectedCategory] = useState<string>(editPost?.category ?? ""); // 선택된 카테고리
-    const [selectedTag, setSelectedTag] = useState<string>(CATEGORY_TAGS_REVERSED[selectedCategory]?.[editPost?.tag] ?? ""); // 선택된 말머리
-    const [content, setContent] = useState<string>(editPost?.postContent ?? ""); // 게시글 내용
-    const [title, setTitle] = useState<string>(editPost?.postTitle ?? ""); // 게시글 제목
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // 게시 확인 모달 열림 여부
-    const [isCancelModalOpen, setIsCancelModalOpen] = useState<boolean>(false); // 게시 취소 확인 모달 열림 여부
-    const [isAnonymous, setIsAnonymous] = useState<boolean>(editPost?.isAnonymous ?? false); // 익명 게시 여부
-    const [attachedFiles, setAttachedFiles] = useState<ServerFile[]>(editPost?.files ?? []); // 첨부 파일
+    const [selectedCategory, setSelectedCategory] = useState<string>(editPost?.category ?? "");
+    const [selectedTag, setSelectedTag] = useState<string>(CATEGORY_TAGS_REVERSED[selectedCategory]?.[editPost?.tag] ?? "");
+    const [content, setContent] = useState<string>(editPost?.postContent ?? "");
+    const [title, setTitle] = useState<string>(editPost?.postTitle ?? "");
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [isCancelModalOpen, setIsCancelModalOpen] = useState<boolean>(false);
+    const [isAnonymous, setIsAnonymous] = useState<boolean>(editPost?.isAnonymous ?? false);
+    const [attachedFiles, setAttachedFiles] = useState<ServerFile[]>(editPost?.files ?? []);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const isComposingRef = useRef(false);
     const imageInputRef = useRef<HTMLInputElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const tags = Object.keys(CATEGORY_TAGS[selectedCategory] ?? {}); // 카테고리별 말머리 모음
+    const tags = Object.keys(CATEGORY_TAGS[selectedCategory] ?? {});
     const rendered = renderMarkdown(content);
-    const isOverLimit = content.length >= MAX_LENGTH; // 게시글 본문 최대 길이 초과 여부
-    const isPostValid = !!title.trim() && !!selectedCategory && !!content.trim(); // 모든 칸이 설정되었는지 여부
-    const hasContent = !!content.trim(); // 내용에 무언가가 적혀있는지 여부
+    const isOverLimit = content.length >= MAX_LENGTH;
+    const isPostValid = !!title.trim() && !!selectedCategory && !!content.trim();
+    const hasContent = !!content.trim();
 
-    const insert = (text: string) => insertAtCursor(content, setContent, textareaRef, text);
+    const { insert } = useMarkdownEditor(content, setContent, textareaRef);
+    const { handleSubmit } = usePostEditor({
+        editPost, title, content, isAnonymous, selectedCategory, selectedTag, attachedFiles,
+    });
 
-    // 이미지 선택 핸들러
     const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
         const blobUrl = URL.createObjectURL(file);
-        insert(`![${file.name}](${blobUrl})`); 
+        insert(`![${file.name}](${blobUrl})`);
 
-        const { url } = await uploadFile(file); 
+        const { url } = await uploadFile(file);
         setContent((prev: string) => prev.replace(blobUrl, url));
         setAttachedFiles(prev => [...prev, {
             fileUrl: url,
@@ -57,7 +61,6 @@ export default function CommunityPost() {
         e.target.value = "";
     };
 
-    // 파일 선택 핸들러
     const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -67,7 +70,7 @@ export default function CommunityPost() {
             file.type.startsWith("video/")
                 ? `[video:${file.name}](${blobUrl})`
                 : `[${file.name}](${blobUrl})`
-        ); // 미리보기용 blob URL 삽입
+        );
 
         const { url } = await uploadFile(file);
         setContent((prev: string) => prev.replace(blobUrl, url));
@@ -88,12 +91,10 @@ export default function CommunityPost() {
         e.target.value = "";
     };
 
-    // 글자 수 제한 초과 시 업데이트 차단
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (e.target.value.length <= MAX_LENGTH) setContent(e.target.value);
     };
 
-    // 엔터 클릭 시 (현재 줄이 리스트면 다음 줄에 자동으로 기호 연결)
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key !== "Enter") return;
         const el = textareaRef.current;
@@ -127,47 +128,6 @@ export default function CommunityPost() {
         processListEnter(content, lineStart, currentLine, el, setContent, ulMatch, olMatch);
     };
 
-    // 게시 확인 모달에서 확인 클릭 시 
-    const handleSubmit = async () => {
-        // content에서 실제 첨부되어있는 파일만 필터링
-        const usedFiles = attachedFiles.filter(file => content.includes(file.fileUrl));
-    
-        if (editPost) {
-            try {
-                await editPostInfo(editPost.postId, {
-                    title,
-                    content,
-                    isAnonymous,
-                    category: selectedCategory,
-                    tag: selectedTag
-                        ? CATEGORY_TAGS[selectedCategory]?.[selectedTag] ?? null
-                        : null,
-                    files: usedFiles,
-                });
-                navigate(-1);
-            } catch (err) {
-                console.error('수정 실패', err);
-            }
-        } else {
-            try {
-                await createPostInfo({
-                    title,
-                    content,
-                    isAnonymous,
-                    category: selectedCategory,
-                    tag: selectedTag
-                        ? CATEGORY_TAGS[selectedCategory]?.[selectedTag] ?? null
-                        : null,
-                    files: usedFiles,
-                });
-                navigate(-1);
-            } catch (err) {
-                console.error('생성 실패', err);
-            }
-        }
-    };
-
-    // 컨펌 모달에서 확인 눌렀을 때
     const handleConfirmPost = () => {
         if (!isPostValid) return;
         handleSubmit();

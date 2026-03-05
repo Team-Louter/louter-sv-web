@@ -5,78 +5,30 @@ import { IoIosArrowBack } from "react-icons/io";
 import { colors } from "@/styles/values/_foundation";
 import { MdRemoveRedEye } from "react-icons/md";
 import { FaRegHeart, FaHeart, FaRegComment } from "react-icons/fa6";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { formatDateTime } from "@/utils/FormatDate";
 import Comment from "../components/Comment/Comment";
 import CommentWrite from "../components/CommentWrite/CommentWrite";
 import KebabMenu from "../components/KebabMenu/KebabMenu";
 import { useKebab } from "@/hooks/useKebab";
 import { MdPushPin } from "react-icons/md";
-import { deletePost, getPostDetail, toggleLike, togglePin } from "@/api/Post";
-import type { Comment as CommentType, Post } from "@/types/post";
 import { CATEGORY_REVERSED, CATEGORY_TAGS_REVERSED } from "@/constants/Community";
 import { renderMarkdown } from "@/utils/Markdown/MarkdownConfig";
 import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
-import { getComments } from "@/api/Comment";
-import type { User } from "@/types/user";
-import { getUser } from "@/api/User";
+import { useAuthStore } from "@/store/authStore";
+import { usePostDetail } from "@/hooks/usePostDetail";
+import { useComments } from "@/hooks/useComments";
 
 export default function CommunityDetail() {
     const location = useLocation();
     const selectedCategory = location.state?.selectedCategory ?? "전체"; // 선택된 카테고리
     const navigate = useNavigate();
     const { postId } = useParams();
-    const [post, setPost] = useState<Post|null>(null); // 게시글 세부 정보
-    const [comments, setComments] = useState<CommentType[]>([]); // 댓글 정보
-    const [userInfo, setUserInfo] = useState<User | null>(null); // 사용자 정보
-
-    // 게시글 세부 정보 가져오기
-    const getPostDetailInfo = async (postId: number) => {
-        try {
-            const data = await getPostDetail(postId);
-            setPost(data);
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    // 댓글 정보 가져오기
-    const getCommentsInfo = async (postId: number) => {
-        try {
-            const data = await getComments(postId);
-            setComments(data);
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    const getUserInfo = async () => {
-            try{
-                const data = await getUser();
-                setUserInfo(data);
-            } catch(err) {
-                console.error(err);
-            }
-        };
-
-    useEffect(() => {
-        getPostDetailInfo(Number(postId));
-        getCommentsInfo(Number(postId));
-        getUserInfo();
-    }, [])
-
-    // 좋아요 눌림 여부 가져오기
-    useEffect(() => {
-        if (post) {
-            setIsLiked(post.isHearted ?? false);
-            setIsPinned(post.pinned ?? false);
-        }
-    }, [post]);
-
-    const [isLiked, setIsLiked] = useState<boolean>(post?.isHearted ?? false); // 좋아요를 눌렀는지 여부
-    const [isPinned, setIsPinned] = useState<boolean>(post?.pinned ?? false); // 고정된 게시글인지 여부
+    const userInfo = useAuthStore((state) => state.user);
     const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab(); // 케밥 메뉴 관련 커스텀 훅
     const [isCancelModalOpen, setIsCancelModalOpen] = useState<boolean>(false); // 게시글 삭제 확인 모달 열림 여부
+    const { post, isLiked, isPinned, setIsPinned, handleToggleLike, handleTogglePin, handleDelete } = usePostDetail(Number(postId));
+    const { comments, getCommentsInfo } = useComments(Number(postId));
 
     // 게시글이 없을 때
     if (!post) {
@@ -88,40 +40,6 @@ export default function CommunityDetail() {
         navigate("/community", { state: { selectedCategory: category } });
     };
 
-    // 게시글 삭제하기
-    const deletePostInfo = async () => {
-        try {
-            await deletePost(post.postId);
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    // 고정 여부 토글
-    const togglePinPost = async (newPinned: boolean) => {
-        try {
-            await togglePin(post.postId, newPinned);
-
-            const data = await getPostDetail(post.postId);
-            setPost(data);
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    // 좋아요 눌림 여부 토글
-    const toggleLikePost = async () => {
-        try {
-            await toggleLike(post.postId);
-            setIsLiked(prev => !prev);
-
-            const data = await getPostDetail(post.postId);
-            setPost(data);
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
     // 케밥 아이콘 내용물
     const kebabItems = [
         ...(userInfo?.role === 'MENTOR' || userInfo?.role === 'LEADER' ? [{
@@ -129,7 +47,7 @@ export default function CommunityDetail() {
             onClick: () => {
                 const newPinned = !isPinned;
                 setIsPinned(newPinned);
-                togglePinPost(newPinned); 
+                handleTogglePin(newPinned);
                 setIsKebabOpen(false);
             },
         }] : []),
@@ -201,10 +119,10 @@ export default function CommunityDetail() {
                         <S.Div>
                             {isLiked
                                 ? <FaHeart color="#FF3535"
-                                    onClick={(e) => { e.stopPropagation(); toggleLikePost(); }}
+                                    onClick={(e) => { e.stopPropagation(); handleToggleLike(); }}
                                     style={{ cursor: "pointer" }} />
                                 : <FaRegHeart color="#FF3535"
-                                    onClick={(e) => { e.stopPropagation(); toggleLikePost(); }}
+                                    onClick={(e) => { e.stopPropagation(); handleToggleLike(); }}
                                     style={{ cursor: "pointer" }} />
                             }
                             <S.LikeCount>{post.likeCount}</S.LikeCount>
@@ -216,10 +134,10 @@ export default function CommunityDetail() {
                     </S.ForRow>
                     <S.Divider />
                     <S.CommentContainer>
-                        <CommentWrite onSuccess={() => getCommentsInfo(Number(postId))}/>
+                        <CommentWrite onSuccess={getCommentsInfo}/>
                         {comments.length > 0
                             ? comments.map((comment) => (
-                                <Comment comment={comment} key={comment.commentId} postId={Number(postId)} onSuccess={() => getCommentsInfo(Number(postId))}/>))
+                                <Comment comment={comment} key={comment.commentId} postId={Number(postId)} onSuccess={getCommentsInfo}/>))
                             : <span style={{ alignSelf: 'center' }}>댓글이 없습니다.</span>
                         }
                     </S.CommentContainer>
@@ -231,7 +149,7 @@ export default function CommunityDetail() {
                 message={"게시글을 삭제하시겠어요?"}
                 onCancel={() => setIsCancelModalOpen(false)}
                 onConfirm={() => {
-                    deletePostInfo();
+                    handleDelete();
                     navigate("/community");
                 }}
                 confirmLabel="삭제"

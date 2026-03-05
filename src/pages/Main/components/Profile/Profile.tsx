@@ -2,24 +2,15 @@ import { useNavigate } from 'react-router-dom';
 import MainPost from '../MainPost/MainPost';
 import * as S from './Profile.styled';
 import PopularPost from '../PopularPost/PopularPost';
-import { getMyPost, getUser } from '@/api/User';
+import { getMyPost } from '@/api/User';
 import { useEffect, useState } from 'react';
-import type { User } from '@/types/user';
 import type { MyPost } from '@/types/post';
+import { useAuthStore } from '@/store/authStore';
 
 export default function Profile() {
   const navigate = useNavigate();
-  const [userInfo, setUserInfo] = useState<User | null>(null);
+  const userInfo = useAuthStore((state) => state.user);
   const [myPost, setMyPost] = useState<MyPost | null>(null);
-
-  const getUserInfo = async () => {
-    try {
-      const data = await getUser();
-      setUserInfo(data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   const getMyPostInfo = async () => {
     try {
@@ -31,7 +22,6 @@ export default function Profile() {
   };
 
   useEffect(() => {
-    getUserInfo();
     getMyPostInfo();
   }, []);
 

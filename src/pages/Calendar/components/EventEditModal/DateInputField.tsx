@@ -1,8 +1,14 @@
 import { useRef } from "react";
 import { CiCalendar } from "react-icons/ci";
 import * as S from "./EventEditModal.styled";
-import type { DateInputFieldProps } from "@/types/fullCalendar";
 
+export interface DateInputFieldProps {
+    label: string;
+    value: string;
+    onChange: (value: string) => void;
+    placeholder?: string;
+    error?: string;
+  }
 
 export default function DateInputField({ label, value, onChange, placeholder = "YYYY-MM-DD", error }: DateInputFieldProps) {
     const dateInputRef = useRef<HTMLInputElement>(null);

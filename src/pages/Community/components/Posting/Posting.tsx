@@ -3,11 +3,16 @@ import * as S from "./Posting.styled";
 import { MdRemoveRedEye } from "react-icons/md";
 import { FaRegHeart, FaHeart, FaRegComment } from "react-icons/fa6";
 import { useState } from "react";
-import type { postProps } from "@/types/post";
+import type { Post } from "@/types/post";
 import { formatDateTime } from "@/utils/FormatDate";
 import { useNavigate } from "react-router-dom";
 import { CATEGORY_REVERSED, CATEGORY_TAGS_REVERSED } from "@/constants/Community";
 import { toggleLike } from "@/api/Post";
+
+export type postProps = {
+  post: Post;
+  selectedCategory: string;
+};
 
 export default function Posting({ post, selectedCategory }: postProps) { 
     const [isLiked, setIsLiked] = useState<boolean>(post.isHearted || false); // 좋아요 누름 여부
