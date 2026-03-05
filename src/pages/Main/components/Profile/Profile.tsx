@@ -41,7 +41,9 @@ export default function Profile() {
         <S.ProfileInfoOut>
           <S.ProfileInfoIn>
             <S.ForRow>
-              <S.ProfileImg src={userInfo?.profileImageUrl} />
+              <S.ProfileImgDiv>
+                <S.ProfileImg src={userInfo?.profileImageUrl} />
+              </S.ProfileImgDiv>
               <S.BasicProfile>
                 <S.Name>{userInfo?.userName}</S.Name>
                 <S.School>

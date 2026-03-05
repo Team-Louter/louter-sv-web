@@ -4,11 +4,16 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100vw;
-  min-height: 100vh;
-  background-color: #ffffff;
+  height: 100vh;
   overflow-y: auto;
+  background-color: #ffffff;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 `;
 
 export const HeaderSpacer = styled.div`
-  min-height: 72px;
+  height: 72px;
 `;

@@ -1,17 +1,24 @@
 import styled from 'styled-components';
 import * as token from '@/styles/values/token';
 
+export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 80rem;
+  background-color: ${token.colors.main.white};
+  overflow-y: auto;
+`;
+
 export const PageWrapper = styled.div`
   ${token.flexColumn}
-  min-height: 100vh;
   background-color: ${token.colors.fill.white};
-  padding: 40px 0 80px;
+  padding: 60px 0 80px;
 `;
 
 export const Inner = styled.div`
   width: 100%;
   max-width: 1300px;
-  height: 100%;
   margin: 0 auto;
   padding: 0 24px;
   ${token.flexColumn}
@@ -34,6 +41,7 @@ export const Card = styled.div`
   height: 100%;
   padding: 16px 0;
   overflow: hidden;
+  zoom: 0.9;
 `;
 
 /* ─── 카드 상단: 프로필 + 통계 + 버튼 ─── */
@@ -138,30 +146,81 @@ export const StatLabel = styled.span`
 
 /* ─── 우측 버튼 ─── */
 export const ActionGroup = styled.div`
-  ${token.flexRow}
-  gap: 8px;
+  ${token.flexColumn}
+  gap: 12px;
   flex-shrink: 0;
   margin-left: auto;
   align-self: flex-end;
   padding-bottom: 4px;
+  align-items: flex-end;
 `;
 
-export const ActionButton = styled.button<{ $danger?: boolean }>`
+export const SocialRow = styled.div`
+  ${token.flexRow}
+  gap: 12px;
+  align-items: center;
+`;
+
+export const SocialLink = styled.a`
+  ${token.flexRow}
+  align-items: center;
+  gap: 4px;
+  ${token.typography('body', 'sm', 'semibold')}
+  color: ${token.colors.fill.slate};
+  text-decoration: none;
+  transition: color 0.15s;
+
+  &:hover {
+    color: ${token.colors.text.dark};
+  }
+`;
+
+export const ButtonRow = styled.div`
+  ${token.flexRow}
+  gap: 8px;
+`;
+
+export const ActionButton = styled.button<{
+  $danger?: boolean;
+  $variant?: 'admin' | 'mentor';
+}>`
   padding: 6px 18px;
   border-radius: 4px;
-  border: 1px solid ${token.colors.line.normal};
-  background-color: ${token.colors.main.white};
+  border: ${({ $variant }) =>
+    $variant === 'admin'
+      ? 'none'
+      : $variant === 'mentor'
+        ? 'none'
+        : `1px solid ${token.colors.line.normal}`};
+  background-color: ${({ $variant }) =>
+    $variant === 'admin'
+      ? '#2D2D2D'
+      : $variant === 'mentor'
+        ? token.colors.main.yellow
+        : token.colors.main.white};
   ${token.typography('body', 'sm', 'bold')}
-  color: ${({ $danger }) =>
-    $danger ? token.colors.calendar.red : token.colors.text.neutral};
+  color: ${({ $danger, $variant }) =>
+    $variant === 'admin'
+      ? token.colors.main.yellow
+      : $variant === 'mentor'
+        ? token.colors.text.dark
+        : $danger
+          ? token.colors.calendar.red
+          : token.colors.text.neutral};
   cursor: pointer;
   transition:
     background-color 0.15s,
     color 0.15s;
 
   &:hover {
-    background-color: ${({ $danger }) =>
-      $danger ? '#FFF0F0' : token.colors.fill.f3};
+    background-color: ${({ $danger, $variant }) =>
+      $variant === 'admin'
+        ? '#1a1a1a'
+        : $variant === 'mentor'
+          ? token.colors.accent.secondary1
+          : $danger
+            ? '#FFF0F0'
+            : token.colors.fill.f3};
   }
 `;
 
@@ -197,6 +256,20 @@ export const InfoValue = styled.span<{ $accent?: boolean }>`
   color: ${({ $accent }) =>
     $accent ? token.colors.text.gold : token.colors.text.coolGray};
   font-weight: ${({ $accent }) => ($accent ? 600 : 400)};
+`;
+
+export const InfoLink = styled.a`
+  ${token.flexRow}
+  align-items: center;
+  gap: 8px;
+  ${token.typography('body', 'lg', 'medium')}
+  color: ${token.colors.text.coolGray};
+  text-decoration: none;
+  transition: color 0.15s;
+
+  &:hover {
+    color: ${token.colors.text.dark};
+  }
 `;
 
 /* ─── 탭 ─── */
@@ -238,15 +311,17 @@ export const TabIndicator = styled.div<{ $active: boolean }>`
 
 /* ─── 글 목록 ─── */
 export const TabContent = styled.div`
-  height: 200px;
+  height: 300px;
   padding: 8px 32px 32px;
   ${token.flexColumn}
   justify-content: flex-start;
-  overflow-y: auto;  &::-webkit-scrollbar {
+  overflow-y: auto;
+  &::-webkit-scrollbar {
     display: none;
   }
   -ms-overflow-style: none;
-  scrollbar-width: none;`;
+  scrollbar-width: none;
+`;
 
 export const PostList = styled.ul`
   list-style: none;
@@ -310,7 +385,11 @@ export const PostMeta = styled.div`
 export const MetaItem = styled.span<{ $red?: boolean; $yellow?: boolean }>`
   ${token.typography('caption', 'lg', 'medium')}
   color: ${({ $red, $yellow }) =>
-    $red ? '#E53935' : $yellow ? token.colors.main.yellow : token.colors.text.lightGray};
+    $red
+      ? '#E53935'
+      : $yellow
+        ? token.colors.main.yellow
+        : token.colors.text.lightGray};
   ${token.flexRow}
   align-items: center;
   gap: 3px;
