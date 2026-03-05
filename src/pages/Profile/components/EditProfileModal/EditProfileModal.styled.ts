@@ -1,6 +1,66 @@
 import styled from 'styled-components';
 import * as token from '@/styles/values/token';
 
+/* ─── 크롭 모달 ─── */
+export const CropOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  ${token.flexCenter}
+  z-index: 1100;
+`;
+
+export const CropModal = styled.div`
+  background: ${token.colors.main.white};
+  border-radius: 12px;
+  padding: 28px 28px 24px;
+  width: 520px;
+  ${token.flexColumn}
+  gap: 0;
+  ${token.elevation('black_3')}
+`;
+
+export const CropTitle = styled.h3`
+  ${token.typography('heading', 'sm', 'semibold')}
+  color: ${token.colors.text.dark};
+  margin: 0 0 16px;
+`;
+
+export const CropArea = styled.div`
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  background: #1a1a1a;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+`;
+
+export const CropZoomRow = styled.div`
+  ${token.flexRow}
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+`;
+
+export const CropZoomLabel = styled.span`
+  ${token.typography('body', 'sm', 'medium')}
+  color: ${token.colors.text.coolGray};
+  flex-shrink: 0;
+`;
+
+export const CropZoomSlider = styled.input`
+  flex: 1;
+  accent-color: ${token.colors.main.yellow};
+  cursor: pointer;
+`;
+
+export const CropButtonRow = styled.div`
+  ${token.flexRow}
+  justify-content: flex-end;
+  gap: 12px;
+`;
+
 /* ─── 오버레이 ─── */
 export const Overlay = styled.div`
   position: fixed;
