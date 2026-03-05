@@ -1,5 +1,13 @@
-import type { TextInputFieldProps } from "@/types/fullCalendar";
 import * as S from "./EventEditModal.styled";
+
+export interface TextInputFieldProps {
+    label: string;
+    value: string;
+    onChange: (value: string) => void;
+    placeholder?: string;
+    showLetterCount?: number;
+    maxLength?: number;
+}
 
 // 한 줄 입력 필드
 export function TextInputField({ 

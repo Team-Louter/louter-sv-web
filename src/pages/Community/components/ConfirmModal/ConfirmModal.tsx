@@ -1,5 +1,16 @@
-import type { ConfirmModalProps } from "@/types/community";
 import * as S from "./ConfirmModal.styled";
+
+interface ConfirmModalProps {
+  open: boolean;
+  message?: string;
+  onCancel: () => void;
+  onConfirm: () => void;
+  cancelLabel?: string;
+  confirmLabel?: string;
+  confirmColor?: string;
+  confirmLabelColor?: string;
+  errorMessage?: string;
+}
 
 export default function ConfirmModal({
   open,

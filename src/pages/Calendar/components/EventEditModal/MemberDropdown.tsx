@@ -4,8 +4,13 @@ import type { Member } from "@/types/member";
 import { IoIosArrowBack } from "react-icons/io";
 import { getGenerations } from "@/utils/FormatFilters";
 import { formatAssignees } from "@/utils/FormatAssignee";
-import type { MemberDropdownProps } from "@/types/fullCalendar";
 import { getMember } from "@/api/Member";
+
+export interface MemberDropdownProps {
+  selectedMemberIds: number[];
+  onSelectChange: (memberIds: number[]) => void;
+  onMembersLoad: (members: Member[]) => void;
+}
 
 export default function MemberDropdown({ selectedMemberIds, onSelectChange, onMembersLoad }: MemberDropdownProps) {
     const [isOpen, setIsOpen] = useState(false); // 담당자 선택 드롭다운 열림 여부

@@ -1,8 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import { CardContainer, DetailRow, DetailLabel, DetailValue } from './EventDetailCard.styled';
-import type { EventDetailCardProps } from '@/types/fullCalendar';
 import { getDateRange } from '@/utils/FormatDate';
 import { formatAssignees } from '@/utils/FormatAssignee';
+import type { EventInput } from '@fullcalendar/core';
+
+interface EventDetailCardProps {
+  event: EventInput | null;
+  position: { x: number; y: number };
+  onClose: () => void;
+}
 
 const EventDetailCard: React.FC<EventDetailCardProps> = ({ event, position, onClose }) => {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -35,7 +41,9 @@ const EventDetailCard: React.FC<EventDetailCardProps> = ({ event, position, onCl
 
       <DetailRow>
         <DetailLabel>날짜</DetailLabel>
-        <DetailValue>{getDateRange(event.start, event.end)}</DetailValue>
+        <DetailValue>
+          {getDateRange(event.start ?? null, event.end ?? null)}
+        </DetailValue>
       </DetailRow>
 
       <DetailRow>

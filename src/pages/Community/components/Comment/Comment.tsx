@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Comment, commentProps } from "@/types/post";
+import type { Comment } from "@/types/post";
 import * as S from "./Comment.styled";
 import { formatDateTime } from "@/utils/FormatDate";
 import CommentWrite from "../CommentWrite/CommentWrite";
@@ -9,6 +9,12 @@ import { deleteComment } from "@/api/Comment";
 import { IoIosArrowBack } from "react-icons/io";
 import { useAuthStore } from "@/store/authStore";
 import { useComments } from "@/hooks/useComments";
+
+export interface commentProps {
+    comment: Comment;
+    postId: number;
+    onSuccess?: () => void;
+}
 
 export default function Comment({ comment, postId, onSuccess }: commentProps) {
     const [showReplyWrite, setShowReplyWrite] = useState(false); // 답글 작성 여부

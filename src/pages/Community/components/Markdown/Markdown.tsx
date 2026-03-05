@@ -2,8 +2,16 @@ import { MARKDOWN_TOOLS } from "@/constants/Community";
 import * as S from "./Markdown.styled";
 import { FaExclamation } from "react-icons/fa6";
 import { colors } from "@/styles/values/_foundation";
-import type { MarkdownProps } from "@/types/community";
 import { useMarkdownEditor } from "@/hooks/useMarkdownEditor";
+import type { RefObject } from "react";
+
+interface MarkdownProps {
+    textareaRef: RefObject<HTMLTextAreaElement | null>;
+    content: string;
+    setContent: (value: string) => void;
+    onImageClick?: () => void;
+    onFileClick?: () => void;
+}
 
 export default function Markdown({ textareaRef, content, setContent, onImageClick, onFileClick }: MarkdownProps) {
     const { handleToolClick } = useMarkdownEditor(content, setContent, textareaRef);

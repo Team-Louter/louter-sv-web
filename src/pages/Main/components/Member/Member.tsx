@@ -1,7 +1,11 @@
+import type { Member } from "@/types/member";
 import * as S from "./Member.styled";
 import { FaGithub } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
-import type { MemberProps } from "@/types/member";
+
+interface MemberProps {
+    memberInfo: Member;
+}
 
 export default function Member ({memberInfo}: MemberProps) {
     return (

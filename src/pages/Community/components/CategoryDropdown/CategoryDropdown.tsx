@@ -1,8 +1,14 @@
 import { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import * as S from "./CategoryDropdown.styled";
-import type { CategoryDropdownProps } from "@/types/community";
 import { useClickOutside } from "@/hooks/useClickOutside";
+
+interface CategoryDropdownProps {
+    options: string[];
+    selected: string;
+    onChange: (value: string) => void;
+    placeholder?: string;
+}
 
 export default function CategoryDropdown({ options, selected, onChange, placeholder = "선택해주세요." }: CategoryDropdownProps) {
     const [isOpen, setIsOpen] = useState(false); // 드롭다운 열림 여부

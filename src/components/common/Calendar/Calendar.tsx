@@ -5,11 +5,14 @@ import interactionPlugin from '@fullcalendar/interaction';
 import type { DateSelectArg, EventClickArg, EventContentArg, EventInput } from '@fullcalendar/core';
 import { FaFlag } from "react-icons/fa6";
 import * as S from './Calendar.styled';
-import type { CalendarProps } from '@/types/fullCalendar';
 import EventDetailCard from './EventDetailCard';
 import EventEditModal from '@/pages/Calendar/components/EventEditModal/EventEditModal';
 import { getEvent } from '@/api/Event';
 import { formatApiEvents, formatEvents } from '@/utils/formatEvent';
+
+type CalendarProps = {
+  readOnly?: boolean;
+}
 
 const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
   const [selectedEvent, setSelectedEvent] = useState<EventInput | null>(null); // 선택된 일정

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import * as S from "./EventEditModal.styled";
-import type { EventEditModalProps } from "@/types/fullCalendar";
 import type { Member } from "@/types/member";
 import { getInitialStartDate, getInitialEndDate } from "@/utils/FormatDate";
 import { getScheduleTarget } from "@/utils/FormatAssignee";
@@ -10,6 +9,16 @@ import { calendarHighlight } from "@/constants/CalendarHighlight";
 import MemberDropdown from "./MemberDropdown";
 import { createEvent, deleteEvent, editEvent, getEvent } from "@/api/Event";
 import { formatEvents } from "@/utils/formatEvent";
+import type { EventInput } from "@fullcalendar/core";
+
+export interface EventEditModalProps {
+    selectedDate?: Date | null;
+    setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    selectedEndDate?: Date | null;
+    modalMode: string;
+    event: EventInput | null;
+    setEvents: React.Dispatch<React.SetStateAction<EventInput[]>>;
+  }
 
 export default function EventEditModal({ selectedDate, selectedEndDate, setIsModalOpen, modalMode, event, setEvents }: EventEditModalProps) {
     const [title, setTitle] = useState<string>(event?.title || ''); // 일정 제목
@@ -166,7 +175,11 @@ export default function EventEditModal({ selectedDate, selectedEndDate, setIsMod
                 />
 
                 <S.Buttons>
-                    {modalMode === '편집' ? <S.DeleteButton onClick={() => handleDelete(event.scheduleId)}>삭제</S.DeleteButton> : <></>}
+                    {modalMode === '편집' && event && (
+                        <S.DeleteButton onClick={() => handleDelete(event.scheduleId)}>
+                            삭제
+                        </S.DeleteButton>
+                    )}
                     <S.CancelButton onClick={() => setIsModalOpen(false)}>취소</S.CancelButton>
                     <S.ConfirmButton $isValid={isFormValid} disabled={!isFormValid} onClick={handleSubmit}>
                         저장

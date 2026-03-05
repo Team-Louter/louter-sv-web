@@ -1,8 +1,16 @@
 import { useState } from "react";
-import type { CommentWriteProps } from "@/types/community";
 import * as S from "./CommentWrite.styled";
 import { useAuthStore } from "@/store/authStore";
 import { useCommentEditor } from "@/hooks/useCommentEditor";
+import type { Comment } from "@/types/post";
+
+interface CommentWriteProps {
+    comment?: Comment;
+    onClose?: () => void;
+    isEditing?: boolean;
+    parentId?: number | null;
+    onSuccess?: () => void;
+}
 
 export default function CommentWrite({ comment, onClose, isEditing = false, parentId = null, onSuccess }: CommentWriteProps) {
     const [content, setContent] = useState(comment?.content || ""); // 댓글 내용

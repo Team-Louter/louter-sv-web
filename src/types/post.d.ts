@@ -72,23 +72,6 @@ export interface HotPost {
   files: PostFile[];
 }
 
-export type mainProps = {
-  title: string;
-  viewCount: number;
-  id: number | undefined;
-};
-
-export type postProps = {
-  post: Post;
-  selectedCategory: string;
-};
-
-export interface commentProps {
-  comment: Comment;
-  postId: number;
-  onSuccess?: () => void;
-}
-
 // 게시글 타입
 export type Post = {
   postId: number;
