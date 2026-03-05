@@ -14,10 +14,26 @@ import { formatDateTime } from '@/utils/FormatDate';
 import ViewIcon from '@/assets/Mypage/View.svg';
 import GoodIcon from '@/assets/Mypage/Good.svg';
 import ChatIcon from '@/assets/Mypage/Chat.svg';
+import GithubImg from '@/assets/Mypage/github.svg';
+import LinkedinImg from '@/assets/Mypage/linkedin.svg';
 import WithdrawModal from './components/WithdrawModal/WithdrawModal';
 import EditProfileModal from './components/EditProfileModal/EditProfileModal';
 
 const TABS = ['내가 쓴 글', '댓글 단 글', '좋아요한 글'] as const;
+
+/** 중복 prefix 제거: https://github.com/https://github.com/user → https://github.com/user */
+const normalizeGithubUrl = (url: string) => {
+  const parts = url.split('github.com/').filter(Boolean);
+  return parts.length > 0
+    ? `https://github.com/${parts[parts.length - 1].split('/')[0]}`
+    : url;
+};
+const normalizeLinkedinUrl = (url: string) => {
+  const parts = url.split(/linkedin\.com\/in\//i).filter(Boolean);
+  return parts.length > 0
+    ? `https://www.linkedin.com/in/${parts[parts.length - 1].split('/')[0]}`
+    : url;
+};
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -92,212 +108,274 @@ export default function Profile() {
   return (
     <S.PageWrapper>
       <SkeletonTheme baseColor="#F3F4F6" highlightColor="#e8e8e8">
-      <S.Inner>
-        {/* 페이지 제목 */}
-        <S.PageTitle>마이페이지</S.PageTitle>
+        <S.Inner>
+          {/* 페이지 제목 */}
+          <S.PageTitle>마이페이지</S.PageTitle>
 
-        {/* 단일 카드 */}
-        <S.Card>
-          {/* 상단: 프로필 + 통계 + 버튼 */}
-          {user === null ? (
-            /* ── 프로필 스켈레톤 ── */
-            <>
-              <S.CardTop>
-                <S.ProfileGroup>
-                  <Skeleton circle width={116} height={116} />
-                  <S.ProfileInfo>
-                    <Skeleton width={120} height={22} />
-                    <Skeleton width={160} height={16} />
-                    <Skeleton width={80} height={28} borderRadius={4} />
-                  </S.ProfileInfo>
-                </S.ProfileGroup>
-                <S.StatsGroup>
-                  {[0, 1, 2].map((i) => (
-                    <S.StatItem key={i}>
-                      <Skeleton width={40} height={24} />
-                      <Skeleton width={72} height={14} style={{ marginTop: 8 }} />
-                    </S.StatItem>
-                  ))}
-                </S.StatsGroup>
-                <S.ActionGroup>
-                  <Skeleton width={80} height={34} borderRadius={4} />
-                  <Skeleton width={80} height={34} borderRadius={4} />
-                </S.ActionGroup>
-              </S.CardTop>
-              <S.Divider />
-              <S.InfoSection>
-                <S.InfoRow>
-                  <Skeleton width={120} height={18} style={{ marginRight: 16 }} />
-                  <Skeleton width={200} height={18} />
-                </S.InfoRow>
-                <S.InfoRow>
-                  <Skeleton width={120} height={18} style={{ marginRight: 16 }} />
-                  <Skeleton width={60} height={18} />
-                </S.InfoRow>
-              </S.InfoSection>
-            </>
-          ) : (
-            /* ── 실제 프로필 ── */
-            <>
-              <S.CardTop>
-                <S.ProfileGroup>
-                  <S.ProfileImageWrapper>
-                    {user.profileImageUrl ? (
-                      <S.ProfileImage
-                        src={user.profileImageUrl}
-                        alt="프로필 이미지"
-                      />
-                    ) : (
-                      <S.ProfileImageFallback>
-                        {user.userName.charAt(0)}
-                      </S.ProfileImageFallback>
-                    )}
-                  </S.ProfileImageWrapper>
-                  <S.ProfileInfo>
-                    <S.ProfileName>{user.userName}</S.ProfileName>
-                    <S.ProfileSubInfo>
-                      {`${user.grade}학년 ${user.classRoom}반 ${user.number}번`}
-                    </S.ProfileSubInfo>
-                    <S.EditButton onClick={() => setShowEditModal(true)}>
-                      프로필 수정
-                    </S.EditButton>
-                  </S.ProfileInfo>
-                </S.ProfileGroup>
-
-                <S.StatsGroup>
-                  <S.StatItem>
-                    <S.StatValue>{user.postCount}</S.StatValue>
-                    <S.StatLabel>작성한 글</S.StatLabel>
-                  </S.StatItem>
-                  <S.StatItem>
-                    <S.StatValue>{user.commentCount}</S.StatValue>
-                    <S.StatLabel>작성한 댓글</S.StatLabel>
-                  </S.StatItem>
-                  <S.StatItem>
-                    <S.StatValue>{user.likedPostCount}</S.StatValue>
-                    <S.StatLabel>좋아요한 글</S.StatLabel>
-                  </S.StatItem>
-                </S.StatsGroup>
-
-                <S.ActionGroup>
-                  <S.ActionButton onClick={handleLogout}>
-                    로그아웃
-                  </S.ActionButton>
-                  <S.ActionButton $danger onClick={handleWithdraw}>
-                    회원 탈퇴
-                  </S.ActionButton>
-                </S.ActionGroup>
-              </S.CardTop>
-
-              <S.Divider />
-
-              <S.InfoSection>
-                <S.InfoRow>
-                  <S.InfoLabel>이메일(Email)</S.InfoLabel>
-                  <S.InfoValue>{user.userEmail}</S.InfoValue>
-                </S.InfoRow>
-                <S.InfoRow>
-                  <S.InfoLabel>받은 좋아요 개수</S.InfoLabel>
-                  <S.InfoValue $accent>
-                    {user.receivedLikeCount.toLocaleString()}
-                  </S.InfoValue>
-                </S.InfoRow>
-              </S.InfoSection>
-            </>
-          )}
-
-          {/* 탭 */}
-          <S.TabBar>
-            {TABS.map((tab, idx) => (
-              <S.TabItem
-                key={tab}
-                $active={activeTab === idx}
-                onClick={() => setActiveTab(idx)}
-              >
-                {tab}
-                <S.TabIndicator $active={activeTab === idx} />
-              </S.TabItem>
-            ))}
-          </S.TabBar>
-
-          {/* 글 목록 */}
-          <S.TabContent>
-            {loading ? (
-              <S.PostList>
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <S.PostItem key={i} style={{ cursor: 'default' }}>
-                    <S.PostLeft>
-                      <Skeleton width={56} height={22} borderRadius={50} />
-                      <Skeleton width={260} height={16} />
-                    </S.PostLeft>
-                    <S.PostMeta>
-                      <Skeleton width={40} height={14} />
-                      <Skeleton width={40} height={14} />
-                      <Skeleton width={40} height={14} />
-                      <Skeleton width={80} height={14} />
-                    </S.PostMeta>
-                  </S.PostItem>
-                ))}
-              </S.PostList>
-            ) : posts.length === 0 ? (
-              <S.EmptyMessage>
-                {activeTab === 0
-                  ? '작성한 게시글이 없습니다'
-                  : activeTab === 1
-                    ? '작성한 댓글이 없습니다'
-                    : '좋아요한 게시글이 없습니다'}
-              </S.EmptyMessage>
+          {/* 단일 카드 */}
+          <S.Card>
+            {/* 상단: 프로필 + 통계 + 버튼 */}
+            {user === null ? (
+              /* ── 프로필 스켈레톤 ── */
+              <>
+                <S.CardTop>
+                  <S.ProfileGroup>
+                    <Skeleton circle width={116} height={116} />
+                    <S.ProfileInfo>
+                      <Skeleton width={120} height={22} />
+                      <Skeleton width={160} height={16} />
+                      <Skeleton width={80} height={28} borderRadius={4} />
+                    </S.ProfileInfo>
+                  </S.ProfileGroup>
+                  <S.StatsGroup>
+                    {[0, 1, 2].map((i) => (
+                      <S.StatItem key={i}>
+                        <Skeleton width={40} height={24} />
+                        <Skeleton
+                          width={72}
+                          height={14}
+                          style={{ marginTop: 8 }}
+                        />
+                      </S.StatItem>
+                    ))}
+                  </S.StatsGroup>
+                  <S.ActionGroup>
+                    <Skeleton width={80} height={34} borderRadius={4} />
+                    <Skeleton width={80} height={34} borderRadius={4} />
+                  </S.ActionGroup>
+                </S.CardTop>
+                <S.Divider />
+                <S.InfoSection>
+                  <S.InfoRow>
+                    <Skeleton
+                      width={120}
+                      height={18}
+                      style={{ marginRight: 16 }}
+                    />
+                    <Skeleton width={200} height={18} />
+                  </S.InfoRow>
+                  <S.InfoRow>
+                    <Skeleton
+                      width={120}
+                      height={18}
+                      style={{ marginRight: 16 }}
+                    />
+                    <Skeleton width={60} height={18} />
+                  </S.InfoRow>
+                </S.InfoSection>
+              </>
             ) : (
-              <S.PostList>
-                {posts.map((post) => (
-                  <S.PostItem
-                    key={
-                      activeTab === 1
-                        ? `${post.postId}-${post.commentId ?? post.postId}`
-                        : post.postId
-                    }
-                    onClick={() => navigate(`/community/${post.postId}`)}
-                  >
-                    <S.PostLeft>
-                      <S.CategoryBadge>
-                        {CATEGORY_REVERSED[post.postCategory] ??
-                          post.postCategory}
-                      </S.CategoryBadge>
-                      <div style={{ overflow: 'hidden' }}>
-                        <S.PostTitle>{post.postTitle}</S.PostTitle>
-                        {activeTab === 1 && post.commentContent && (
-                          <S.CommentContent>
-                            └ {post.commentContent}
-                          </S.CommentContent>
+              /* ── 실제 프로필 ── */
+              <>
+                <S.CardTop>
+                  <S.ProfileGroup>
+                    <S.ProfileImageWrapper>
+                      {user.profileImageUrl ? (
+                        <S.ProfileImage
+                          src={user.profileImageUrl}
+                          alt="프로필 이미지"
+                        />
+                      ) : (
+                        <S.ProfileImageFallback>
+                          {user.userName.charAt(0)}
+                        </S.ProfileImageFallback>
+                      )}
+                    </S.ProfileImageWrapper>
+                    <S.ProfileInfo>
+                      <S.ProfileName>{user.userName}</S.ProfileName>
+                      <S.ProfileSubInfo>
+                        {`${user.grade}학년 ${user.classRoom}반 ${user.number}번`}
+                      </S.ProfileSubInfo>
+                      <S.EditButton onClick={() => setShowEditModal(true)}>
+                        프로필 수정
+                      </S.EditButton>
+                    </S.ProfileInfo>
+                  </S.ProfileGroup>
+
+                  <S.StatsGroup>
+                    <S.StatItem>
+                      <S.StatValue>{user.postCount}</S.StatValue>
+                      <S.StatLabel>작성한 글</S.StatLabel>
+                    </S.StatItem>
+                    <S.StatItem>
+                      <S.StatValue>{user.commentCount}</S.StatValue>
+                      <S.StatLabel>작성한 댓글</S.StatLabel>
+                    </S.StatItem>
+                    <S.StatItem>
+                      <S.StatValue>{user.likedPostCount}</S.StatValue>
+                      <S.StatLabel>좋아요한 글</S.StatLabel>
+                    </S.StatItem>
+                  </S.StatsGroup>
+
+                  <S.ActionGroup>
+                    {(user.githubUrl || user.linkedinUrl) && (
+                      <S.SocialRow>
+                        {user.githubUrl && (
+                          <S.SocialLink
+                            href={normalizeGithubUrl(user.githubUrl)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                              src={GithubImg}
+                              alt="GitHub"
+                              width={18}
+                              height={18}
+                            />
+                            {(() => {
+                              const parts = user.githubUrl
+                                .split('github.com/')
+                                .filter(Boolean);
+                              return parts.length > 0
+                                ? parts[parts.length - 1].split('/')[0]
+                                : '';
+                            })()}
+                          </S.SocialLink>
                         )}
-                      </div>
-                    </S.PostLeft>
-                    <S.PostMeta>
-                      <S.MetaItem>
-                        <img src={ViewIcon} alt="views" />
-                        {post.viewers.toLocaleString()}
-                      </S.MetaItem>
-                      <S.MetaItem $red>
-                        <img src={GoodIcon} alt="likes" />
-                        {post.likeCount.toLocaleString()}
-                      </S.MetaItem>
-                      <S.MetaItem $yellow>
-                        <img src={ChatIcon} alt="comments" />
-                        {post.commentCount.toLocaleString()}
-                      </S.MetaItem>
-                      <S.MetaItem>
-                        {formatDateTime(
-                          post.commentCreatedAt ?? post.createdAt,
+                        {user.linkedinUrl && (
+                          <S.SocialLink
+                            href={normalizeLinkedinUrl(user.linkedinUrl)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <img
+                              src={LinkedinImg}
+                              alt="LinkedIn"
+                              width={18}
+                              height={18}
+                            />
+                            {(() => {
+                              const parts = user.linkedinUrl
+                                .split(/linkedin\.com\/in\//i)
+                                .filter(Boolean);
+                              return parts.length > 0
+                                ? parts[parts.length - 1].split('/')[0]
+                                : '';
+                            })()}
+                          </S.SocialLink>
                         )}
-                      </S.MetaItem>
-                    </S.PostMeta>
-                  </S.PostItem>
-                ))}
-              </S.PostList>
+                      </S.SocialRow>
+                    )}
+                    <S.ButtonRow>
+                      <S.ActionButton onClick={handleLogout}>
+                        로그아웃
+                      </S.ActionButton>
+                      <S.ActionButton $danger onClick={handleWithdraw}>
+                        회원 탈퇴
+                      </S.ActionButton>
+                    </S.ButtonRow>
+                  </S.ActionGroup>
+                </S.CardTop>
+
+                <S.Divider />
+
+                <S.InfoSection>
+                  <S.InfoRow>
+                    <S.InfoLabel>이메일(Email)</S.InfoLabel>
+                    <S.InfoValue>{user.userEmail}</S.InfoValue>
+                  </S.InfoRow>
+                  <S.InfoRow>
+                    <S.InfoLabel>받은 좋아요 개수</S.InfoLabel>
+                    <S.InfoValue $accent>
+                      {user.receivedLikeCount.toLocaleString()}
+                    </S.InfoValue>
+                  </S.InfoRow>
+                </S.InfoSection>
+              </>
             )}
-          </S.TabContent>
-        </S.Card>
-      </S.Inner>
+
+            {/* 탭 */}
+            <S.TabBar>
+              {TABS.map((tab, idx) => (
+                <S.TabItem
+                  key={tab}
+                  $active={activeTab === idx}
+                  onClick={() => setActiveTab(idx)}
+                >
+                  {tab}
+                  <S.TabIndicator $active={activeTab === idx} />
+                </S.TabItem>
+              ))}
+            </S.TabBar>
+
+            {/* 글 목록 */}
+            <S.TabContent>
+              {loading ? (
+                <S.PostList>
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <S.PostItem key={i} style={{ cursor: 'default' }}>
+                      <S.PostLeft>
+                        <Skeleton width={56} height={22} borderRadius={50} />
+                        <Skeleton width={260} height={16} />
+                      </S.PostLeft>
+                      <S.PostMeta>
+                        <Skeleton width={40} height={14} />
+                        <Skeleton width={40} height={14} />
+                        <Skeleton width={40} height={14} />
+                        <Skeleton width={80} height={14} />
+                      </S.PostMeta>
+                    </S.PostItem>
+                  ))}
+                </S.PostList>
+              ) : posts.length === 0 ? (
+                <S.EmptyMessage>
+                  {activeTab === 0
+                    ? '작성한 게시글이 없습니다'
+                    : activeTab === 1
+                      ? '작성한 댓글이 없습니다'
+                      : '좋아요한 게시글이 없습니다'}
+                </S.EmptyMessage>
+              ) : (
+                <S.PostList>
+                  {posts.map((post) => (
+                    <S.PostItem
+                      key={
+                        activeTab === 1
+                          ? `${post.postId}-${post.commentId ?? post.postId}`
+                          : post.postId
+                      }
+                      onClick={() => navigate(`/community/${post.postId}`)}
+                    >
+                      <S.PostLeft>
+                        <S.CategoryBadge>
+                          {CATEGORY_REVERSED[post.postCategory] ??
+                            post.postCategory}
+                        </S.CategoryBadge>
+                        <div style={{ overflow: 'hidden' }}>
+                          <S.PostTitle>{post.postTitle}</S.PostTitle>
+                          {activeTab === 1 && post.commentContent && (
+                            <S.CommentContent>
+                              └ {post.commentContent}
+                            </S.CommentContent>
+                          )}
+                        </div>
+                      </S.PostLeft>
+                      <S.PostMeta>
+                        <S.MetaItem>
+                          <img src={ViewIcon} alt="views" />
+                          {post.viewers.toLocaleString()}
+                        </S.MetaItem>
+                        <S.MetaItem $red>
+                          <img src={GoodIcon} alt="likes" />
+                          {post.likeCount.toLocaleString()}
+                        </S.MetaItem>
+                        <S.MetaItem $yellow>
+                          <img src={ChatIcon} alt="comments" />
+                          {post.commentCount.toLocaleString()}
+                        </S.MetaItem>
+                        <S.MetaItem>
+                          {formatDateTime(
+                            post.commentCreatedAt ?? post.createdAt,
+                          )}
+                        </S.MetaItem>
+                      </S.PostMeta>
+                    </S.PostItem>
+                  ))}
+                </S.PostList>
+              )}
+            </S.TabContent>
+          </S.Card>
+        </S.Inner>
       </SkeletonTheme>
       {showWithdrawModal && (
         <WithdrawModal onClose={() => setShowWithdrawModal(false)} />
@@ -306,11 +384,7 @@ export default function Profile() {
         <EditProfileModal
           user={user}
           onClose={() => setShowEditModal(false)}
-          onUpdated={() =>
-            getUser()
-              .then(setUser)
-              .catch(() => toast.error('사용자 정보를 불러오지 못했습니다.'))
-          }
+          onUpdated={(updated) => setUser(updated)}
         />
       )}
     </S.PageWrapper>
