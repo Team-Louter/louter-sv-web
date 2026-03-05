@@ -10,7 +10,7 @@ interface UseEditProfileOptionParams {
   onClose: () => void;
 }
 
-interface UseEditProfileReturn {
+interface UseEditProfileReturnParams {
   userName: string;
   setUserName: (v: string) => void;
   hakbun: string;
@@ -35,7 +35,7 @@ export function useEditProfile({
   profileImageUrl,
   onUpdated,
   onClose,
-}: UseEditProfileOptionParams): UseEditProfileReturn {
+}: UseEditProfileOptionParams): UseEditProfileReturnParams {
   const initialHakbun = `${user.grade}${user.classRoom}${String(user.number).padStart(2, '0')}`;
 
   const [userName, setUserName] = useState(user.userName);
