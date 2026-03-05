@@ -101,7 +101,7 @@ export default function StudyModal({
   ];
 
   return (
-    <S.Overlay onClick={onClose}>
+    <S.Overlay>
       <S.Container onClick={(e) => e.stopPropagation()}>
         <S.TitleCancelContainer>
           {isReadOnly && study ? (
