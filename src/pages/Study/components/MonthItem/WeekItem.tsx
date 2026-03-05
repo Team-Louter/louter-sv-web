@@ -1,5 +1,5 @@
 import * as S from "./WeekItem.styled";
-import StudyAddButton from "../../../../assets/study/studyAdd.png";
+import StudyAddButton from "@/assets/study/studyAdd.png";
 
 interface WeekItemProps {
   weekNumber: number;

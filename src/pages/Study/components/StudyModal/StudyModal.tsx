@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import * as S from "./StudyModal.styled";
-import cancelImg from "../../../../assets/cancel.png";
-import { createStudy, updateStudy, deleteStudy, type StudyResponse } from "../../../../api/Study";
+import cancelImg from "@/assets/cancel.png";
+import { createStudy, updateStudy, deleteStudy, type StudyResponse } from "@/api/Study";
 import KebabMenu from "@/pages/Community/components/KebabMenu/KebabMenu";
 import { useKebab } from "@/hooks/useKebab";
 

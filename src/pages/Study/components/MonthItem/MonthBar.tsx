@@ -2,7 +2,7 @@ import { useState } from "react";
 import * as S from "./MonthBar.styled";
 import WeekItem from "./WeekItem";
 import StudyModal from "../StudyModal/StudyModal";
-import type { StudyResponse } from "../../../../api/Study";
+import type { StudyResponse } from "@/api/Study";
 
 interface MonthBarProps {
   month: number;
