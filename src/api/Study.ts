@@ -2,12 +2,16 @@ import instance from "./Axios";
 
 export interface StudyResponse {
   studyId: number;
+  study_id?: number;
   authorName: string;
+  author_name?: string;
   title: string;
   content: string;
   summary: string;
   month: number;
+  month_number?: number;
   weekNumber: number;
+  week_number?: number;
   createdAt: string;
 }
 

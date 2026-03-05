@@ -1,16 +1,17 @@
 import { useState } from "react";
 import * as S from "./StudyModal.styled";
 import cancelImg from "../../../../assets/cancel.png";
-import { createStudy, updateStudy, type StudyResponse } from "../../../../api/Study";
+import { createStudy, updateStudy, deleteStudy, type StudyResponse } from "../../../../api/Study";
 
 interface StudyModalProps {
   month: number;
   weekNumber: number;
   study?: StudyResponse | null;
   onClose: () => void;
+  onSuccess: () => void;
 }
 
-export default function StudyModal({ month, weekNumber, study, onClose }: StudyModalProps) {
+export default function StudyModal({ month, weekNumber, study, onClose, onSuccess }: StudyModalProps) {
   const [title, setTitle] = useState(study?.title ?? "");
   const [text, setText] = useState(study?.content ?? "");
   const [isLoading, setIsLoading] = useState(false);
@@ -20,13 +21,12 @@ export default function StudyModal({ month, weekNumber, study, onClose }: StudyM
     setIsLoading(true);
     try {
       if (study) {
-        // 수정
-        await updateStudy(study.studyId, { title, content: text });
+        const id = study.studyId ?? (study as any).study_id;
+        await updateStudy(id, { title, content: text });
       } else {
-        // 작성
         await createStudy({ title, content: text, month, weekNumber });
       }
-      onClose();
+      onSuccess();
     } catch (e) {
       alert("저장에 실패했어요.");
     } finally {
@@ -34,12 +34,29 @@ export default function StudyModal({ month, weekNumber, study, onClose }: StudyM
     }
   };
 
+  const handleDelete = async () => {
+    if (!study) return;
+
+    setIsLoading(true);
+    try {
+      const id = study.studyId ?? (study as any).study_id;
+      await deleteStudy(id);
+      onSuccess();
+    } catch (e) {
+      alert("삭제에 실패했어요.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <>
-      <S.Container>
+    <S.Overlay>
+      <S.Container onClick={(e) => e.stopPropagation()}>
         <S.TitleCancelContainer>
           <S.Wrapper />
-          <S.Title>{month}월 {weekNumber}주차 학습 일지 기록</S.Title>
+          <S.Title>
+            {month}월 {weekNumber}주차 학습 일지 {study ? "수정" : "기록"}
+          </S.Title>
           <S.Cancel src={cancelImg} onClick={onClose} />
         </S.TitleCancelContainer>
 
@@ -59,10 +76,16 @@ export default function StudyModal({ month, weekNumber, study, onClose }: StudyM
           placeholder="내용을 입력해 주세요."
         />
         <S.CharCount>{text.length}/{MAX_LENGTH}</S.CharCount>
+        
         <S.Button onClick={handleSubmit} disabled={isLoading}>
-          완료
+          {study ? "수정 완료" : "기록 완료"}
         </S.Button>
+        {study && (
+          <S.DeleteButton onClick={handleDelete} disabled={isLoading}>
+            삭제하기
+          </S.DeleteButton>
+        )}
       </S.Container>
-    </>
+    </S.Overlay>
   );
 }

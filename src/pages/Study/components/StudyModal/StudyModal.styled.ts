@@ -1,6 +1,16 @@
 import styled from "styled-components";
 import * as token from "@/styles/values/token";
 
+export const Overlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+`;
+
 export const Container = styled.div`
   width: 40%;
   height: 600px;
@@ -83,4 +93,17 @@ export const Button = styled.button`
   background-color: ${token.colors.main.alternative};
   ${token.typography("body", "sm", "medium")}
   border-radius: ${token.shapes.medium};
+  cursor: pointer;
+  border: none;
+`
+
+export const DeleteButton = styled.button`
+  width: 100%;
+  padding: 10px;
+  background-color: ${token.colors.state.errorSoft};
+  color: ${token.colors.main.white};
+  ${token.typography("body", "sm", "medium")}
+  border-radius: ${token.shapes.medium};
+  cursor: pointer;
+  margin-bottom: 5px;
 `

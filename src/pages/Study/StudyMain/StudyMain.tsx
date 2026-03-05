@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import * as S from "./StudyMain.styled";
 import MonthBar from "../components/MonthItem/MonthBar";
 import { getMyStudies, type StudyResponse } from "../../../api/Study";
@@ -37,21 +37,30 @@ export default function StudyMain() {
     isDragging.current = false;
   };
 
-  useEffect(() => {
-    const fetchStudies = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const data = await getMyStudies();
-        setStudies(data);
-      } catch (e) {
-        setError("스터디 정보를 불러오지 못했어요.");
-      } finally {
-        setIsLoading(false);
+  const fetchStudies = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await getMyStudies();
+      let studyList: StudyResponse[] = [];
+      if (Array.isArray(response)) {
+        studyList = response;
+      } else if (response && typeof response === 'object') {
+        const anyResponse = response as any;
+        studyList = anyResponse.data || anyResponse.content || anyResponse.studies || [];
       }
-    };
-    fetchStudies();
+      
+      setStudies(studyList);
+    } catch (e) {
+      setError("스터디 정보를 불러오지 못했어요.");
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchStudies();
+  }, [fetchStudies]);
 
   if (isLoading) return <div>로딩 중...</div>;
   if (error) return <div>{error}</div>;
@@ -68,10 +77,17 @@ export default function StudyMain() {
         <MonthBar
           key={month}
           month={month}
-          // 해당 월 데이터만 필터링해서 전달
-          studies={studies.filter((s) => s.month === month)}
+          studies={studies.filter((s: any) => {
+            // month 필드가 있으면 우선 사용, 없으면 createdAt에서 추출 (최후의 수단)
+            let sMonth = s.month ?? s.month_number ?? s.monthNumber;
+            if (sMonth === undefined && s.createdAt) {
+              sMonth = new Date(s.createdAt).getMonth() + 1;
+            }
+            return Number(sMonth) === Number(month);
+          })}
           currentMonth={currentMonth}
           currentWeek={currentWeek}
+          onStudyChange={fetchStudies}
         />
       ))}
     </S.container>

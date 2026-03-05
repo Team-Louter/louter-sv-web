@@ -9,16 +9,5 @@ export const container = styled.div`
   justify-content: flex-start;
   gap: 120px;
   overflow-y: scroll;
-  cursor: grab;
   padding: 60px 0;
-
-  &:active {
-    cursor: grabbing;
-  }
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 `

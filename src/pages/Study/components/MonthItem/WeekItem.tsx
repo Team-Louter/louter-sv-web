@@ -3,6 +3,7 @@ import StudyAddButton from "../../../../assets/study/studyAdd.png";
 
 interface WeekItemProps {
   weekNumber: number;
+  title?: string;
   content?: string;
   isCurrentWeek?: boolean;
   isPast?: boolean;
@@ -12,14 +13,28 @@ interface WeekItemProps {
 
 export default function WeekItem({
   weekNumber,
-  content,
+  title, 
   isCurrentWeek = false,
   isPast = false,
   onAdd,
   onDetail,
 }: WeekItemProps) {
 
-  // 현재 주차
+  // 이미 작성한 경우
+  if (typeof title === 'string') {
+    return (
+      <S.Container>
+        {weekNumber}주차
+        <S.ContentContainer>
+          <S.DetailButton onClick={onDetail}>
+            {title.trim() === "" ? "(제목 없음)" : title}
+          </S.DetailButton>
+        </S.ContentContainer>
+      </S.Container>
+    );
+  }
+  
+  // 현재 주차인데 아직 미작성
   if (isCurrentWeek) {
     return (
       <S.Container>
@@ -27,18 +42,6 @@ export default function WeekItem({
         <S.ContentContainer>
           <S.AddButton src={StudyAddButton} onClick={onAdd} />
           <S.AddText>이번 주 학습을 돌아보며 기록해 볼까요?</S.AddText>
-        </S.ContentContainer>
-      </S.Container>
-    );
-  }
-
-  // 내용 있음
-  if (content) {
-    return (
-      <S.Container>
-        {weekNumber}주차
-        <S.ContentContainer>
-          <S.DetailButton onClick={onDetail}>{content}</S.DetailButton>
         </S.ContentContainer>
       </S.Container>
     );
