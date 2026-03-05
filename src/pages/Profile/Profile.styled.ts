@@ -138,12 +138,38 @@ export const StatLabel = styled.span`
 
 /* ─── 우측 버튼 ─── */
 export const ActionGroup = styled.div`
-  ${token.flexRow}
+  ${token.flexColumn}
   gap: 8px;
   flex-shrink: 0;
   margin-left: auto;
   align-self: flex-end;
   padding-bottom: 4px;
+  align-items: flex-end;
+`;
+
+export const SocialRow = styled.div`
+  ${token.flexRow}
+  gap: 12px;
+  align-items: center;
+`;
+
+export const SocialLink = styled.a`
+  ${token.flexRow}
+  align-items: center;
+  gap: 4px;
+  ${token.typography('body', 'sm', 'medium')}
+  color: ${token.colors.fill.slate};
+  text-decoration: none;
+  transition: color 0.15s;
+
+  &:hover {
+    color: ${token.colors.text.dark};
+  }
+`;
+
+export const ButtonRow = styled.div`
+  ${token.flexRow}
+  gap: 8px;
 `;
 
 export const ActionButton = styled.button<{ $danger?: boolean }>`
@@ -197,6 +223,20 @@ export const InfoValue = styled.span<{ $accent?: boolean }>`
   color: ${({ $accent }) =>
     $accent ? token.colors.text.gold : token.colors.text.coolGray};
   font-weight: ${({ $accent }) => ($accent ? 600 : 400)};
+`;
+
+export const InfoLink = styled.a`
+  ${token.flexRow}
+  align-items: center;
+  gap: 8px;
+  ${token.typography('body', 'lg', 'medium')}
+  color: ${token.colors.text.coolGray};
+  text-decoration: none;
+  transition: color 0.15s;
+
+  &:hover {
+    color: ${token.colors.text.dark};
+  }
 `;
 
 /* ─── 탭 ─── */
