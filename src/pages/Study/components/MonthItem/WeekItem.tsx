@@ -24,8 +24,8 @@ export default function WeekItem({
     const trimmedTitle = title.trim();
     const displayTitle = trimmedTitle === "" 
       ? "(제목 없음)" 
-      : trimmedTitle.length > 15 
-        ? `${trimmedTitle.slice(0, 15)}...` 
+      : trimmedTitle.length > 20 
+        ? `${trimmedTitle.slice(0, 20)}...` 
         : trimmedTitle;
 
     return (
@@ -67,7 +67,7 @@ export default function WeekItem({
 
   // 아직 오지 않은 주차
   return (
-    <S.Container>
+    <S.Container $isFuture={true}>
       {weekNumber}주차
       <S.ContentContainer>
         <S.EmptyText>기록 기간이 아니에요.</S.EmptyText>

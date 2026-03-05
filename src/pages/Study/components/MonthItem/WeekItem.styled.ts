@@ -1,13 +1,13 @@
 import styled from "styled-components";
 import * as token from "@/styles/values/token";
 
-export const Container = styled.div`
+export const Container = styled.div<{ $isFuture?: boolean }>`
   width: 25%;
   height: 100%;
   ${token.flexColumnCenter};
   justify-content: space-between;
   ${token.typography("body", "md", "semibold")};
-  color: ${token.colors.text.neutral};
+  color: ${props => props.$isFuture ? token.colors.text.disabled : token.colors.text.neutral};
   padding: 40px 20px;
   gap: 5px;
 `
