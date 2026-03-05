@@ -184,6 +184,12 @@ export const ContentContainer = styled.div`
         max-height: 300px;
         object-fit: contain;
         border-radius: 8px;
+        cursor: pointer;
+        transition: opacity 0.15s;
+
+        &:hover {
+            opacity: 0.85;
+        }
     }
 `;
 

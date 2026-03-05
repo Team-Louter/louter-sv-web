@@ -5,7 +5,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { colors } from "@/styles/values/_foundation";
 import { MdRemoveRedEye } from "react-icons/md";
 import { FaRegHeart, FaHeart, FaRegComment } from "react-icons/fa6";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, memo } from "react";
 import { formatDateTime } from "@/utils/FormatDate";
 import Comment from "../components/Comment/Comment";
 import CommentWrite from "../components/CommentWrite/CommentWrite";
@@ -17,9 +17,27 @@ import type { Comment as CommentType, Post } from "@/types/post";
 import { CATEGORY_REVERSED, CATEGORY_TAGS_REVERSED } from "@/constants/Community";
 import { renderMarkdown } from "@/utils/Markdown/MarkdownConfig";
 import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
+import ImagePreview from "../components/ImagePreview/ImagePreview";
 import { getComments } from "@/api/Comment";
 import type { User } from "@/types/user";
 import { getUser } from "@/api/User";
+
+// 게시글 콘텐츠 영역 (memo로 감싸서 불필요한 리렌더링·이미지 리로드 방지)
+const PostContent = memo(function PostContent({
+    html,
+    onClick,
+}: {
+    html: string;
+    onClick: (e: React.MouseEvent<HTMLDivElement>) => void;
+}) {
+    const innerHtml = useMemo(() => ({ __html: html }), [html]);
+    return (
+        <S.ContentContainer
+            onClick={onClick}
+            dangerouslySetInnerHTML={innerHtml}
+        />
+    );
+});
 
 export default function CommunityDetail() {
     const location = useLocation();
@@ -77,6 +95,37 @@ export default function CommunityDetail() {
     const [isPinned, setIsPinned] = useState<boolean>(post?.pinned ?? false); // 고정된 게시글인지 여부
     const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab(); // 케밥 메뉴 관련 커스텀 훅
     const [isCancelModalOpen, setIsCancelModalOpen] = useState<boolean>(false); // 게시글 삭제 확인 모달 열림 여부
+    const [previewIndex, setPreviewIndex] = useState<number>(0); // 이미지 미리보기 인덱스
+    const [isPreviewOpen, setIsPreviewOpen] = useState<boolean>(false); // 이미지 미리보기 열림 여부
+
+    // 마크다운 렌더링 결과 캐싱
+    const renderedContent = useMemo(
+        () => (post ? renderMarkdown(post.postContent) : ""),
+        [post?.postContent]
+    );
+
+    // 렌더된 HTML에서 이미지 src 목록 추출
+    const imageList = useMemo(() => {
+        if (!renderedContent) return [];
+        const matches = renderedContent.matchAll(/<img[^>]+src="([^"]+)"/g);
+        return Array.from(matches, (m) => m[1]);
+    }, [renderedContent]);
+
+    // 이미지 미리보기 닫기 (안정적인 참조 유지)
+    const closePreview = useCallback(() => setIsPreviewOpen(false), []);
+
+    // 게시글 콘텐츠 내 이미지 클릭 시 미리보기 열기
+    const handleContentClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+        const target = e.target as HTMLElement;
+        if (target.tagName === "IMG") {
+            const src = (target as HTMLImageElement).src;
+            if (src) {
+                const idx = imageList.indexOf(src);
+                setPreviewIndex(idx >= 0 ? idx : 0);
+                setIsPreviewOpen(true);
+            }
+        }
+    }, [imageList]);
 
     // 게시글이 없을 때
     if (!post) {
@@ -196,7 +245,10 @@ export default function CommunityDetail() {
                         </S.ForRow>
                     </S.TopContainer>
                     <S.Divider />
-                    <S.ContentContainer dangerouslySetInnerHTML={{ __html: renderMarkdown(post.postContent) }} />
+                    <PostContent
+                        html={renderedContent}
+                        onClick={handleContentClick}
+                    />
                     <S.ForRow>
                         <S.Div>
                             {isLiked
@@ -225,6 +277,13 @@ export default function CommunityDetail() {
                     </S.CommentContainer>
                 </S.PostContainer>
             </S.ForCenter>
+
+            <ImagePreview
+                open={isPreviewOpen}
+                images={imageList}
+                initialIndex={previewIndex}
+                onClose={closePreview}
+            />
 
             <ConfirmModal
                 open={isCancelModalOpen}

@@ -55,3 +55,10 @@ export interface ConfirmModalProps {
     confirmLabelColor?: string;
     errorMessage?: string;
 }
+
+export interface ImagePreviewProps {
+    open: boolean;
+    images: string[];
+    initialIndex: number;
+    onClose: () => void;
+}
