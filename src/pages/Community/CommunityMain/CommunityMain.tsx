@@ -16,12 +16,23 @@ export default function Community() {
     );
     const navigate = useNavigate();
     const [posts, setPosts] = useState<Post[]|null>(null); // 게시글 목록 정보
+    const [maxPage, setMaxPage] = useState<number>(0);
+    const [currentPage, setCurrentPage] = useState<number>(0);
 
     // 전체 게시글 정보 가져오기
     const getAllPostInfo = async () => {
         try {
-            const data = await getAllPost();
+            const data = await getAllPost({
+                page: currentPage,
+                size: 10,
+                sort: [
+                    "pinned,desc",
+                    "createdAt,desc"
+                ]
+            });
             setPosts(data.content);
+            setMaxPage(data.totalPages);
+
         } catch (err) {
             console.error(err);
         }
@@ -30,8 +41,16 @@ export default function Community() {
     // 카테고리별 게시글 정보 가져오기
     const getCategoryPostInfo = async (category: string) => {
         try {
-            const data = await getCategoryPost(category);
+            const data = await getCategoryPost(category, {
+                page: currentPage,
+                size: 10,
+                sort: [
+                    "pinned,desc",
+                    "createdAt,desc"
+                ]
+            });
             setPosts(data.content);
+            setMaxPage(data.totalPages);
         } catch (err) {
             console.error(err);
         }
@@ -43,7 +62,7 @@ export default function Community() {
         } else {
             getCategoryPostInfo(CATEGORIES[selectedCategory]);
         }
-    }, [selectedCategory])
+    }, [selectedCategory, currentPage])
 
     // 고정된 게시글과 고정되지 않은 게시글 분리
     const pinnedPosts = posts?.filter((post) => post.pinned) ?? [];
@@ -56,24 +75,33 @@ export default function Community() {
                     selectedCategory={selectedCategory}
                     onCategoryChange={setSelectedCategory}
                 />
-                <S.PostContainer>
-                    {pinnedPosts.length > 0 && (
-                        <>
-                            <S.PinnedSection>
-                                <S.PinnedLabel>
-                                    <MdPushPin size={25} color={colors.fill.yellow} /> 고정된 게시물
-                                </S.PinnedLabel>
-                                {pinnedPosts.map((post) => (
-                                    <Posting key={post.postId} post={post} selectedCategory={selectedCategory} />
-                                ))}
-                            </S.PinnedSection>
-                            <S.Divider />
-                        </>
-                    )}
-                    {normalPosts.map((post) => (
-                        <Posting key={post.postId} post={post} selectedCategory={selectedCategory} />
-                    ))}
-                </S.PostContainer>
+                <S.ForColumn>
+                    <S.PostContainer>
+                        {pinnedPosts.length > 0 && (
+                            <>
+                                <S.PinnedSection>
+                                    <S.PinnedLabel>
+                                        <MdPushPin size={25} color={colors.fill.yellow} /> 고정된 게시물
+                                    </S.PinnedLabel>
+                                    {pinnedPosts.map((post) => (
+                                        <Posting key={post.postId} post={post} selectedCategory={selectedCategory} />
+                                    ))}
+                                </S.PinnedSection>
+                                <S.Divider />
+                            </>
+                        )}
+                        {normalPosts.map((post) => (
+                            <Posting key={post.postId} post={post} selectedCategory={selectedCategory} />
+                        ))}
+                    </S.PostContainer>
+                    <S.PageBtnContainer>
+                        {[...Array(maxPage)].map((_, i) => (
+                            <S.PageBtn key={i} $isActive={currentPage === i} onClick={() => setCurrentPage(i)}>
+                                {i + 1}
+                            </S.PageBtn>
+                        ))}
+                    </S.PageBtnContainer>
+                </S.ForColumn>
             </S.ForCenter>
             <S.WriteButton onClick={() => navigate('/community/write')}>게시글 작성</S.WriteButton>
         </S.Container>

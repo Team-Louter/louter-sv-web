@@ -1,5 +1,6 @@
-import type { HotPost, Post, PostList, ServerPost } from "@/types/post";
+import type { HotPost, Post, PostList, ServerPage, ServerPost } from "@/types/post";
 import instance from "./Axios";
+import qs from 'qs';
 
 // 인기글 가져오기
 export const getHotPost = async (): Promise<HotPost[]> => {
@@ -8,14 +9,20 @@ export const getHotPost = async (): Promise<HotPost[]> => {
 }
 
 // 전체 게시글 가져오기
-export const getAllPost = async (): Promise<PostList> => {
-    const response = await instance.get<PostList>("/posts");
+export const getAllPost = async (page: ServerPage): Promise<PostList> => {
+    const response = await instance.get<PostList>("/posts", {
+        params: page,
+        paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' })
+    });
     return response.data;
 }
 
 // 카테고리별 게시글 가져오기
-export const getCategoryPost = async (category: string): Promise<PostList> => {
-    const response = await instance.get<PostList>(`/posts/category/${category}`);
+export const getCategoryPost = async (category: string, page: ServerPage): Promise<PostList> => {
+    const response = await instance.get<PostList>(`/posts/category/${category}`, {
+        params: page,
+        paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' })
+    });
     return response.data;
 }
 
@@ -44,6 +51,7 @@ export const uploadFile = async (file:File): Promise<{url: string}> => {
 
 // 게시글 수정하기
 export const editPostInfo = async (postId: number|null, event: ServerPost): Promise<void> => {
+    console.log(event)
     await instance.put<void>(`/posts/${postId}`, event);
 }
 

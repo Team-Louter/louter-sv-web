@@ -15,9 +15,16 @@ export const ForCenter = styled.div`
     height: 85%;
 `
 
+export const ForColumn = styled.div`
+    ${token.flexColumn};
+    width: 84%;
+    height: 100%;
+    gap: 20px;
+`
+
 export const PostContainer = styled.div`
     background-color: ${token.colors.background.white};
-    width: 84%;
+    width: 100%;
     height: 100%;
     border-radius: ${token.shapes.xlarge};
     border: 1px solid ${token.colors.line.normal};
@@ -61,4 +68,20 @@ export const Divider = styled.hr`
     border: none;
     border-top: 1px solid ${token.colors.line.normal};
     margin: 8px 0;
+`;
+
+export const PageBtnContainer = styled.div`
+    ${token.flexRow};
+    align-items: center;
+    gap: 10px;
+    align-self: center;
+`
+
+export const PageBtn = styled.button<{ $isActive: boolean }>`
+    background-color: ${({ $isActive }) => $isActive ? token.colors.accent.secondary2 : 'none'};
+    width: 30px;
+    height: 30px;
+    border-radius: ${token.shapes.xsmall};
+    ${token.flexCenter};
+    ${token.typography('body', 'md', 'regular')};
 `;
