@@ -20,21 +20,27 @@ export default function WeekItem({
   onDetail,
 }: WeekItemProps) {
 
-  // 이미 작성한 경우
   if (typeof title === 'string') {
+    const trimmedTitle = title.trim();
+    const displayTitle = trimmedTitle === "" 
+      ? "(제목 없음)" 
+      : trimmedTitle.length > 15 
+        ? `${trimmedTitle.slice(0, 15)}...` 
+        : trimmedTitle;
+
     return (
       <S.Container>
         {weekNumber}주차
         <S.ContentContainer>
           <S.DetailButton onClick={onDetail}>
-            {title.trim() === "" ? "(제목 없음)" : title}
+            {displayTitle}
           </S.DetailButton>
         </S.ContentContainer>
       </S.Container>
     );
   }
   
-  // 현재 주차인데 아직 미작성
+  // 현재 주차, 미작성
   if (isCurrentWeek) {
     return (
       <S.Container>

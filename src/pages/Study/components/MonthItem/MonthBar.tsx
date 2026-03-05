@@ -78,6 +78,7 @@ export default function MonthBar({ month, studies, currentMonth, currentWeek, on
           month={month}
           weekNumber={selectedWeek}
           study={selectedStudy}
+          isReadOnly={true}
           onClose={handleClose}
           onSuccess={() => {
             handleClose();

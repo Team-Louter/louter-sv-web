@@ -20,11 +20,13 @@ export const Container = styled.div`
   padding: 30px;
   ${token.flexColumn};
   gap: 10px;
+  position: relative;
 `
 
 export const TitleCancelContainer = styled.div`
   ${token.flexRow}
   justify-content: space-between;
+  align-items: center;
 `;
 
 export const Title = styled.span`
@@ -42,22 +44,41 @@ export const Wrapper = styled.div`
   height: 19px;
 `;
 
-export const InputContainer = styled.textarea`
+export const KebabWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  ${token.typography("caption", "lg", "medium")}
+`;
+
+export const KebabIcon = styled.div`
+  ${token.flexColumn}
+  gap: 2px;
+  padding: 5px;
+  div {
+    width: 3px;
+    height: 3px;
+    background-color: ${token.colors.text.neutral};
+    border-radius: 50%;
+  }
+`;
+
+export const InputContainer = styled.textarea<{ isReadOnly?: boolean }>`
   width: 100%;
   flex: 1;
   border-radius: ${token.shapes.medium};
-  border: none;
   resize: none;
   padding: 12px;
   box-sizing: border-box;
   overflow-y: auto;
-  background-color: ${token.colors.fill.normal};
+  background-color: ${props => props.isReadOnly ? token.colors.fill.assistive : token.colors.fill.normal};
+  border: ${props => props.isReadOnly ? `1px solid ${token.colors.line.normal}` : 'none'};
   ${token.typography("body", "sm", "medium")}
   &:focus {
     outline: none;
   }
 `
-
 export const CharCount = styled.span`
   width: 100%;
   text-align: right;
@@ -87,10 +108,29 @@ export const StudyInputdivider = styled.div`
   background-color: ${token.colors.line.normal};
 `
 
+export const ButtonContainer = styled.div`
+  ${token.flexRow}
+  width: 100%;
+  gap: 10px;
+  button {
+    flex: 1;
+  }
+`;
+
 export const Button = styled.button`
   width: 100%;
   padding: 10px;
   background-color: ${token.colors.main.alternative};
+  ${token.typography("body", "sm", "medium")}
+  border-radius: ${token.shapes.medium};
+  cursor: pointer;
+  border: none;
+`
+
+export const CancelButton = styled.button`
+  padding: 10px;
+  background-color: ${token.colors.fill.neutral};
+  color: ${token.colors.text.neutral};
   ${token.typography("body", "sm", "medium")}
   border-radius: ${token.shapes.medium};
   cursor: pointer;
