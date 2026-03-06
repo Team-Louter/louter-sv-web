@@ -52,6 +52,7 @@ export const PostGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 30px;
+  align-items: start;
 `;
 
 export const EmptyState = styled.div`

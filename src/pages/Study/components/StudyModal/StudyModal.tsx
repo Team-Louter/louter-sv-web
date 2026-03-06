@@ -10,6 +10,7 @@ interface StudyModalProps {
   weekNumber: number;
   study?: StudyResponse | null;
   isReadOnly?: boolean;
+  isMentee?: boolean;
   onClose: () => void;
   onSuccess: () => void;
 }
@@ -19,6 +20,7 @@ export default function StudyModal({
   weekNumber, 
   study, 
   isReadOnly: initialIsReadOnly = false,
+  isMentee,
   onClose, 
   onSuccess 
 }: StudyModalProps) {
@@ -104,7 +106,7 @@ export default function StudyModal({
     <S.Overlay>
       <S.Container onClick={(e) => e.stopPropagation()}>
         <S.TitleCancelContainer>
-          {isReadOnly && study ? (
+          {isReadOnly && study && isMentee ? (
             <S.KebabWrapper ref={kebabRef}>
               <S.KebabIcon onClick={() => setIsKebabOpen(!isKebabOpen)}>
                 <div /><div /><div />

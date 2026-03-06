@@ -4,12 +4,14 @@ import * as S from "./StudyMentor.styled";
 import { getStudies, type StudyResponse } from "@/api/Study";
 import LeftArrow from "@/assets/study/Arrow.png";
 import StudyModal from "../components/StudyModal/StudyModal";
+import { getUser } from "@/api/User";
 
 export default function StudyMentor() {
   const [studies, setStudies] = useState<StudyResponse[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedStudy, setSelectedStudy] = useState<StudyResponse | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [role, setRole] = useState<string | null>(null);
 
   // 현재 날짜 기준 초기 값 설정
   const today = new Date();
@@ -31,6 +33,16 @@ export default function StudyMentor() {
 
   useEffect(() => {
     fetchAllStudies();
+
+    const fetchUserRole = async () => {
+      try {
+        const userData = await getUser();
+        setRole(userData.role);
+      } catch (error) {
+        console.error("역할 정보를 가져오는데 실패했습니다.", error);
+      }
+    };
+    fetchUserRole();
   }, [fetchAllStudies]);
 
   // 주차 이동
@@ -114,6 +126,7 @@ export default function StudyMentor() {
           weekNumber={viewWeek}
           study={selectedStudy}
           isReadOnly={true}
+          isMentee={role === "MENTEE"}
           onClose={() => setIsModalOpen(false)}
           onSuccess={() => {
             setIsModalOpen(false);
