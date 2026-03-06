@@ -11,8 +11,10 @@ export default function Main() {
     const [selectedGen, setSelectedGen] = useState<string>("전체"); // 선택된 기수
     const [members, setMembers] = useState<MemberType[]|null>(null);
     const [allMembers, setAllMembers] = useState<MemberType[] | null>(null);
+    const [isLoading, setisLoading] = useState<boolean>(true);
     
     const getMemberInfo = async () => {
+        setisLoading(true);
         try{
             const data = await getMember(selectedGen, null);
             setMembers(data);
@@ -22,6 +24,8 @@ export default function Main() {
             }
         } catch(err) {
             console.error(err);
+        } finally {
+            setisLoading(false);
         }
     };
 
@@ -57,7 +61,7 @@ export default function Main() {
                     <S.MemberScroll>
                         {members
                             ?.map((member) => (
-                                <Member key={member.userId} memberInfo={member}/>
+                                <Member key={member.userId} memberInfo={member} isLoading={isLoading}/>
                             ))}
                     </S.MemberScroll>
                 </S.MemberContainer>

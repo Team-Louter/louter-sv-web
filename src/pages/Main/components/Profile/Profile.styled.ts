@@ -1,5 +1,11 @@
-import styled from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 import * as token from "@/styles/values/token"
+
+const pulse = keyframes`
+  0% { opacity: 1; }
+  50% { opacity: 0.4; }
+  100% { opacity: 1; }
+`;
 
 export const ProfileContainer = styled.div`
     ${token.flexColumn};
@@ -30,11 +36,17 @@ export const ForRow = styled.div`
     align-items: center;
 `
 
-export const ProfileImgDiv = styled.div`
+export const ProfileImgDiv = styled.div<{ $isLoading?: boolean }>`
     height: 60%;
     aspect-ratio: 1;
     border-radius: 50%;
     border: 1px solid ${token.colors.line.normal};
+    overflow: hidden;
+    ${({ $isLoading }) => $isLoading && css`
+        background-color: #e0e0e0;
+        animation: ${pulse} 1.5s ease-in-out infinite;
+        border: none;
+    `}
 `
 
 export const ProfileImg = styled.img`
@@ -69,4 +81,13 @@ export const MyProfile = styled.button`
 export const MyPostTitle = styled.h2`
     ${token.typography("body", "md", "bold")};
     margin: 20px 0px 10px 20px;
+`
+
+export const PostSkeleton = styled.div`
+    height: 80px;
+    width: 90%;
+    margin: 10px auto 0;
+    border-radius: ${token.shapes.xsmall};
+    background-color: #e0e0e0;
+    animation: ${pulse} 1.5s ease-in-out infinite;
 `

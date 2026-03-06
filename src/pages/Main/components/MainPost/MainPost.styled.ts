@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import * as token from "@/styles/values/token";
 
-
 export const PostContainer = styled.div`
     width: 90%;
     border-bottom: 2px solid ${token.colors.line.highlight};

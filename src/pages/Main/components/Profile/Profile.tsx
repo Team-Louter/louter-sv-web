@@ -6,18 +6,24 @@ import { getMyPost } from '@/api/User';
 import { useEffect, useState } from 'react';
 import type { MyPost } from '@/types/post';
 import { useAuthStore } from '@/store/authStore';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 export default function Profile() {
   const navigate = useNavigate();
   const userInfo = useAuthStore((state) => state.user);
   const [myPost, setMyPost] = useState<MyPost | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const getMyPostInfo = async () => {
+    setIsLoading(true);
     try {
       const data = await getMyPost();
       setMyPost(data);
     } catch (err) {
       console.error(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -31,14 +37,18 @@ export default function Profile() {
         <S.ProfileInfoOut>
           <S.ProfileInfoIn>
             <S.ForRow>
-              <S.ProfileImgDiv>
-                <S.ProfileImg src={userInfo?.profileImageUrl} />
+              <S.ProfileImgDiv $isLoading={isLoading || !userInfo}>
+                {!isLoading && userInfo && <S.ProfileImg src={userInfo.profileImageUrl} />}
               </S.ProfileImgDiv>
               <S.BasicProfile>
-                <S.Name>{userInfo?.userName}</S.Name>
+                <S.Name>
+                  {isLoading || !userInfo ? <Skeleton width={80} /> : userInfo.userName}
+                </S.Name>
                 <S.School>
-                  {userInfo?.grade}학년 {userInfo?.classRoom}반{' '}
-                  {userInfo?.number}번
+                  {isLoading || !userInfo
+                    ? <Skeleton width={120} />
+                    : `${userInfo.grade}학년 ${userInfo.classRoom}반 ${userInfo.number}번`
+                  }
                 </S.School>
               </S.BasicProfile>
             </S.ForRow>
@@ -46,13 +56,15 @@ export default function Profile() {
           </S.ProfileInfoIn>
         </S.ProfileInfoOut>
         <S.MyPostTitle>내가 최근에 쓴 글</S.MyPostTitle>
-        {(myPost?.content?.length ?? 0) > 0
-          ? <MainPost
-              title={myPost?.content[0]?.postTitle ?? ''}
-              viewCount={myPost?.content[0]?.viewers ?? 0}
-              id={myPost?.content[0]?.postId}
-            />
-          : <span style={{alignSelf: 'center', marginTop: 30}}>작성한 게시글이 없습니다.</span>
+        {isLoading
+          ? <S.PostSkeleton />
+          : (myPost?.content?.length ?? 0) > 0
+            ? <MainPost
+                title={myPost?.content[0]?.postTitle ?? ''}
+                viewCount={myPost?.content[0]?.viewers ?? 0}
+                id={myPost?.content[0]?.postId}
+              />
+            : <span style={{ alignSelf: 'center', marginTop: 30 }}>작성한 게시글이 없습니다.</span>
         }
       </S.ProfileContainer>
       <PopularPost />
