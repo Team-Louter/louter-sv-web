@@ -76,11 +76,11 @@ export default function Comment({ comment, postId, onSuccess }: commentProps) {
                     <S.ForColumn>
                         {comment
                             ? <S.Name>{comment.userName}</S.Name>
-                            : <Skeleton width={50} height={20} style={{marginBottom: 5}}/>
+                            : <Skeleton width={50} height={20}/>
                         }
                         {comment
                             ? <S.CommentContent>{comment.content}</S.CommentContent>
-                            : <Skeleton width={200} height={20} style={{marginBottom: 5}}/>
+                            : <Skeleton width={200} height={20}/>
                         }
                         <S.Div>
                             {comment
