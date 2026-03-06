@@ -27,7 +27,7 @@ export const usePostList = (selectedCategory: string, currentPage: number) => {
                 } catch(err) {
                     console.error(err);
                 } finally {
-                    // setIsLoading(false);
+                    setIsLoading(false);
                 }
             };
             
