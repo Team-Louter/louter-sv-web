@@ -25,5 +25,5 @@ export const useComments = (postId?: number, parentId?: number) => {
         getCommentsInfo();
     }, [postId]);
 
-    return { comments, getCommentsInfo, isLoading }
+    return { comments, getCommentsInfo, isCommentLoading: isLoading }
 }

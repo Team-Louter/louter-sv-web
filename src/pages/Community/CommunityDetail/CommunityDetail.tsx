@@ -18,6 +18,8 @@ import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
 import { useAuthStore } from "@/store/authStore";
 import { usePostDetail } from "@/hooks/usePostDetail";
 import { useComments } from "@/hooks/useComments";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 export default function CommunityDetail() {
     const location = useLocation();
@@ -27,8 +29,8 @@ export default function CommunityDetail() {
     const userInfo = useAuthStore((state) => state.user);
     const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab(); // 케밥 메뉴 관련 커스텀 훅
     const [isCancelModalOpen, setIsCancelModalOpen] = useState<boolean>(false); // 게시글 삭제 확인 모달 열림 여부
-    const { post, isLiked, isPinned, setIsPinned, handleToggleLike, handleTogglePin, handleDelete } = usePostDetail(Number(postId));
-    const { comments, getCommentsInfo, isLoading } = useComments(Number(postId));
+    const { post, isLiked, isPinned, setIsPinned, handleToggleLike, handleTogglePin, handleDelete, isPostLoading } = usePostDetail(Number(postId));
+    const { comments, getCommentsInfo, isCommentLoading } = useComments(Number(postId));
 
     // 게시글 세부 페이지에서 사이드바의 카테고리 클릭 시 이동
     const handleCategoryChange = (category: string) => {
@@ -73,20 +75,29 @@ export default function CommunityDetail() {
                     <S.TopContainer>
                         <S.ForRow>
                             <S.Div style={{ cursor: "pointer" }} onClick={() => navigate("/community", { state: { selectedCategory }, replace: true })}>
-                                <IoIosArrowBack size={30} color={colors.fill.yellow} />
-                                <S.Category>{CATEGORY_REVERSED[post?.category ?? '']}</S.Category>
+                                <IoIosArrowBack size={30} color={isPostLoading ? '#e0e0e0' : colors.fill.yellow} />
+                                {isPostLoading
+                                    ? <Skeleton width={70} height={30} />
+                                    : <S.Category>{CATEGORY_REVERSED[post?.category ?? '']}</S.Category>
+                                }
                             </S.Div>
                         </S.ForRow>
                         <S.ForRow style={{ justifyContent: "space-between" }}>
                             <S.Div>
                                 {post?.pinned && <MdPushPin size={30} color={colors.fill.yellow} />}
-                                <S.Title>
-                                    {post?.tag && post?.category && `[${CATEGORY_TAGS_REVERSED[post.category][post.tag]}] `}
-                                    {post?.postTitle}
-                                </S.Title>
+                                {isPostLoading
+                                    ? <Skeleton height={45} width={400} />
+                                    : <S.Title>
+                                        {post?.tag && post?.category && `[${CATEGORY_TAGS_REVERSED[post.category][post.tag]}] `}
+                                        {post?.postTitle}
+                                    </S.Title>
+                                }
                                 <S.Div>
-                                    <MdRemoveRedEye size={22} color={colors.fill.yellow} />
-                                    <S.ViewCount>{post?.viewers}</S.ViewCount>
+                                    <MdRemoveRedEye size={22} color={isPostLoading ? '#e0e0e0' : colors.fill.yellow} />
+                                    {isPostLoading
+                                        ? <Skeleton height={20} width={40} />
+                                        : <S.ViewCount>{post?.viewers}</S.ViewCount>
+                                    }
                                 </S.Div>
                             </S.Div>
                             {kebabItems.length > 0 &&
@@ -102,35 +113,58 @@ export default function CommunityDetail() {
                         </S.ForRow>
                         <S.ForRow>
                             <S.Div>
-                                <S.ProfileImg src={post?.userProfileImageUrl}/>
-                                <S.Name>{post?.userName}</S.Name>
+                                {isPostLoading
+                                    ? <Skeleton circle width={25} height={25} />
+                                    : <S.ProfileImg src={post?.userProfileImageUrl} />
+                                }
+                                {isPostLoading
+                                    ? <Skeleton width={40} height={20} />
+                                    : <S.Name>{post?.userName}</S.Name>
+                                }
                             </S.Div>
-                            <S.UploadTime>{formatDateTime(post?.createdAt ?? '')}</S.UploadTime>
+                            {isPostLoading
+                                ? <Skeleton width={100} height={20} />
+                                : <S.UploadTime>{formatDateTime(post?.createdAt ?? '')}</S.UploadTime>
+                            }
                         </S.ForRow>
                     </S.TopContainer>
                     <S.Divider />
-                    <S.ContentContainer dangerouslySetInnerHTML={{ __html: renderMarkdown(post?.postContent ?? '') }} />
+                    {isPostLoading
+                        ? <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                            <Skeleton height={20} width="70%"/>
+                            <Skeleton height={20} width="50%" />
+                        </div>
+                        : <S.ContentContainer dangerouslySetInnerHTML={{ __html: renderMarkdown(post?.postContent ?? '') }} />
+                    }
                     <S.ForRow>
                         <S.Div>
                             {isLiked
-                                ? <FaHeart color="#FF3535"
-                                    onClick={(e) => { e.stopPropagation(); handleToggleLike(); }}
-                                    style={{ cursor: "pointer" }} />
-                                : <FaRegHeart color="#FF3535"
-                                    onClick={(e) => { e.stopPropagation(); handleToggleLike(); }}
-                                    style={{ cursor: "pointer" }} />
+                                ? <FaHeart
+                                    color={isPostLoading ? '#e0e0e0' : '#FF3535'}
+                                    onClick={(e) => { e.stopPropagation(); if (!isPostLoading) handleToggleLike(); }}
+                                    style={{ cursor: isPostLoading ? 'default' : 'pointer' }} />
+                                : <FaRegHeart
+                                    color={isPostLoading ? '#e0e0e0' : '#FF3535'}
+                                    onClick={(e) => { e.stopPropagation(); if (!isPostLoading) handleToggleLike(); }}
+                                    style={{ cursor: isPostLoading ? 'default' : 'pointer' }} />
                             }
-                            <S.LikeCount>{post?.likeCount}</S.LikeCount>
+                            {isPostLoading
+                                ? <Skeleton width={40} height={20} />
+                                : <S.LikeCount>{post?.likeCount}</S.LikeCount>
+                            }
                         </S.Div>
                         <S.Div>
-                            <FaRegComment color={colors.fill.yellow} />
-                            <S.CommentCount>{post?.commentCount}</S.CommentCount>
+                            <FaRegComment color={isPostLoading ? '#e0e0e0' : colors.fill.yellow} />
+                            {isPostLoading
+                                ? <Skeleton width={40} height={20} />
+                                : <S.CommentCount>{post?.commentCount}</S.CommentCount>
+                            }
                         </S.Div>
                     </S.ForRow>
                     <S.Divider />
                     <S.CommentContainer>
-                        <CommentWrite onSuccess={getCommentsInfo}/>
-                        {isLoading
+                        <CommentWrite onSuccess={getCommentsInfo} />
+                        {isCommentLoading
                             ? <Comment /> 
                             : comments.length > 0
                                 ? comments.map((comment) => (

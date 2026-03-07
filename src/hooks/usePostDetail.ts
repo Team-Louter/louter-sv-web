@@ -6,14 +6,18 @@ export const usePostDetail = (postId: number) => {
     const [post, setPost] = useState<Post|null>(null); // 게시글 세부 정보
     const [isLiked, setIsLiked] = useState<boolean>(false); // 좋아요를 눌렀는지 여부
     const [isPinned, setIsPinned] = useState<boolean>(false); // 고정된 게시글인지 여부
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const getPostInfo = async () => {
+            setIsLoading(true);
             try {
                 const data = await getPostDetail(postId);
                 setPost(data)
             } catch (err) {
                 console.log(err);
+            } finally {
+                setIsLoading(false);
             }
         };
 
@@ -56,5 +60,5 @@ export const usePostDetail = (postId: number) => {
         }
     };
 
-    return { post, isLiked, isPinned, setIsPinned, handleDelete, handleToggleLike, handleTogglePin }
+    return { post, isLiked, isPinned, setIsPinned, handleDelete, handleToggleLike, handleTogglePin, isPostLoading: isLoading }
 }
