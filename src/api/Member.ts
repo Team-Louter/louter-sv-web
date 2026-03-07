@@ -27,7 +27,7 @@ export const updateMemberRole = async (
 
 // 멤버 퇴출 (DELETE /admin/members)
 export const kickMember = async (userId: number): Promise<void> => {
-  await instance.delete('/admin/members', { data: { userId } });
+  await instance.delete('/admin/members', { data: { userIds: [userId] } });
 };
 
 // 멤버 이메일 조회 (GET /admin/members/{userId}/email)
