@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { GoSearch, GoX, GoKebabHorizontal } from 'react-icons/go';
+import { createPortal } from 'react-dom';
+import { GoSearch, GoX } from 'react-icons/go';
+import { BsThreeDotsVertical } from 'react-icons/bs';
 import * as S from './MemberManageModal.styled';
 import {
   getMember,
@@ -27,11 +29,14 @@ function getRoleLabel(role: string) {
 function MemberManageModal({ onClose }: MemberManageModalProps) {
   const [members, setMembers] = useState<Member[]>([]);
   const [query, setQuery] = useState('');
-  const [selected, setSelected] = useState<Set<number>>(new Set());
   const [loading, setLoading] = useState(true);
   const [openKebabId, setOpenKebabId] = useState<number | null>(null);
+  const [dropdownPos, setDropdownPos] = useState<{
+    top: number;
+    right: number;
+  } | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const kebabRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -44,25 +49,57 @@ function MemberManageModal({ onClose }: MemberManageModalProps) {
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        if (openKebabId !== null) setOpenKebabId(null);
-        else onClose();
+        if (openKebabId !== null) {
+          setOpenKebabId(null);
+          setDropdownPos(null);
+        } else onClose();
       }
     };
     document.addEventListener('keydown', handleKey);
     return () => document.removeEventListener('keydown', handleKey);
   }, [onClose, openKebabId]);
 
-  // 드롭다운 외부 클릭 시 닫기
   useEffect(() => {
     if (openKebabId === null) return;
-    const handleClick = (e: MouseEvent) => {
-      if (kebabRef.current && !kebabRef.current.contains(e.target as Node)) {
+    const handleMouseDown = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.closest(`[data-kebab-id="${openKebabId}"]`)) return;
+      if (dropdownRef.current && !dropdownRef.current.contains(target)) {
         setOpenKebabId(null);
+        setDropdownPos(null);
       }
     };
-    document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
+    document.addEventListener('mousedown', handleMouseDown);
+    return () => document.removeEventListener('mousedown', handleMouseDown);
   }, [openKebabId]);
+
+  useEffect(() => {
+    if (openKebabId === null) return;
+    const close = () => {
+      setOpenKebabId(null);
+      setDropdownPos(null);
+    };
+    window.addEventListener('scroll', close, true);
+    return () => window.removeEventListener('scroll', close, true);
+  }, [openKebabId]);
+
+  const toggleKebab = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    memberId: number,
+  ) => {
+    e.stopPropagation();
+    if (openKebabId === memberId) {
+      setOpenKebabId(null);
+      setDropdownPos(null);
+    } else {
+      const rect = e.currentTarget.getBoundingClientRect();
+      setDropdownPos({
+        top: rect.bottom + 4,
+        right: window.innerWidth - rect.right,
+      });
+      setOpenKebabId(memberId);
+    }
+  };
 
   const filtered = members.filter((m) => {
     if (!query) return true;
@@ -70,16 +107,14 @@ function MemberManageModal({ onClose }: MemberManageModalProps) {
     return m.userName.toLowerCase().includes(q) || String(m.hakbun).includes(q);
   });
 
-  const toggleSelect = (userId: number) => {
-    setSelected((prev) => {
-      const next = new Set(prev);
-      next.has(userId) ? next.delete(userId) : next.add(userId);
-      return next;
-    });
-  };
+  const openMember =
+    openKebabId !== null
+      ? (members.find((m) => m.userId === openKebabId) ?? null)
+      : null;
 
   const handleCopyEmail = async (userId: number) => {
     setOpenKebabId(null);
+    setDropdownPos(null);
     try {
       const email = await getMemberEmail(userId);
       await navigator.clipboard.writeText(email);
@@ -94,6 +129,7 @@ function MemberManageModal({ onClose }: MemberManageModalProps) {
     role: 'LEADER' | 'MENTOR' | 'MENTEE',
   ) => {
     setOpenKebabId(null);
+    setDropdownPos(null);
     try {
       await updateMemberRole(member.userId, role);
       setMembers((prev) =>
@@ -109,6 +145,7 @@ function MemberManageModal({ onClose }: MemberManageModalProps) {
 
   const handleKick = async (member: Member) => {
     setOpenKebabId(null);
+    setDropdownPos(null);
     if (!window.confirm(`${member.userName}님을 동아리에서 퇴출하시겠습니까?`))
       return;
     try {
@@ -121,134 +158,124 @@ function MemberManageModal({ onClose }: MemberManageModalProps) {
   };
 
   return (
-    <S.Overlay onClick={onClose}>
-      <S.Modal onClick={(e) => e.stopPropagation()}>
-        {/* ─── 검색 헤더 ─── */}
-        <S.SearchHeader>
-          <S.SearchIcon>
-            <GoSearch size={18} />
-          </S.SearchIcon>
-          <S.SearchInput
-            ref={inputRef}
-            placeholder="이름이나 학번을 입력하세요"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-          <S.CloseIconButton type="button" onClick={onClose}>
-            <GoX size={18} />
-          </S.CloseIconButton>
-        </S.SearchHeader>
+    <>
+      <S.Overlay onClick={onClose}>
+        <S.Modal onClick={(e) => e.stopPropagation()}>
+          {/* ─── 검색 헤더 ─── */}
+          <S.SearchHeader>
+            <S.SearchIcon>
+              <GoSearch size={18} />
+            </S.SearchIcon>
+            <S.SearchInput
+              ref={inputRef}
+              placeholder="이름이나 학번을 입력하세요"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+            <S.CloseIconButton type="button" onClick={onClose}>
+              <GoX size={18} />
+            </S.CloseIconButton>
+          </S.SearchHeader>
 
-        {/* ─── 멤버 목록 ─── */}
-        <S.MemberList>
-          {loading ? (
-            <S.EmptyMessage>불러오는 중...</S.EmptyMessage>
-          ) : filtered.length === 0 ? (
-            <S.EmptyMessage>검색 결과가 없습니다</S.EmptyMessage>
-          ) : (
-            filtered.map((member) => (
-              <S.MemberRow
-                key={member.userId}
-                onClick={() => toggleSelect(member.userId)}
+          {/* ─── 멤버 목록 ─── */}
+          <S.MemberList>
+            {loading ? (
+              <S.EmptyMessage>불러오는 중...</S.EmptyMessage>
+            ) : filtered.length === 0 ? (
+              <S.EmptyMessage>검색 결과가 없습니다</S.EmptyMessage>
+            ) : (
+              filtered.map((member) => (
+                <S.MemberRow key={member.userId}>
+                  <S.LeftSection>
+                    <S.Avatar>
+                      {member.profileImageUrl ? (
+                        <S.AvatarImage
+                          src={member.profileImageUrl}
+                          alt={member.userName}
+                        />
+                      ) : (
+                        <S.AvatarFallback>
+                          {member.userName.charAt(0)}
+                        </S.AvatarFallback>
+                      )}
+                    </S.Avatar>
+                    <S.MemberInfo>
+                      <S.MemberName>{member.userName}</S.MemberName>
+                      <S.MemberSub>
+                        {member.grade}학년 {member.classRoom}반 {member.number}
+                        번
+                      </S.MemberSub>
+                    </S.MemberInfo>
+                  </S.LeftSection>
+                  <S.RoleLabel>{getRoleLabel(member.role)}</S.RoleLabel>
+
+                  {/* ─── 케밥 버튼 ─── */}
+                  <S.RightSection>
+                    <S.KebabButton
+                      type="button"
+                      data-kebab-id={member.userId}
+                      onClick={(e) => toggleKebab(e, member.userId)}
+                    >
+                      <BsThreeDotsVertical size={16} />
+                    </S.KebabButton>
+                  </S.RightSection>
+                </S.MemberRow>
+              ))
+            )}
+          </S.MemberList>
+
+          {/* ─── 하단 바 ─── */}
+          <S.Footer>
+            <S.FooterCount>멤버 {filtered.length}명 표시 중</S.FooterCount>
+            <S.ShortcutHint>
+              <S.KeyBadge>ESC</S.KeyBadge>
+              <span>닫기</span>
+            </S.ShortcutHint>
+          </S.Footer>
+        </S.Modal>
+      </S.Overlay>
+      {openKebabId !== null &&
+        dropdownPos &&
+        openMember &&
+        createPortal(
+          <S.DropdownMenu
+            ref={dropdownRef}
+            style={{ top: dropdownPos.top, right: dropdownPos.right }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <S.DropdownItem onClick={() => handleCopyEmail(openMember.userId)}>
+              이메일 복사
+            </S.DropdownItem>
+            {openMember.role !== 'MENTOR' && (
+              <S.DropdownItem
+                onClick={() => handleRoleChange(openMember, 'MENTOR')}
               >
-                <S.Checkbox
-                  type="checkbox"
-                  checked={selected.has(member.userId)}
-                  onChange={() => toggleSelect(member.userId)}
-                  onClick={(e) => e.stopPropagation()}
-                />
-                <S.Avatar>
-                  {member.profileImageUrl ? (
-                    <S.AvatarImage
-                      src={member.profileImageUrl}
-                      alt={member.userName}
-                    />
-                  ) : (
-                    <S.AvatarFallback>
-                      {member.userName.charAt(0)}
-                    </S.AvatarFallback>
-                  )}
-                </S.Avatar>
-                <S.MemberInfo>
-                  <S.MemberName>{member.userName}</S.MemberName>
-                  <S.MemberSub>
-                    {member.grade}학년 {member.classRoom}반 {member.number}번
-                  </S.MemberSub>
-                </S.MemberInfo>
-                <S.RoleLabel>{getRoleLabel(member.role)}</S.RoleLabel>
-
-                {/* ─── 케밥 메뉴 ─── */}
-                <S.KebabWrapper
-                  ref={openKebabId === member.userId ? kebabRef : null}
-                >
-                  <S.KebabButton
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setOpenKebabId((prev) =>
-                        prev === member.userId ? null : member.userId,
-                      );
-                    }}
-                  >
-                    <GoKebabHorizontal size={16} />
-                  </S.KebabButton>
-                  {openKebabId === member.userId && (
-                    <S.DropdownMenu onClick={(e) => e.stopPropagation()}>
-                      <S.DropdownItem
-                        onClick={() => handleCopyEmail(member.userId)}
-                      >
-                        이메일 복사
-                      </S.DropdownItem>
-                      {member.role !== 'MENTOR' && (
-                        <S.DropdownItem
-                          onClick={() => handleRoleChange(member, 'MENTOR')}
-                        >
-                          멘토로 지정하기
-                        </S.DropdownItem>
-                      )}
-                      {member.role !== 'LEADER' && (
-                        <S.DropdownItem
-                          onClick={() => handleRoleChange(member, 'LEADER')}
-                        >
-                          부장으로 지정하기
-                        </S.DropdownItem>
-                      )}
-                      {member.role !== 'MENTEE' && (
-                        <S.DropdownItem
-                          onClick={() => handleRoleChange(member, 'MENTEE')}
-                        >
-                          멘티로 변경하기
-                        </S.DropdownItem>
-                      )}
-                      <S.DropdownDivider />
-                      <S.DropdownItem
-                        $danger
-                        onClick={() => handleKick(member)}
-                      >
-                        동아리에서 퇴출하기
-                      </S.DropdownItem>
-                    </S.DropdownMenu>
-                  )}
-                </S.KebabWrapper>
-              </S.MemberRow>
-            ))
-          )}
-        </S.MemberList>
-
-        {/* ─── 하단 바 ─── */}
-        <S.Footer>
-          <S.FooterCount>멤버 {filtered.length}명 표시 중</S.FooterCount>
-          <S.FooterButtons>
-            <S.FooterButton type="button" onClick={onClose}>
-              ESC
-            </S.FooterButton>
-            <S.FooterButton type="button" onClick={onClose}>
-              닫기
-            </S.FooterButton>
-          </S.FooterButtons>
-        </S.Footer>
-      </S.Modal>
-    </S.Overlay>
+                멘토로 지정하기
+              </S.DropdownItem>
+            )}
+            {openMember.role !== 'MENTEE' && (
+              <S.DropdownItem
+                onClick={() => handleRoleChange(openMember, 'MENTEE')}
+              >
+                멘티로 변경하기
+              </S.DropdownItem>
+            )}
+            <S.DropdownDivider />
+            {openMember.role !== 'LEADER' && (
+              <S.DropdownItem
+                $danger
+                onClick={() => handleRoleChange(openMember, 'LEADER')}
+              >
+                부장으로 지정하기
+              </S.DropdownItem>
+            )}
+            <S.DropdownItem $danger onClick={() => handleKick(openMember)}>
+              동아리에서 퇴출하기
+            </S.DropdownItem>
+          </S.DropdownMenu>,
+          document.body,
+        )}
+    </>
   );
 }
 

@@ -15,7 +15,6 @@ export const Modal = styled.div`
   width: 680px;
   max-height: 80vh;
   ${token.flexColumn}
-  overflow: hidden;
   ${token.elevation('black_3')}
 `;
 
@@ -68,7 +67,7 @@ export const CloseIconButton = styled.button`
 
 /* ─── 멤버 목록 ─── */
 export const MemberList = styled.div`
-  flex: 1;
+  max-height: 288px;
   overflow-y: auto;
 
   &::-webkit-scrollbar {
@@ -83,27 +82,28 @@ export const MemberList = styled.div`
 export const MemberRow = styled.div`
   ${token.flexRow}
   align-items: center;
-  gap: 14px;
   padding: 16px 24px;
   border-bottom: 1px solid ${token.colors.line.light};
   transition: background-color 0.15s;
-  cursor: pointer;
 
   &:last-child {
     border-bottom: none;
   }
-
-  &:hover {
-    background-color: ${token.colors.fill.f5};
-  }
 `;
 
-export const Checkbox = styled.input`
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-  accent-color: ${token.colors.main.yellow};
-  flex-shrink: 0;
+export const LeftSection = styled.div`
+  flex: 1;
+  ${token.flexRow}
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+`;
+
+export const RightSection = styled.div`
+  flex: 1;
+  ${token.flexRow}
+  justify-content: flex-end;
+  align-items: center;
 `;
 
 export const Avatar = styled.div`
@@ -130,7 +130,7 @@ export const AvatarFallback = styled.div`
 export const MemberInfo = styled.div`
   ${token.flexColumn}
   gap: 2px;
-  flex: 1;
+  min-width: 0;
 `;
 
 export const MemberName = styled.span`
@@ -146,7 +146,9 @@ export const MemberSub = styled.span`
 export const RoleLabel = styled.span`
   ${token.typography('body', 'sm', 'medium')}
   color: ${token.colors.text.lightGray};
-  min-width: 120px;
+  flex: 1;
+  text-align: center;
+  white-space: nowrap;
 `;
 
 export const KebabWrapper = styled.div`
@@ -162,7 +164,7 @@ export const KebabButton = styled.button`
   background: none;
   cursor: pointer;
   border-radius: 6px;
-  color: ${token.colors.text.lightGray};
+  color: ${token.colors.fill.a0};
   transition: background-color 0.15s;
 
   &:hover {
@@ -172,15 +174,13 @@ export const KebabButton = styled.button`
 `;
 
 export const DropdownMenu = styled.div`
-  position: absolute;
-  top: calc(100% + 4px);
-  right: 0;
+  position: fixed;
   background-color: ${token.colors.main.white};
   border: 1px solid ${token.colors.line.light};
   border-radius: ${token.shapes.medium};
   ${token.elevation('black_2')}
   min-width: 160px;
-  z-index: 100;
+  z-index: 1001;
   overflow: hidden;
   ${token.flexColumn}
 `;
@@ -230,22 +230,23 @@ export const FooterCount = styled.span`
   color: ${token.colors.text.lightGray};
 `;
 
-export const FooterButtons = styled.div`
+export const ShortcutHint = styled.div`
   ${token.flexRow}
-  gap: 8px;
+  align-items: center;
+  gap: 6px;
+  ${token.typography('body', 'sm', 'medium')}
+  color: ${token.colors.text.lightGray};
 `;
 
-export const FooterButton = styled.button`
-  padding: 6px 16px;
-  border-radius: 4px;
+export const KeyBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 7px;
   border: 1px solid ${token.colors.line.normal};
-  background-color: ${token.colors.main.white};
-  ${token.typography('body', 'sm', 'bold')}
-  color: ${token.colors.text.dark};
-  cursor: pointer;
-  transition: background-color 0.15s;
-
-  &:hover {
-    background-color: ${token.colors.fill.f3};
-  }
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  color: ${token.colors.text.lightGray};
+  letter-spacing: 0.5px;
 `;
