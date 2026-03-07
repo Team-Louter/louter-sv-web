@@ -65,6 +65,29 @@ export const useMarkdownEditor = (
   const handleToolClick = (tool: typeof MARKDOWN_TOOLS[number], onImageClick?: () => void, onFileClick?: () => void) => {
     if (tool.type === 'image') onImageClick?.();
     else if (tool.type === 'file') onFileClick?.();
+    else if (tool.type === 'link') {
+      const el = textareaRef.current;
+      if (!el) return;
+
+      const start = el.selectionStart;
+      const end = el.selectionEnd;
+      const selected = content.substring(start, end);
+      const linkText = selected || '텍스트 입력';
+      const insertion = `[${linkText}](url 입력)`;
+
+      const newValue = content.substring(0, start) + insertion + content.substring(end);
+      setContent(newValue);
+
+      requestAnimationFrame(() => {
+        el.focus();
+        if (selected) {
+          const urlStart = start + linkText.length + 3;
+          el.setSelectionRange(urlStart, urlStart + 'url 입력'.length);
+        } else {
+          el.setSelectionRange(start + 1, start + 1 + '텍스트 입력'.length);
+        }
+      });
+    }
     else insert(tool.before, tool.after, tool.block);
   };
 
