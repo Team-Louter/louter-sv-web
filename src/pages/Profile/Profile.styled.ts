@@ -385,11 +385,7 @@ export const PostMeta = styled.div`
 export const MetaItem = styled.span<{ $red?: boolean; $yellow?: boolean }>`
   ${token.typography('caption', 'lg', 'medium')}
   color: ${({ $red, $yellow }) =>
-    $red
-      ? '#E53935'
-      : $yellow
-        ? token.colors.main.yellow
-        : token.colors.text.lightGray};
+    $red ? '#FF3535' : $yellow ? token.colors.main.yellow : '#A0A0A0'};
   ${token.flexRow}
   align-items: center;
   gap: 3px;

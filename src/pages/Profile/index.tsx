@@ -13,11 +13,13 @@ import { CATEGORY_REVERSED } from '@/constants/Community';
 import { formatDateTime } from '@/utils/FormatDate';
 import ViewIcon from '@/assets/Mypage/View.svg';
 import GoodIcon from '@/assets/Mypage/Good.svg';
+import GoodEmptyIcon from '@/assets/Mypage/GoodEmpty.svg';
 import ChatIcon from '@/assets/Mypage/Chat.svg';
 import GithubImg from '@/assets/Mypage/github.svg';
 import LinkedinImg from '@/assets/Mypage/linkedin.svg';
 import WithdrawModal from './components/WithdrawModal/WithdrawModal';
 import EditProfileModal from './components/EditProfileModal/EditProfileModal';
+import MemberManageModal from './components/MemberManageModal/MemberManageModal';
 
 const TABS = ['내가 쓴 글', '댓글 단 글', '좋아요한 글'] as const;
 const PAGE_SIZE = 5;
@@ -48,6 +50,7 @@ export default function Profile() {
   const [tabMeta, setTabMeta] = useState<Record<number, TabMeta>>({});
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showMemberModal, setShowMemberModal] = useState(false);
 
   const tabContentRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -314,26 +317,15 @@ export default function Profile() {
                         </S.SocialRow>
                       )}
                       <S.ButtonRow>
-                        {user.role === 'LEADER' && (
-                          <S.ActionButton
-                            $variant="admin"
-                            onClick={() =>
-                              toast.warning('아직 완성되지 않은 기능입니다.')
-                            }
-                          >
-                            멤버 관리
-                          </S.ActionButton>
-                        )}
-                        {(user.role === 'LEADER' || user.role === 'MENTOR') && (
-                          <S.ActionButton
-                            $variant="mentor"
-                            onClick={() =>
-                              toast.warning('아직 완성되지 않은 기능입니다.')
-                            }
-                          >
-                            멘티 관리
-                          </S.ActionButton>
-                        )}
+                        {user.role === 'LEADER' ||
+                          (user.role === 'MENTOR' && (
+                            <S.ActionButton
+                              $variant="admin"
+                              onClick={() => setShowMemberModal(true)}
+                            >
+                              멤버 관리
+                            </S.ActionButton>
+                          ))}
                         <S.ActionButton onClick={handleLogout}>
                           로그아웃
                         </S.ActionButton>
@@ -433,7 +425,14 @@ export default function Profile() {
                             {post.viewers.toLocaleString()}
                           </S.MetaItem>
                           <S.MetaItem $red>
-                            <img src={GoodIcon} alt="likes" />
+                            <img
+                              src={
+                                (post.isHearted ?? activeTab === 2)
+                                  ? GoodIcon
+                                  : GoodEmptyIcon
+                              }
+                              alt="likes"
+                            />
                             {post.likeCount.toLocaleString()}
                           </S.MetaItem>
                           <S.MetaItem $yellow>
@@ -487,6 +486,9 @@ export default function Profile() {
             onClose={() => setShowEditModal(false)}
             onUpdated={(updated) => setUser(updated)}
           />
+        )}
+        {showMemberModal && (
+          <MemberManageModal onClose={() => setShowMemberModal(false)} />
         )}
       </S.PageWrapper>
     </S.Container>
