@@ -147,7 +147,10 @@ export const RoleLabel = styled.span`
   ${token.typography('caption', 'md', 'medium')}
   color: ${token.colors.text.lightGray};
   flex: 1;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
   white-space: nowrap;
 `;
 

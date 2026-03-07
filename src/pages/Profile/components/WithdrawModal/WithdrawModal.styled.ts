@@ -97,3 +97,8 @@ export const ConfirmButton = styled.button<{ $active: boolean }>`
       $active ? token.colors.accent.secondary1 : token.colors.fill.neutral};
   }
 `;
+
+export const SmallNote = styled.span`
+  font-size: 12px;
+  color: #a0a0a0;
+`;

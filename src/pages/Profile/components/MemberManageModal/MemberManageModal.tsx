@@ -4,13 +4,10 @@ import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { GoSearch, GoX } from 'react-icons/go';
 import { BsThreeDotsVertical } from 'react-icons/bs';
+import CrownIcon from '@/assets/Mypage/crown.svg';
 import * as S from './MemberManageModal.styled';
-import {
-  getMember,
-  updateMemberRole,
-  kickMember,
-  getMemberEmail,
-} from '@/api/Member';
+import KickConfirmModal from './KickConfirmModal';
+import { getMember, updateMemberRole, getMemberEmail } from '@/api/Member';
 import { ROLE_LABEL } from '@/constants/Member';
 import { toast } from '@/store/toastStore';
 import type { Member } from '@/types/member';
@@ -32,6 +29,7 @@ function MemberManageModal({ onClose }: MemberManageModalProps) {
     top: number;
     right: number;
   } | null>(null);
+  const [kickTarget, setKickTarget] = useState<Member | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -140,18 +138,10 @@ function MemberManageModal({ onClose }: MemberManageModalProps) {
     }
   };
 
-  const handleKick = async (member: Member) => {
+  const handleKick = (member: Member) => {
     setOpenKebabId(null);
     setDropdownPos(null);
-    if (!window.confirm(`${member.userName}님을 동아리에서 퇴출하시겠습니까?`))
-      return;
-    try {
-      await kickMember(member.userId);
-      setMembers((prev) => prev.filter((m) => m.userId !== member.userId));
-      toast.success(`${member.userName}님이 퇴출되었습니다.`);
-    } catch {
-      toast.error('퇴출에 실패했습니다.');
-    }
+    setKickTarget(member);
   };
 
   return (
@@ -222,7 +212,21 @@ function MemberManageModal({ onClose }: MemberManageModalProps) {
                       </S.MemberSub>
                     </S.MemberInfo>
                   </S.LeftSection>
-                  <S.RoleLabel>{getRoleLabel(member.role)}</S.RoleLabel>
+                  <S.RoleLabel>
+                    {member.role === 'LEADER' && (
+                      <img src={CrownIcon} alt="" width={15} height={15} />
+                    )}
+                    <span>{getRoleLabel(member.role)}</span>
+                    {member.role === 'LEADER' && (
+                      <img
+                        src={CrownIcon}
+                        alt=""
+                        width={15}
+                        height={15}
+                        style={{ visibility: 'hidden' }}
+                      />
+                    )}
+                  </S.RoleLabel>
 
                   {/* ─── 케밥 버튼 ─── */}
                   <S.RightSection>
@@ -260,6 +264,15 @@ function MemberManageModal({ onClose }: MemberManageModalProps) {
           </S.Footer>
         </S.Modal>
       </S.Overlay>
+      {kickTarget && (
+        <KickConfirmModal
+          member={kickTarget}
+          onClose={() => setKickTarget(null)}
+          onKicked={(userId) =>
+            setMembers((prev) => prev.filter((m) => m.userId !== userId))
+          }
+        />
+      )}
       {openKebabId !== null &&
         dropdownPos &&
         openMember &&
