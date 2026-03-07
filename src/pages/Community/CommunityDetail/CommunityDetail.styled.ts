@@ -68,6 +68,7 @@ export const ProfileImg = styled.img`
     width: 25px;
     height: 25px;
     border-radius: 50%;
+    object-fit: cover;
 `
 
 export const Name = styled.span`
@@ -177,6 +178,8 @@ export const ContentContainer = styled.div`
     a {
         color: ${token.colors.text.gold};
         text-decoration: underline;
+        word-break: break-all;
+        overflow-wrap: break-word;
     }
 
     img {

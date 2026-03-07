@@ -1,4 +1,3 @@
-// EventEditModal.tsx
 import { useState, useEffect } from "react";
 import * as S from "./EventEditModal.styled";
 import type { Member } from "@/types/member";
@@ -31,10 +30,12 @@ export default function EventEditModal({ selectedDate, selectedEndDate, setIsMod
     const [selectedColor, setSelectedColor] = useState<string>(event?.color || calendarHighlight[2]);
     const [allMembers, setAllMembers] = useState<Member[]>([]);
 
-    const { handleSubmit, handleDelete } = useEventEditor({
+    const { handleSubmit, handleDelete, isSubmitting, isDeleting } = useEventEditor({
         modalMode, event, title, content, startDate, endDate,
         selectedColor, selectedMemberIds, allMembers, setEvents, setIsModalOpen,
     });
+
+    const isActionPending = isSubmitting || isDeleting;
 
     useEffect(() => {
         if (startDate && endDate) {
@@ -120,13 +121,27 @@ export default function EventEditModal({ selectedDate, selectedEndDate, setIsMod
 
                 <S.Buttons>
                     {modalMode === '편집' && event && (
-                        <S.DeleteButton onClick={() => handleDelete(event.scheduleId)}>
-                            삭제
+                        <S.DeleteButton
+                            onClick={() => handleDelete(event.scheduleId)}
+                            disabled={isActionPending}
+                            style={{ opacity: isDeleting ? 0.6 : 1, cursor: isDeleting ? 'not-allowed' : 'pointer' }}
+                        >
+                            {isDeleting ? '삭제 중...' : '삭제'}
                         </S.DeleteButton>
                     )}
-                    <S.CancelButton onClick={() => setIsModalOpen(false)}>취소</S.CancelButton>
-                    <S.ConfirmButton $isValid={isFormValid} disabled={!isFormValid} onClick={handleSubmit}>
-                        저장
+                    <S.CancelButton
+                        onClick={() => setIsModalOpen(false)}
+                        disabled={isActionPending}
+                        style={{ opacity: isActionPending ? 0.6 : 1, cursor: isActionPending ? 'not-allowed' : 'pointer' }}
+                    >
+                        취소
+                    </S.CancelButton>
+                    <S.ConfirmButton
+                        $isValid={isFormValid && !isActionPending}
+                        disabled={!isFormValid || isActionPending}
+                        onClick={handleSubmit}
+                    >
+                        {isSubmitting ? '저장 중...' : '저장'}
                     </S.ConfirmButton>
                 </S.Buttons>
             </S.Container>

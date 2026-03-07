@@ -23,7 +23,7 @@ export const usePostList = (selectedCategory: string, currentPage: number) => {
                             sort: ['pinned,desc', 'createdAt,desc']
                         });
                     setPosts(data.content);
-                    setMaxPage(data.totalPages);
+                    setMaxPage(data.totalPages === 0 ? 1 : data.totalPages);
                 } catch(err) {
                     console.error(err);
                 } finally {

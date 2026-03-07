@@ -9,7 +9,8 @@ export const Container = styled.div`
     border-radius: ${token.shapes.xlarge};
     ${token.flexColumnStart};
     padding: 35px;
-    gap: 30px;
+    gap: 10px;
+    flex-shrink: 0;
 `
 
 export const Title = styled.h4`
@@ -21,6 +22,15 @@ export const Title = styled.h4`
 
 export const Category = styled.button<{ $isSelected: boolean }>`
     ${token.typography('body', 'md', 'medium')};
-    color: ${({ $isSelected }) =>
-        $isSelected ? token.colors.text.gold : "inherit"};
+    background-color: ${({ $isSelected }) =>
+        $isSelected ? token.colors.accent.secondary2 : "inherit"};
+    width: 100%;
+    height: 40px;
+    border-radius: ${token.shapes.small};
+    text-align: start;
+    padding: 10px;
+
+    &:hover {
+        background-color: ${token.colors.accent.assistive4}
+    }
 `

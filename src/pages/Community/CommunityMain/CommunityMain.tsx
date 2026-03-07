@@ -52,7 +52,7 @@ export default function Community() {
                         ))}
                     </S.PostContainer>
                     <S.PageBtnContainer>
-                        {[...Array(maxPage)].map((_, i) => (
+                        {!isLoading && [...Array(maxPage)].map((_, i) => (
                             <S.PageBtn key={i} $isActive={currentPage === i} onClick={() => setCurrentPage(i)}>
                                 {i + 1}
                             </S.PageBtn>

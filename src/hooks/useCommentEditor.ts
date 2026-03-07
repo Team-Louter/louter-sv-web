@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { createComment, editComment } from '@/api/Comment';
 
@@ -23,8 +24,11 @@ export const useCommentEditor = ({
     setContent
 }: UseCommentEditorParams) => {
     const { postId } = useParams();
+    const [isSubmitting, setIsSubmitting] = useState(false); 
 
     const handleSubmit = async () => {
+        if (isSubmitting) return; 
+        setIsSubmitting(true);    
         try {
             if (isEditing && comment?.commentId) {
                 await editComment(Number(postId), comment?.commentId, content);
@@ -40,8 +44,10 @@ export const useCommentEditor = ({
             onClose?.();
         } catch (err) {
             console.error(err);
+        } finally {
+            setIsSubmitting(false); 
         }
     };
 
-    return { handleSubmit };
+    return { handleSubmit, isSubmitting }; 
 };

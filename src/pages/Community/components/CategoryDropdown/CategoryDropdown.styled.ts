@@ -6,14 +6,14 @@ export const DropdownWrapper = styled.div`
     width: 250px;
 `
 
-export const DropdownSelected = styled.div`
+export const DropdownSelected = styled.div<{ $isDisabled: boolean }>`
     ${token.flexRow};
     align-items: center;
     justify-content: space-between;
     padding: 8px 16px;
     background-color: ${token.colors.background.white};
     border-bottom: 1.5px solid ${token.colors.line.normal};
-    cursor: pointer;
+    cursor: ${({ $isDisabled }) => ($isDisabled ? "not-allowed" : "pointer")};
     ${token.typography('body', 'md', 'semibold')};
     color: ${token.colors.text.normal};
 `

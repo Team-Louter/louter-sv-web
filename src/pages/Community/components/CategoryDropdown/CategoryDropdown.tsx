@@ -16,7 +16,13 @@ export default function CategoryDropdown({ options, selected, onChange, placehol
 
     return (
         <S.DropdownWrapper ref={dropdownRef}>
-            <S.DropdownSelected onClick={() => setIsOpen((prev) => !prev)}>
+            <S.DropdownSelected
+                $isDisabled={options.length === 0}
+                onClick={() => {
+                    if (options.length === 0) return;
+                    setIsOpen((prev) => !prev);
+                }}
+            >
                 <S.SelectedText $isDisabled={options.length === 0}>
                     {selected || placeholder}
                 </S.SelectedText>

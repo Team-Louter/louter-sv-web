@@ -148,6 +148,14 @@ const Calendar: React.FC<CalendarProps> = ({readOnly = false}) => {
           locale="ko"
           height="100%"
           fixedWeekCount={true}
+          eventOrder={(a: any, b: any) => {
+            // 멀티데이 이벤트 우선 (duration 긴 것이 위로)
+            const aDuration = a.end && a.start ? a.end - a.start : 0;
+            const bDuration = b.end && b.start ? b.end - b.start : 0;
+            if (bDuration !== aDuration) return bDuration - aDuration;
+            // duration 같으면 시작일 빠른 것 우선
+            return (a.start || 0) - (b.start || 0);
+          }}
           moreLinkClick={() => {
             blockPopover.current = false;
             return 'popover';

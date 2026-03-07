@@ -6,6 +6,7 @@ export const Container = styled.div`
     width: 100%;
     height: calc(100vh - 60px);
     ${token.flexCenter};
+    min-height: 0;
 `
 
 export const ForCenter = styled.div`
@@ -13,6 +14,7 @@ export const ForCenter = styled.div`
     gap: 20px;
     width: 90%;
     height: 85%;
+    min-height: 0;
 `
 
 export const ForColumn = styled.div`
@@ -20,12 +22,14 @@ export const ForColumn = styled.div`
     width: 84%;
     height: 100%;
     gap: 20px;
+    min-height: 0;
 `
 
 export const PostContainer = styled.div`
     background-color: ${token.colors.background.white};
     width: 100%;
-    height: 100%;
+    flex: 1;
+    min-height: 0;
     border-radius: ${token.shapes.xlarge};
     border: 1px solid ${token.colors.line.normal};
     ${token.flexColumn};

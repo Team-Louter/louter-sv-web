@@ -25,6 +25,7 @@ export const ProfileImg = styled.img`
     border-radius: 50%;
     align-self: flex-start;
     flex-shrink: 0;
+    object-fit: cover;
 `
 
 export const ForColumn = styled.div`

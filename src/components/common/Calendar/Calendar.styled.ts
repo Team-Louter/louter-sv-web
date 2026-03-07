@@ -203,7 +203,23 @@ export const CalendarWrapper = styled.div`
 
   .skeleton-event {
   height: 18px !important;
-}
+  }
+
+  .fc .fc-daygrid-more-link {
+    display: block;
+    width: 100%;
+    margin: 1px 0;
+    padding: 2px 4px;        
+    box-sizing: border-box;
+    border-radius: 4px;      
+    line-height: 1.5;        
+    font-size: 12px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.08);
+    }
+  }
 `;
 
 export const EventContentWrapper = styled.div`

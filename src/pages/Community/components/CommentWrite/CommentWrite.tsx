@@ -3,6 +3,7 @@ import * as S from "./CommentWrite.styled";
 import { useAuthStore } from "@/store/authStore";
 import { useCommentEditor } from "@/hooks/useCommentEditor";
 import type { Comment } from "@/types/post";
+import anonymousProfile from "@/assets/anonymousProfile.png";
 
 interface CommentWriteProps {
     comment?: Comment;
@@ -18,7 +19,7 @@ export default function CommentWrite({ comment, onClose, isEditing = false, pare
     const userInfo = useAuthStore((state) => state.user);
     const isValid = content.trim().length > 0; // 내용이 한 글자라도 입력됐는지 확인
 
-    const { handleSubmit } = useCommentEditor({
+    const { handleSubmit, isSubmitting } = useCommentEditor({
         comment, isEditing, content, isAnonymous, parentId, onSuccess, onClose, setContent
     })
 
@@ -32,8 +33,17 @@ export default function CommentWrite({ comment, onClose, isEditing = false, pare
             <S.ForRow>
                 <S.Div style={{ gap: 10 }}>
                     <S.Div style={{ marginLeft: 10 }}>
-                        <S.ProfileImg src={userInfo?.profileImageUrl}/>
-                        <S.Name>{userInfo?.userName}</S.Name>
+                        <>
+                            <S.ProfileImg
+                                src={anonymousProfile}
+                                style={{ display: isAnonymous ? 'block' : 'none' }}
+                            />
+                            <S.ProfileImg
+                                src={userInfo?.profileImageUrl}
+                                style={{ display: isAnonymous ? 'none' : 'block' }}
+                            />
+                        </>
+                        <S.Name style={{width: 40}}>{isAnonymous ? '익명' : userInfo?.userName}</S.Name>
                     </S.Div>
                     {!isEditing && (
                         <S.Div>
@@ -52,9 +62,9 @@ export default function CommentWrite({ comment, onClose, isEditing = false, pare
                     {onClose && <S.Cancel onClick={onClose}>취소</S.Cancel>}
                     <S.Confirm 
                         onClick={handleSubmit} 
-                        disabled={!isValid}   
+                        disabled={!isValid || isSubmitting}  // isSubmitting 추가
                     >
-                        등록
+                        {isSubmitting ? '등록 중...' : '등록'}  {/* 선택사항 */}
                     </S.Confirm>
                 </S.Div>
             </S.ForRow>
