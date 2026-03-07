@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import { GoSearch, GoX } from 'react-icons/go';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import * as S from './MemberManageModal.styled';
@@ -180,7 +182,25 @@ function MemberManageModal({ onClose }: MemberManageModalProps) {
           {/* ─── 멤버 목록 ─── */}
           <S.MemberList>
             {loading ? (
-              <S.EmptyMessage>불러오는 중...</S.EmptyMessage>
+              <SkeletonTheme baseColor="#f0f0f0" highlightColor="#e0e0e0">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <S.MemberRow key={i}>
+                    <S.LeftSection>
+                      <Skeleton circle width={30} height={30} />
+                      <S.MemberInfo>
+                        <Skeleton width={70} height={13} />
+                        <Skeleton width={95} height={11} />
+                      </S.MemberInfo>
+                    </S.LeftSection>
+                    <S.RoleLabel>
+                      <Skeleton width={80} height={12} />
+                    </S.RoleLabel>
+                    <S.RightSection>
+                      <Skeleton width={20} height={20} borderRadius={4} />
+                    </S.RightSection>
+                  </S.MemberRow>
+                ))}
+              </SkeletonTheme>
             ) : filtered.length === 0 ? (
               <S.EmptyMessage>검색 결과가 없습니다</S.EmptyMessage>
             ) : (
