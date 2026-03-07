@@ -177,6 +177,8 @@ export const ContentContainer = styled.div`
     a {
         color: ${token.colors.text.gold};
         text-decoration: underline;
+        word-break: break-all;
+        overflow-wrap: break-word;
     }
 
     img {
