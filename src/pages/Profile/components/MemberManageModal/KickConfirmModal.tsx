@@ -4,13 +4,17 @@ import { kickMember } from '@/api/Member';
 import { toast } from '@/store/toastStore';
 import type { Member } from '@/types/member';
 
-type Props = {
+type KickConfirmModalProps = {
   member: Member;
   onClose: () => void;
   onKicked: (userId: number) => void;
 };
 
-function KickConfirmModal({ member, onClose, onKicked }: Props) {
+function KickConfirmModal({
+  member,
+  onClose,
+  onKicked,
+}: KickConfirmModalProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleKick = async () => {
