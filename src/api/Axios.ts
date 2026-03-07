@@ -4,6 +4,12 @@ import type {
   InternalAxiosRequestConfig,
   AxiosResponse,
 } from 'axios';
+import { useAuthStore } from '@/store/authStore';
+
+const forceLogout = () => {
+  useAuthStore.getState().clearAuth();
+  window.location.href = '/auth/signin';
+};
 
 // 환경변수 타입 안전하게
 const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
@@ -63,9 +69,7 @@ instance.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       // /auth/refresh 자체가 401이면 무한루프 방지
       if (originalRequest.url?.includes('/auth/refresh')) {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('pendingToken');
-        window.location.href = '/auth/signin';
+        forceLogout();
         return Promise.reject(error);
       }
 
@@ -87,6 +91,9 @@ instance.interceptors.response.use(
           '/auth/refresh',
         );
         const newToken = response.data.token;
+        if (!newToken) {
+          throw new Error('Empty refresh token');
+        }
         localStorage.setItem('accessToken', newToken);
         instance.defaults.headers.common.Authorization = `Bearer ${newToken}`;
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
@@ -94,9 +101,7 @@ instance.interceptors.response.use(
         return instance(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError, null);
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('pendingToken');
-        window.location.href = '/auth/signin';
+        forceLogout();
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;

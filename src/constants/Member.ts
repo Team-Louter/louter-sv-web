@@ -11,3 +11,9 @@ export const MAJOR_OPTIONS = [
 ] as const;
 
 export type Major = (typeof MAJOR_OPTIONS)[number];
+
+export const ROLE_LABEL: Record<string, string> = {
+  LEADER: '부장 (Leader)',
+  MENTOR: '멘토 (Mentor)',
+  MENTEE: '멘티 (Mentee)',
+};

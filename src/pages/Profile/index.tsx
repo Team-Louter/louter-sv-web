@@ -11,16 +11,22 @@ import type { User } from '@/types/user';
 import type { MainPost } from '@/types/post';
 import { CATEGORY_REVERSED } from '@/constants/Community';
 import { formatDateTime } from '@/utils/FormatDate';
+import {
+  PROFILE_TABS,
+  PROFILE_PAGE_SIZE,
+  TAB_EMPTY_MESSAGES,
+} from '@/constants/Profile';
 import ViewIcon from '@/assets/Mypage/View.svg';
 import GoodIcon from '@/assets/Mypage/Good.svg';
+import GoodEmptyIcon from '@/assets/Mypage/GoodEmpty.svg';
 import ChatIcon from '@/assets/Mypage/Chat.svg';
 import GithubImg from '@/assets/Mypage/github.svg';
 import LinkedinImg from '@/assets/Mypage/linkedin.svg';
 import WithdrawModal from './components/WithdrawModal/WithdrawModal';
 import EditProfileModal from './components/EditProfileModal/EditProfileModal';
+import MemberManageModal from './components/MemberManageModal/MemberManageModal';
 
-const TABS = ['내가 쓴 글', '댓글 단 글', '좋아요한 글'] as const;
-const PAGE_SIZE = 5;
+const PAGE_SIZE = PROFILE_PAGE_SIZE;
 
 type TabMeta = { nextPage: number; hasMore: boolean; fetching: boolean };
 
@@ -48,6 +54,7 @@ export default function Profile() {
   const [tabMeta, setTabMeta] = useState<Record<number, TabMeta>>({});
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showMemberModal, setShowMemberModal] = useState(false);
 
   const tabContentRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -317,21 +324,9 @@ export default function Profile() {
                         {user.role === 'LEADER' && (
                           <S.ActionButton
                             $variant="admin"
-                            onClick={() =>
-                              toast.warning('아직 완성되지 않은 기능입니다.')
-                            }
+                            onClick={() => setShowMemberModal(true)}
                           >
                             멤버 관리
-                          </S.ActionButton>
-                        )}
-                        {(user.role === 'LEADER' || user.role === 'MENTOR') && (
-                          <S.ActionButton
-                            $variant="mentor"
-                            onClick={() =>
-                              toast.warning('아직 완성되지 않은 기능입니다.')
-                            }
-                          >
-                            멘티 관리
                           </S.ActionButton>
                         )}
                         <S.ActionButton onClick={handleLogout}>
@@ -363,7 +358,7 @@ export default function Profile() {
 
               {/* 탭 */}
               <S.TabBar>
-                {TABS.map((tab, idx) => (
+                {PROFILE_TABS.map((tab, idx) => (
                   <S.TabItem
                     key={tab}
                     $active={activeTab === idx}
@@ -396,11 +391,7 @@ export default function Profile() {
                   </S.PostList>
                 ) : posts.length === 0 ? (
                   <S.EmptyMessage>
-                    {activeTab === 0
-                      ? '작성한 게시글이 없습니다'
-                      : activeTab === 1
-                        ? '작성한 댓글이 없습니다'
-                        : '좋아요한 게시글이 없습니다'}
+                    {TAB_EMPTY_MESSAGES[activeTab]}
                   </S.EmptyMessage>
                 ) : (
                   <S.PostList>
@@ -433,7 +424,14 @@ export default function Profile() {
                             {post.viewers.toLocaleString()}
                           </S.MetaItem>
                           <S.MetaItem $red>
-                            <img src={GoodIcon} alt="likes" />
+                            <img
+                              src={
+                                (post.isHearted ?? activeTab === 2)
+                                  ? GoodIcon
+                                  : GoodEmptyIcon
+                              }
+                              alt="likes"
+                            />
                             {post.likeCount.toLocaleString()}
                           </S.MetaItem>
                           <S.MetaItem $yellow>
@@ -487,6 +485,9 @@ export default function Profile() {
             onClose={() => setShowEditModal(false)}
             onUpdated={(updated) => setUser(updated)}
           />
+        )}
+        {showMemberModal && (
+          <MemberManageModal onClose={() => setShowMemberModal(false)} />
         )}
       </S.PageWrapper>
     </S.Container>

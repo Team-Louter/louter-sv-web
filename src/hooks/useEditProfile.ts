@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { updateProfile } from '@/api/User';
+import { updateProfile, getUser } from '@/api/User';
 import { toast } from '@/store/toastStore';
 import type { User } from '@/types/user';
 
@@ -98,8 +98,12 @@ export function useEditProfile({
           : '',
       });
       toast.success('프로필이 수정되었습니다.');
-      onUpdated(updated);
+      // updateProfile 응답으로 즉시 반영, 백그라운드에서 /me 재조회
+      onUpdated({ ...updated, profileImageUrl });
       onClose();
+      getUser()
+        .then(onUpdated)
+        .catch(() => {});
     } catch {
       toast.error('프로필 수정에 실패했습니다.');
     }

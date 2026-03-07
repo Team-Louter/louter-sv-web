@@ -8,6 +8,7 @@ export interface MainPost {
   postId: number;
   postTitle: string;
   viewers: number;
+  isHearted?: boolean;
   commentContent?: string; // /me/comments 에서만 반환
   commentCreatedAt?: string; // /me/comments 에서만 반환
   commentId?: number; // /me/comments 에서만 반환
@@ -142,7 +143,7 @@ export type ServerComment = {
 };
 
 export type ServerPage = {
-  "page": number,
-  "size": number,
-  "sort": string[]
-}
+  page: number;
+  size: number;
+  sort: string[];
+};
