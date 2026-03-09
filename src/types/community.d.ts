@@ -8,5 +8,5 @@ export interface Markdown {
     before: string;
     after: string;
     block: boolean;
-    type?: string;
+    type?: "default" | "image" | "file" | "link";
 }
