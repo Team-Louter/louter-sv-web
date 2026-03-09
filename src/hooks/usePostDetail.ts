@@ -16,7 +16,6 @@ export const usePostDetail = (postId: number) => {
                 const data = await getPostDetail(postId);
                 setPost(data)
             } catch (err) {
-                console.log(err);
             } finally {
                 setIsLoading(false);
             }
@@ -39,7 +38,6 @@ export const usePostDetail = (postId: number) => {
             const data = await getPostDetail(postId);
             setPost(data);
         } catch (err) {
-            console.error(err);
         }
     };
 
@@ -49,7 +47,6 @@ export const usePostDetail = (postId: number) => {
             const data = await getPostDetail(postId);
             setPost(data);
         } catch (err) {
-            console.error(err);
         }
     }
 
