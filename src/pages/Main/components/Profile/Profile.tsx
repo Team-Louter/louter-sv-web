@@ -21,7 +21,6 @@ export default function Profile() {
       const data = await getMyPost();
       setMyPost(data);
     } catch (err) {
-      console.error(err);
     } finally {
       setIsLoading(false);
     }

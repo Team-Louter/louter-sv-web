@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { createComment, editComment } from '@/api/Comment';
+import { toast } from '@/store/toastStore';
 
 interface UseCommentEditorParams {
     comment?: { commentId: number; content: string; isAnonymous: boolean };
@@ -32,6 +33,7 @@ export const useCommentEditor = ({
         try {
             if (isEditing && comment?.commentId) {
                 await editComment(Number(postId), comment?.commentId, content);
+                toast.success('댓글이 수정되었습니다.');
             } else {
                 await createComment(Number(postId), {
                     content,
@@ -39,11 +41,12 @@ export const useCommentEditor = ({
                     parentId
                 });
                 setContent("");
+                toast.success('댓글이 게시되었습니다.');
             }
             onSuccess?.();
             onClose?.();
         } catch (err) {
-            console.error(err);
+            toast.error(isEditing ? '댓글 수정이 실패하였습니다.' : '댓글 게시가 실패하였습니다.');
         } finally {
             setIsSubmitting(false); 
         }

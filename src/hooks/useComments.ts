@@ -15,7 +15,6 @@ export const useComments = (postId?: number, parentId?: number) => {
                 : await getComments(postId)
             setComments(data);
         } catch (err) {
-            console.error(err);
         } finally {
             setIsLoading(false);
         }

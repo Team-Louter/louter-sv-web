@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { createPostInfo, editPostInfo } from '@/api/Post';
 import type { Post, ServerFile } from '@/types/post';
 import { CATEGORY_TAGS } from '@/constants/Community';
+import { toast } from '@/store/toastStore';
 
 interface UsePostEditorParams {
   editPost?: Post;
@@ -25,12 +26,14 @@ export const usePostEditor = ({
     try {
       if (editPost) {
         await editPostInfo(editPost.postId, { title, content, isAnonymous, category: selectedCategory, tag, files: usedFiles });
+        toast.success('게시글이 수정되었습니다.');
       } else {
         await createPostInfo({ title, content, isAnonymous, category: selectedCategory, tag, files: usedFiles });
+        toast.success('게시글이 게시되었습니다.');
       }
       navigate(-1);
     } catch (err) {
-      console.error(editPost ? '수정 실패' : '생성 실패', err);
+      toast.error(editPost ? '수정이 실패하였습니다.' : '생성이 실패하였습니다.');
     }
   };
 

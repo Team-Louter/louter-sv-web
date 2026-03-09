@@ -23,7 +23,6 @@ export default function Main() {
                 setAllMembers(data);
             }
         } catch(err) {
-            console.error(err);
         } finally {
             setisLoading(false);
         }

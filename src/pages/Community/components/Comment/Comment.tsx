@@ -11,6 +11,7 @@ import { useAuthStore } from "@/store/authStore";
 import { useComments } from "@/hooks/useComments";
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { toast } from "@/store/toastStore";
 
 export interface commentProps {
     comment?: Comment;
@@ -29,9 +30,10 @@ export default function Comment({ comment, postId, onSuccess }: commentProps) {
     const deleteCommentInfo = async () => {
         try {
             await deleteComment(postId!, comment?.commentId!);
+            toast.success('댓글이 삭제되었습니다.');
             onSuccess?.();
         } catch (err) {
-            console.error(err);
+            toast.error('댓글 삭제가 실패하였습니다.');
         }
     }
 

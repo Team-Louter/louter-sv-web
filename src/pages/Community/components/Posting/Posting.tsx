@@ -32,7 +32,6 @@ export default function Posting({ post, selectedCategory, isLoading }: postProps
             setIsLiked(prev => !prev);
             setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
         } catch (err) {
-            console.error(err);
         }
     }
 

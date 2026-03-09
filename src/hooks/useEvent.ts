@@ -13,7 +13,6 @@ export const useEvent = () => {
       const data = await getEvent();
       setEventsInfo(formatEvents(data));
     } catch (err) {
-      console.error(err);
     } finally {
       setIsLoading(false);
     }

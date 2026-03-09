@@ -5,6 +5,7 @@ import { formatEvents } from '@/utils/formatEvent';
 import type { EventInput } from '@fullcalendar/core';
 import type { Member } from '@/types/member';
 import type React from 'react';
+import { toast } from '@/store/toastStore';
 
 interface UseEventEditorParams {
   modalMode: string;
@@ -32,11 +33,12 @@ export const useEventEditor = ({
     setIsDeleting(true);
     try {
       await deleteEvent(scheduleId);
+      toast.success('일정이 삭제되었습니다.');
       const data = await getEvent();
       setEvents(formatEvents(data));
       setIsModalOpen(false);
     } catch (err) {
-      console.error('삭제 실패', err);
+      toast.error('일정 삭제가 실패하였습니다.')
     } finally {
       setIsDeleting(false);
     }
@@ -57,15 +59,17 @@ export const useEventEditor = ({
     try {
       if (modalMode === '추가') {
         await createEvent(payload);
+        toast.success('일정이 추가되었습니다.');
       } else {
         if (!event?.scheduleId) return;
         await editEvent(event.scheduleId, payload);
+        toast.success('일정이 수정되었습니다.');
       }
       const data = await getEvent();
       setEvents(formatEvents(data));
       setIsModalOpen(false);
     } catch (err) {
-      console.error(modalMode === '추가' ? '생성 실패' : '수정 실패', err);
+      toast.error(modalMode === '추가' ? '일정 추가가 실패하였습니다.' : '일정 수정이 실패하였습니다.');
     } finally {
       setIsSubmitting(false);
     }

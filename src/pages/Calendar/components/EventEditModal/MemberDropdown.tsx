@@ -24,7 +24,6 @@ export default function MemberDropdown({ selectedMemberIds, onSelectChange, onMe
             setMembers(data);
             onMembersLoad(data); 
         } catch(err) {
-            console.error(err);
         }
     };
 

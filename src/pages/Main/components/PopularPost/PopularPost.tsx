@@ -14,7 +14,6 @@ export default function PopularPost () {
             const data = await getHotPost();
             setHotPosts(data);
         } catch(err) {
-            console.error(err);
         } finally {
             setIsLoading(false);
         }

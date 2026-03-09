@@ -62,9 +62,9 @@ export default function CommentWrite({ comment, onClose, isEditing = false, pare
                     {onClose && <S.Cancel onClick={onClose}>취소</S.Cancel>}
                     <S.Confirm 
                         onClick={handleSubmit} 
-                        disabled={!isValid || isSubmitting}  // isSubmitting 추가
+                        disabled={!isValid || isSubmitting}  
                     >
-                        {isSubmitting ? '등록 중...' : '등록'}  {/* 선택사항 */}
+                        {isSubmitting ? '게시 중...' : '게시'}  
                     </S.Confirm>
                 </S.Div>
             </S.ForRow>
