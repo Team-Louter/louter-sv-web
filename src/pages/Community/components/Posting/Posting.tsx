@@ -27,11 +27,21 @@ export default function Posting({ post, selectedCategory, isLoading }: postProps
     ) ?? [];
 
     const toggleLikePost = async () => {
+        // 롤백용 상태 저장
+        const prevIsLiked = isLiked;
+        const prevLikeCount = likeCount;
+    
+        // 상태 변경
+        const nextLiked = !isLiked;
+        setIsLiked(nextLiked);
+        setLikeCount(prev => nextLiked ? prev + 1 : prev - 1);
+    
         try {
             await toggleLike(post.postId);
-            setIsLiked(prev => !prev);
-            setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
         } catch (err) {
+            // 실패 시 롤백
+            setIsLiked(prevIsLiked);
+            setLikeCount(prevLikeCount);
         }
     }
 

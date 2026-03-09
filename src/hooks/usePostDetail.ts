@@ -32,12 +32,28 @@ export const usePostDetail = (postId: number) => {
     }, [post]);
 
     const handleToggleLike = async () => {
+        // 롤백용 상태 저장
+        const prevIsLiked = isLiked;
+        const prevPost = post;
+    
+        // 상태 변경 
+        const nextLiked = !isLiked;
+        setIsLiked(nextLiked);
+        setPost((prev) => prev ? {
+            ...prev,
+            isHearted: nextLiked, 
+            likeCount: nextLiked ? prev.likeCount + 1 : prev.likeCount - 1
+        } : prev);
+    
+        // 서버 호출
         try {
+            // 성공하면 유지
             await toggleLike(postId);
-            setIsLiked((prev) => !prev);
-            const data = await getPostDetail(postId);
-            setPost(data);
         } catch (err) {
+            // 실패 시 롤백
+            setIsLiked(prevIsLiked);
+            setPost(prevPost);
+            toast.error('좋아요 처리에 실패했습니다.');
         }
     };
 
