@@ -10,8 +10,8 @@ export default function QnaList({ comments }: Props) {
 
   return (
     <>
-      {comments.map((comment) => (
-        <QnaItem key={comment.id} comment={comment} />
+      {comments.map((comment, index) => (
+        <QnaItem key={comment.id} comment={comment} isFirst={index === 0} />
       ))}
     </>
   );

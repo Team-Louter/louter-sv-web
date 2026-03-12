@@ -64,9 +64,9 @@ export const IconButton = styled.button`
   }
 `;
 
-export const CharCount = styled.span<{ isOver: boolean }>`
+export const CharCount = styled.span<{ $isOver: boolean }>`
   ${token.typography("body", "sm", "medium")}
-  color: ${({ isOver }) => (isOver ? token.colors.state.errorSoft : token.colors.text.disabled)};
+  color: ${({ $isOver }) => ($isOver ? token.colors.state.errorSoft : token.colors.text.disabled)};
 `;
 
 export const ImagePreviewArea = styled.div`

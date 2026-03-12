@@ -3,6 +3,7 @@ export interface Comment {
   userName: string;
   content: string;
   time: string;
+  createdAt: string;
   profileUrl: string;
   images?: string[];
   replies: Comment[];

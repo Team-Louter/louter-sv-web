@@ -21,8 +21,8 @@ export interface Mentoring {
 
 export interface MentoringMember {
   memberId: number;
-  mentoring: Mentoring;
-  user: any; // Assuming User type from user.d.ts if needed, but using any for now to avoid circular dependency issues if they exist
+  mentoringId: number;
+  userId: number;
   role: MentoringRole;
 }
 
@@ -72,6 +72,7 @@ export interface UpdateQuestionRequest {
 export interface CreateMessageRequest {
   questionId: number;
   content: string;
+  files?: MentoringFileRequest[];
 }
 
 export interface MessageResponse {
@@ -79,7 +80,7 @@ export interface MessageResponse {
   questionId: number;
   userId: number;
   content: string;
-  fileUrls: string[];
+  files: MentoringFileResponse[];
   createdAt: string;
 }
 

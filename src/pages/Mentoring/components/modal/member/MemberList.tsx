@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as S from "./MemberList.styled";
 import type { GradeGroup, Member } from "./member.type";
 import userImg from "../../../../../assets/dummy/userImg.png";
@@ -14,8 +14,6 @@ interface MemberListProps {
   selectedCount: number;
   onClearAll: () => void;
   searchSlot: React.ReactNode;
-  selectedRole: string;
-  onRoleChange: (role: string) => void;
 }
 
 export default function MemberList({
@@ -27,17 +25,15 @@ export default function MemberList({
   selectedCount,
   onClearAll,
   searchSlot,
-  selectedRole,
-  onRoleChange,
 }: MemberListProps) {
-  const [openGrades, setOpenGrades] = useState<Set<number>>(new Set([1, 2, 3]));
+  // 모든 학년이 기본적으로 열려 있도록 초기화
+  const [openGrades, setOpenGrades] = useState<Set<number>>(new Set());
 
-  const roles = [
-    { id: "ALL", label: "전체" },
-    { id: "LEADER", label: "부장" },
-    { id: "MENTOR", label: "멘토" },
-    { id: "MENTEE", label: "멘티" },
-  ];
+  useEffect(() => {
+    if (groups.length > 0) {
+      setOpenGrades(new Set(groups.map(g => g.grade)));
+    }
+  }, [groups]);
 
   const toggleOpen = (grade: number) => {
     setOpenGrades(prev => {
@@ -63,17 +59,6 @@ export default function MemberList({
 
   return (
     <S.Container>
-      <S.FilterWrapper>
-        {roles.map(role => (
-          <S.FilterItem
-            key={role.id}
-            $active={selectedRole === role.id}
-            onClick={() => onRoleChange(role.id)}
-          >
-            {role.label}
-          </S.FilterItem>
-        ))}
-      </S.FilterWrapper>
       <S.SearchWrapper>{searchSlot}</S.SearchWrapper>
 
       <S.ListArea>

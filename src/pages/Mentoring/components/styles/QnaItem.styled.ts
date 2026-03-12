@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import * as token from "@/styles/values/token";
 
-export const CommentRow = styled.div<{ isReply?: boolean }>`
+export const CommentRow = styled.div<{ $isReply?: boolean }>`
   display: flex;
   align-items: flex-start;
   gap: 0.625rem;
-  margin-left: ${({ isReply }) => (isReply ? 2.5 : 0)}rem;
+  margin-left: ${({ $isReply }) => ($isReply ? 2.5 : 0)}rem;
   margin-bottom: 1.25rem;
 `;
 
@@ -15,9 +15,9 @@ export const ProfileGroup = styled.div`
   justify-content: center;
 `;
 
-export const Avatar = styled.img<{ isReply?: boolean }>`
-  width: ${({ isReply }) => (isReply ? 1.75 : 2.1875)}rem;
-  height: ${({ isReply }) => (isReply ? 1.75 : 2.1875)}rem;
+export const Avatar = styled.img<{ $isReply?: boolean }>`
+  width: ${({ $isReply }) => ($isReply ? 1.75 : 2.1875)}rem;
+  height: ${({ $isReply }) => ($isReply ? 1.75 : 2.1875)}rem;
   border-radius: ${token.shapes.xlarge};
   object-fit: cover;
 `;
@@ -40,17 +40,16 @@ export const CommentMetaRow = styled.div`
   gap: 10px;
 `;
 
-export const CommentText = styled.div<{ isRoot?: boolean }>`
+export const CommentText = styled.div<{ $isRoot?: boolean }>`
   background-color: ${token.colors.background.white};
   ${token.typography("body", "sm", "medium")}
   border: 1px solid
-    ${({ isRoot }) =>
-      isRoot
-        ? token.colors.main.alternative
-        : token.colors.line.normal};
+    ${({ $isRoot }) =>
+      $isRoot ? token.colors.main.alternative : token.colors.line.normal};
 
   border-radius: ${token.shapes.medium};
   overflow: hidden;
+  max-width: 705px;
 `;
 
 export const CommentTextInner = styled.div`
@@ -82,20 +81,17 @@ export const AttachedImageList = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  padding: 12px 15px 0 15px;
+  padding: 12px 15px;
 `;
 
 export const AttachedImage = styled.img`
-  width: 160px;
-  height: 120px;
+  max-width: 300px;
+  max-height: 400px;
+  width: auto;
+  height: auto;
   border-radius: 12px;
-  object-fit: cover;
+  object-fit: contain;
   cursor: pointer;
-  transition: transform 0.2s ease;
-
-  &:hover {
-    transform: scale(1.03);
-  }
 `;
 
 // 모달

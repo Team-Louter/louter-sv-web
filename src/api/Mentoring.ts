@@ -9,6 +9,7 @@ import type {
   QuestionStatus,
   MessageResponse,
   UpdateMessageRequest,
+  MentoringFileRequest,
 } from "../types/mentoring.type";
 import type { Member } from "@/types/member";
 
@@ -53,13 +54,12 @@ export const getQuestions = async (): Promise<QuestionResponse[]> => {
   return response.data;
 };
 
-export const createQuestion = async (mentoringId: number, title: string, content: string): Promise<QuestionResponse> => {
-  const response = await instance.post<QuestionResponse>("/mentoring/questions", {
-    mentoringId,
-    title,
-    content,
-    files: []
-  });
+export const createQuestion = async (mentoringId: number, title: string, content: string, files: MentoringFileRequest[] = []): Promise<QuestionResponse> => {
+  const body: any = { mentoringId, title, content };
+  if (files.length > 0) {
+    body.files = files.map(f => ({ ...f, targetType: "QUESTION" }));
+  }
+  const response = await instance.post<QuestionResponse>("/mentoring/questions", body);
   return response.data;
 };
 
@@ -95,12 +95,15 @@ export const getMessages = async (): Promise<MessageResponse[]> => {
   return response.data;
 };
 
-export const createMessage = async (questionId: number, content: string): Promise<MessageResponse> => {
-  const response = await instance.post<MessageResponse>("/mentoring/messages", {
-    questionId,
-    content,
-    files: []
-  });
+export const createMessage = async (questionId: number, content: string, files: MentoringFileRequest[] = []): Promise<MessageResponse> => {
+  const body: any = { questionId, content };
+  if (files.length > 0) {
+    body.files = files.map(f => ({ 
+      ...f, 
+      targetType: "MESSAGE",
+    }));
+  }
+  const response = await instance.post<MessageResponse>(`/mentoring/messages`, body);
   return response.data;
 };
 
@@ -116,6 +119,18 @@ export const updateMessage = async (messageId: number, body: UpdateMessageReques
 
 export const deleteMessage = async (messageId: number): Promise<void> => {
   await instance.delete(`/mentoring/messages/${messageId}`);
+};
+
+// 파일 업로드
+export const uploadFile = async (file: File): Promise<{
+  data: any; url: string 
+}> => {
+  const formData = new FormData();
+  formData.append("file", file);
+  const response = await instance.post("/files/upload", formData, {
+    headers: { 'Content-Type': "multipart/form-data" },
+  });
+  return response.data;
 };
 
 export const mentoringApi = {
@@ -137,4 +152,5 @@ export const mentoringApi = {
   getMessage,
   updateMessage,
   deleteMessage,
+  uploadFile,
 };

@@ -7,13 +7,16 @@ import KebabMenu from "@/pages/Community/components/KebabMenu/KebabMenu";
 interface AvatarListItemProps {
   item: AvatarItem;
   isClicked: boolean;
+  showKebab: boolean;
   onClick: () => void;
   onEdit: (item: AvatarItem) => void;
   onDelete: (id: number) => void;
 }
 
-function AvatarListItem({ item, isClicked, onClick, onEdit, onDelete }: AvatarListItemProps) {
+function AvatarListItem({ item, isClicked, showKebab, onClick, onEdit, onDelete }: AvatarListItemProps) {
   const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab();
+
+  const isMentee = item.myRole === "MENTEE";
 
   const kebabItems = [
     { 
@@ -56,10 +59,12 @@ function AvatarListItem({ item, isClicked, onClick, onEdit, onDelete }: AvatarLi
         <S.userName>{item.name}</S.userName>
       </S.profile>
       
-      <S.KebabWrapper ref={kebabRef}>
-        <S.Kebab src={kebabMenu} onClick={handleKebabClick} />
-        {isKebabOpen && <KebabMenu items={kebabItems} />}
-      </S.KebabWrapper>
+      {showKebab && !isMentee && (
+        <S.KebabWrapper ref={kebabRef}>
+          <S.Kebab src={kebabMenu} onClick={handleKebabClick} />
+          {isKebabOpen && <KebabMenu items={kebabItems} />}
+        </S.KebabWrapper>
+      )}
     </S.container>
   );
 }
@@ -67,12 +72,13 @@ function AvatarListItem({ item, isClicked, onClick, onEdit, onDelete }: AvatarLi
 interface AvatarListProps {
   data: AvatarItem[];
   selectedId: number | null;
+  showKebab?: boolean;
   onSelect: (item: AvatarItem) => void;
   onEdit: (item: AvatarItem) => void;
   onDelete: (id: number) => void;
 }
 
-export default function AvatarList({ data, selectedId, onSelect, onEdit, onDelete }: AvatarListProps) {
+export default function AvatarList({ data, selectedId, showKebab = true, onSelect, onEdit, onDelete }: AvatarListProps) {
   return (
     <>
       {data.map((item) => (
@@ -80,6 +86,7 @@ export default function AvatarList({ data, selectedId, onSelect, onEdit, onDelet
           key={item.id}
           item={item}
           isClicked={selectedId === item.id}
+          showKebab={showKebab}
           onClick={() => onSelect(item)}
           onEdit={onEdit}
           onDelete={onDelete}

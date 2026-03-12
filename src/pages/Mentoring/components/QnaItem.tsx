@@ -10,11 +10,11 @@ import "highlight.js/styles/vs2015.css";
 
 interface Props {
   comment: Comment;
-  isReply?: boolean;
+  isFirst?: boolean;
 }
 
-export function QnaItem({ comment, isReply = false }: Props) {
-  const isRoot = !isReply;
+export function QnaItem({ comment, isFirst = false }: Props) {
+  const isRoot = isFirst;
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -28,16 +28,16 @@ export function QnaItem({ comment, isReply = false }: Props) {
 
   return (
     <>
-      <S.CommentRow isReply={isReply}>
+      <S.CommentRow $isReply={false}>
         <S.ProfileGroup>
-          <S.Avatar src={comment.profileUrl} isReply={isReply} />
+          <S.Avatar src={comment.profileUrl} $isReply={false} />
         </S.ProfileGroup>
 
         <S.ContentGroup>
           <S.UserName>{comment.userName}</S.UserName>
 
           <S.CommentMetaRow>
-            <S.CommentText isRoot={isRoot}>
+            <S.CommentText $isRoot={isRoot}>
               {/* 이미지 */}
               {comment.images && comment.images.length > 0 && (
                 <S.AttachedImageList>
@@ -68,6 +68,7 @@ export function QnaItem({ comment, isReply = false }: Props) {
                       (node?.position?.start.line ?? 0) !==
                         (node?.position?.end.line ?? 0);
 
+                    // 인라인 코드
                     if (!isBlock) {
                       const result = hljs.highlightAuto(codeString);
                       return (
@@ -77,11 +78,17 @@ export function QnaItem({ comment, isReply = false }: Props) {
                       );
                     }
 
+                    // 블록 코드 언어 감지
+                    const detectedLanguage =
+                      match?.[1] ||
+                      hljs.highlightAuto(codeString).language ||
+                      "plaintext";
+
                     return (
                       <S.BlockCodeWrapper>
                         <SyntaxHighlighter
                           style={vscDarkPlus}
-                          language={match ? match[1] : "plaintext"}
+                          language={detectedLanguage}
                           PreTag="div"
                           customStyle={{
                             margin: 0,
@@ -106,7 +113,7 @@ export function QnaItem({ comment, isReply = false }: Props) {
         </S.ContentGroup>
       </S.CommentRow>
 
-      {/* 모달 */}
+      {/* 이미지 모달 */}
       {selectedImage && (
         <S.ImageModalOverlay onClick={closeModal}>
           <S.ImageModalContent onClick={(e) => e.stopPropagation()}>

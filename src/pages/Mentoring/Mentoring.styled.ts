@@ -23,7 +23,7 @@ export const LeftArea = styled.div`
 export const RightContainer = styled.div`
   flex: 1;
   min-width: 0; 
-  height: 705px;
+  height: 800px;
   padding: 20px;
   border: 1px solid ${token.colors.line.normal};
   border-radius: ${token.shapes.xlarge};
@@ -49,12 +49,13 @@ export const AvatarQnaContainer = styled.div`
   padding: 20px;
   gap: 10px;
   ${token.typography("heading", "sm", "semibold")}
+  overflow: scroll;
 `
 export const AvatarContainer = styled(AvatarQnaContainer)`
-  height: 265px;
+  height: 310px;
 `
 export const QnaContainer = styled(AvatarQnaContainer)`
-  height: 420px;
+  height: 470px;
 `
 export const QuestionListScroll = styled.div`
   flex: 1 1 0;

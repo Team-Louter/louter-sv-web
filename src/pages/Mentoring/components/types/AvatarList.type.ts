@@ -1,10 +1,14 @@
 type PersonType = "single" | "batch";
 
+export type RoleType = "LEADER" | "MENTOR" | "MENTEE";
+
 interface BaseItem {
   id: number;
   roomId: number;
   type: PersonType;
   name: string;
+  users: { id: number; img: string; name: string }[];
+  myRole?: RoleType;
 }
 
 interface SingleItem extends BaseItem {
@@ -14,7 +18,6 @@ interface SingleItem extends BaseItem {
 
 interface BatchItem extends BaseItem {
   type: "batch";
-  users: { id: number; img: string }[];
 }
 
 export type AvatarItem = SingleItem | BatchItem;

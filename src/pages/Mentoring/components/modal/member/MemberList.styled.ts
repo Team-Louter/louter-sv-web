@@ -130,29 +130,6 @@ export const ClearAll = styled.span`
   }
 `;
 
-export const FilterWrapper = styled.div`
-  display: flex;
-  gap: 8px;
-  padding: 12px 16px;
-  border-bottom: 1px solid ${token.colors.line.normal};
-  background-color: ${token.colors.background.white};
-`;
-
-export const FilterItem = styled.div<{ $active: boolean }>`
-  padding: 6px 14px;
-  border-radius: 20px;
-  cursor: pointer;
-  ${token.typography("caption", "md", "semibold")}
-  background-color: ${({ $active }) => $active ? token.colors.accent.primary : token.colors.fill.assistive};
-  color: ${({ $active }) => $active ? token.colors.background.white : token.colors.text.normal};
-  border: 1px solid ${({ $active }) => $active ? token.colors.accent.primary : token.colors.line.normal};
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: ${({ $active }) => $active ? token.colors.accent.primary : token.colors.fill.f3};
-  }
-`;
-
 export const SearchWrapper = styled.div`
   padding: 0 16px;
   border-bottom: 1px solid ${token.colors.line.normal};

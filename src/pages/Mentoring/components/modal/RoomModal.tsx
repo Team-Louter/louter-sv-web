@@ -3,7 +3,7 @@ import * as S from "./RoomModal.styled";
 import cancelIcon from "../../../../assets/mentoringImg/cancel.png";
 import MemberList from "./member/MemberList";
 import Search from "../SearchBar/SearchBar";
-import type { GradeGroup, Member } from "./member/member.type";
+import type { GradeGroup, Member } from "./member.type";
 import type { AvatarItem } from "../../components/types/AvatarList.type";
 import { mentoringApi } from "@/api/Mentoring";
 
@@ -27,25 +27,22 @@ const toGradeGroups = (members: Member[]): GradeGroup[] => {
 };
 
 export default function RoomModal({ isOpen, onClose, onCreate, onUpdate, initialData }: RoomModalProps) {
-  if (!isOpen) return null;
-
+  // 1. 모든 useState 훅 선언 (최상단)
   const [groups, setGroups] = useState<GradeGroup[]>([]);
   const [searchValue, setSearchValue] = useState("");
   const [roomName, setRoomName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedRole, setSelectedRole] = useState("ALL");
 
   const isEditMode = !!initialData;
 
+  // 2. useEffect 훅 선언
   useEffect(() => {
     if (!isOpen) return;
     setSearchValue("");
-    setSelectedRole("ALL");
 
     const loadMembers = async () => {
       setIsLoading(true);
       try {
-        // 전체 멤버 목록
         const allMembersData = await mentoringApi.getAllMembers();
         const allMembers: Member[] = allMembersData.map(m => ({
           id: m.userId,
@@ -55,32 +52,17 @@ export default function RoomModal({ isOpen, onClose, onCreate, onUpdate, initial
           number: m.number,
           role: m.role === "LEADER" ? "부장 (Leader)" : m.role === "MENTOR" ? "멘토 (Mentor)" : "멘티 (Mentee)",
           checked: false,
-          profileImageUrl: m.profileImageUrl,
+          profileImg: m.profileImageUrl,
         }));
 
         if (isEditMode && initialData) {
           setRoomName(initialData.name);
-
-          // 기존 멤버 체크 상태 반영
-          try {
-            const [leaders, mentors, mentees] = await Promise.all([
-              mentoringApi.getMembers(initialData.id, "LEADER"),
-              mentoringApi.getMembers(initialData.id, "MENTOR"),
-              mentoringApi.getMembers(initialData.id, "MENTEE"),
-            ]);
-            const existingIds = new Set([
-              ...leaders.map(m => m.user.userId),
-              ...mentors.map(m => m.user.userId),
-              ...mentees.map(m => m.user.userId),
-            ]);
-            const membersWithCheck = allMembers.map(m => ({
-              ...m,
-              checked: existingIds.has(m.id),
-            }));
-            setGroups(toGradeGroups(membersWithCheck));
-          } catch {
-            setGroups(toGradeGroups(allMembers));
-          }
+          const existingIds = new Set(initialData.users.map(u => Number(u.id)));
+          const membersWithCheck = allMembers.map(m => ({
+            ...m,
+            checked: existingIds.has(Number(m.id)),
+          }));
+          setGroups(toGradeGroups(membersWithCheck));
         } else {
           setRoomName("");
           setGroups(toGradeGroups(allMembers));
@@ -94,8 +76,9 @@ export default function RoomModal({ isOpen, onClose, onCreate, onUpdate, initial
     };
 
     loadMembers();
-  }, [isOpen, initialData?.id]);
+  }, [isOpen, initialData, isEditMode]);
 
+  // 3. useMemo 훅 선언
   const checkedGrades = useMemo(
     () =>
       new Set(
@@ -106,16 +89,16 @@ export default function RoomModal({ isOpen, onClose, onCreate, onUpdate, initial
     [groups],
   );
 
-  const isSearching = searchValue.trim() !== "" || selectedRole !== "ALL";
+  // 4. 모든 훅 선언이 끝난 후 조건부 리턴 (isOpen 체크)
+  if (!isOpen) return null;
+
+  // 5. 이후 로직 (isOpen이 true일 때만 실행됨)
+  const isSearching = searchValue.trim() !== "";
   const filteredGroups = groups.map(g => ({
     ...g,
     members: g.members.filter(m => {
       const matchesSearch = m.name.includes(searchValue) || String(m.number).includes(searchValue);
-      const matchesRole = selectedRole === "ALL" || 
-        (selectedRole === "LEADER" && m.role.includes("Leader")) ||
-        (selectedRole === "MENTOR" && m.role.includes("Mentor")) ||
-        (selectedRole === "MENTEE" && m.role.includes("Mentee"));
-      return matchesSearch && matchesRole;
+      return matchesSearch;
     }),
   }));
   const flatSearchResults = filteredGroups.flatMap(g => g.members);
@@ -188,8 +171,6 @@ export default function RoomModal({ isOpen, onClose, onCreate, onUpdate, initial
               selectedCount={selectedCount}
               onClearAll={handleClearAll}
               searchSlot={<Search onSearch={setSearchValue} />}
-              selectedRole={selectedRole}
-              onRoleChange={setSelectedRole}
             />
           )}
         </S.AddMemberContainer>
