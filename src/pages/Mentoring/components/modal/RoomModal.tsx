@@ -3,7 +3,7 @@ import * as S from "./RoomModal.styled";
 import cancelIcon from "../../../../assets/mentoringImg/cancel.png";
 import MemberList from "./member/MemberList";
 import Search from "../SearchBar/SearchBar";
-import type { GradeGroup, Member } from "./member.type";
+import type { GradeGroup, Member } from "./member/member.type";
 import type { AvatarItem } from "../../components/types/AvatarList.type";
 import { mentoringApi } from "@/api/Mentoring";
 
@@ -27,7 +27,6 @@ const toGradeGroups = (members: Member[]): GradeGroup[] => {
 };
 
 export default function RoomModal({ isOpen, onClose, onCreate, onUpdate, initialData }: RoomModalProps) {
-  // 1. 모든 useState 훅 선언 (최상단)
   const [groups, setGroups] = useState<GradeGroup[]>([]);
   const [searchValue, setSearchValue] = useState("");
   const [roomName, setRoomName] = useState("");
@@ -35,7 +34,6 @@ export default function RoomModal({ isOpen, onClose, onCreate, onUpdate, initial
 
   const isEditMode = !!initialData;
 
-  // 2. useEffect 훅 선언
   useEffect(() => {
     if (!isOpen) return;
     setSearchValue("");
@@ -78,7 +76,6 @@ export default function RoomModal({ isOpen, onClose, onCreate, onUpdate, initial
     loadMembers();
   }, [isOpen, initialData, isEditMode]);
 
-  // 3. useMemo 훅 선언
   const checkedGrades = useMemo(
     () =>
       new Set(
@@ -89,10 +86,8 @@ export default function RoomModal({ isOpen, onClose, onCreate, onUpdate, initial
     [groups],
   );
 
-  // 4. 모든 훅 선언이 끝난 후 조건부 리턴 (isOpen 체크)
   if (!isOpen) return null;
 
-  // 5. 이후 로직 (isOpen이 true일 때만 실행됨)
   const isSearching = searchValue.trim() !== "";
   const filteredGroups = groups.map(g => ({
     ...g,
