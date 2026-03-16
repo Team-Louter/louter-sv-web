@@ -1,12 +1,7 @@
 import styled from "styled-components";
 import * as token from "@/styles/values/token";
 
-
-interface Props {
-  $isClicked: boolean;
-}
-
-export const container = styled.div<Props>`
+export const container = styled.div<{ $isClicked: boolean }>`
   width: 26.69rem;
   height: 3.5rem;
   padding: 15px 20px;

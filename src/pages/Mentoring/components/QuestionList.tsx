@@ -1,8 +1,15 @@
 import * as S from "./styles/QuestionList.styled";
-import type { QuestionListProps, Question } from "./types/QuestionList.type";
+import type { Question } from "./types/QuestionList.type";
 import { useKebab } from "@/hooks/useKebab";
 import KebabMenu from "@/pages/Community/components/KebabMenu/KebabMenu";
 import kebabIcon from "@/assets/mentoringImg/kebab.png";
+
+interface QuestionListProps {
+  questions: Question[];
+  selectedId: number | null;
+  onSelect: (question: Question) => void;
+  onDelete?: (id: number) => void;
+}
 
 interface QuestionListItemProps {
   question: Question;

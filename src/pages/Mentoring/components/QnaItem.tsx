@@ -8,12 +8,12 @@ import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import hljs from "highlight.js";
 import "highlight.js/styles/vs2015.css";
 
-interface Props {
+interface QnaItemProps {
   comment: Comment;
   isFirst?: boolean;
 }
 
-export function QnaItem({ comment, isFirst = false }: Props) {
+export function QnaItem({ comment, isFirst = false }: QnaItemProps) {
   const isRoot = isFirst;
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);

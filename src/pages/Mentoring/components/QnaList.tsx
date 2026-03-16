@@ -1,11 +1,11 @@
 import { QnaItem } from "./QnaItem";
 import type { Comment } from "./types/Qna.type";
 
-interface Props {
+interface QnaListProps {
   comments: Comment[];
 }
 
-export default function QnaList({ comments }: Props) {
+export default function QnaList({ comments }: QnaListProps) {
   if (!comments.length) return null;
 
   return (

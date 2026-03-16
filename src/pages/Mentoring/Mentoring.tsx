@@ -4,7 +4,7 @@ import QnaList from "./components/QnaList";
 import type { Comment } from "./components/types/Qna.type";
 import type { AvatarItem } from "./components/types/AvatarList.type";
 import type { Question } from "./components/types/QuestionList.type";
-import userImg from "@/assets/dummy/userImg.png";
+import userImg from "@/assets/anonymousProfile.png";
 import QnaInput from "./components/QnaInput";
 import * as S from "./Mentoring.styled";
 import Add from "@/assets/mentoringImg/add.png";

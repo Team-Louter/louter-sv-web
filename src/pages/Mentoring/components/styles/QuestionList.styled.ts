@@ -2,16 +2,8 @@ import styled from "styled-components";
 import * as token from "@/styles/values/token";
 import type { StatusType } from "../types/QuestionList.type";
 
-interface Props {
-  $isClicked: boolean;
-  $status: StatusType;
-}
 
-interface statusProps {
-  $status: StatusType;
-}
-
-export const container = styled.div<Props>`
+export const container = styled.div<{ $isClicked: boolean; $status: StatusType }>`
   box-sizing: border-box;
   width: 26.69rem;
   background-color: ${({ $isClicked }) =>
@@ -76,7 +68,7 @@ const statusColor = {
   "답변 완료": token.colors.state.infoSoft,
 } as const;
 
-export const statusBadge = styled.span<statusProps>`
+export const statusBadge = styled.span<{ $status: StatusType }>`
   ${token.typography("body", "sm", "medium")}
   color: ${({ $status }) => statusColor[$status] || token.colors.text.disabled}
 `;
