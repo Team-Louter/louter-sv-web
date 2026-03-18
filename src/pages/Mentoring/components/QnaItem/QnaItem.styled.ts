@@ -52,8 +52,9 @@ export const CommentText = styled.div<{ $isRoot?: boolean }>`
   max-width: 705px;
 `;
 
-export const CommentTextInner = styled.div`
-  padding: 10px 15px;
+export const CommentTextInner = styled.div<{ $hasImages?: boolean }>`
+  padding: ${({ $hasImages }) =>
+    $hasImages ? "0 15px 10px" : "10px 15px"};
 `;
 
 export const BlockCodeWrapper = styled.div`

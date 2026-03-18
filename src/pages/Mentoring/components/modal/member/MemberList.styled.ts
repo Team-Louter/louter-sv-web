@@ -27,7 +27,7 @@ export const GradeHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 16px;
+  padding: 0.875rem 1rem;
   cursor: pointer;
   background-color: ${token.colors.background.white};
 `;
@@ -39,12 +39,12 @@ export const GradeTitle = styled.span`
 export const GradeRight = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 0.75rem;
 `;
 
 export const ChevronIcon = styled.img<{ isOpen: boolean }>`
-  width: 16px;
-  height: 16px;
+  width: 1rem;
+  height: 1rem;
   transform: ${({ isOpen }) => isOpen ? "rotate(180deg)" : "rotate(0deg)"};
   transition: transform 0.2s ease;
   flex-shrink: 0;
@@ -53,15 +53,21 @@ export const ChevronIcon = styled.img<{ isOpen: boolean }>`
 export const MemberRow = styled.div`
   display: flex;
   align-items: center;
-  padding: 12px 16px;
-  gap: 12px;
+  padding: 0.75rem 1rem;
+  gap: 0.75rem;
   border-top: 1px solid ${token.colors.line.normal};
   background-color: ${token.colors.background.white};
+
+  @media (max-width: 36rem) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+  }
 `;
 
 export const ProfileImg = styled.img`
-  width: 40px;
-  height: 40px;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
@@ -69,9 +75,10 @@ export const ProfileImg = styled.img`
 
 export const MemberInfo = styled.div`
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 0.125rem;
 `;
 
 export const MemberName = styled.span`
@@ -81,18 +88,23 @@ export const MemberName = styled.span`
 export const MemberSub = styled.span`
   ${token.typography("caption", "sm", "regular")}
   color: ${token.colors.text.normal};
+  overflow-wrap: anywhere;
 `;
 
 export const RoleText = styled.span`
   ${token.typography("caption", "md", "regular")}
   color: ${token.colors.text.normal};
   flex-shrink: 0;
+
+  @media (max-width: 36rem) {
+    display: none;
+  }
 `;
 
 export const Checkbox = styled.div<{ checked: boolean }>`
-  width: 22px;
-  height: 22px;
-  border-radius: 4px;
+  width: 1.375rem;
+  height: 1.375rem;
+  border-radius: 0.25rem;
   border: 1.5px solid ${({ checked }) => checked ? token.colors.accent.primary : token.colors.line.normal};
   background-color: ${({ checked }) => checked ? token.colors.accent.primary : "transparent"};
   cursor: pointer;
@@ -103,17 +115,23 @@ export const Checkbox = styled.div<{ checked: boolean }>`
 `;
 
 export const CheckIcon = styled.img`
-  width: 13px;
-  height: 13px;
+  width: 0.8125rem;
+  height: 0.8125rem;
 `;
 
 export const Footer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 16px;
+  padding: 0.625rem 1rem;
   background-color: ${token.colors.fill.f3};
   border-top: 1px solid ${token.colors.line.normal};
+
+  @media (max-width: 36rem) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
 `;
 
 export const SelectedCount = styled.span`
@@ -131,12 +149,12 @@ export const ClearAll = styled.span`
 `;
 
 export const SearchWrapper = styled.div`
-  padding: 0 16px;
+  padding: 0 1rem;
   border-bottom: 1px solid ${token.colors.line.normal};
 `;
 
 export const EmptyText = styled.div`
-  padding: 24px 16px;
+  padding: 1.5rem 1rem;
   text-align: center;
   ${token.typography("body", "sm", "regular")}
   color: ${token.colors.text.normal};

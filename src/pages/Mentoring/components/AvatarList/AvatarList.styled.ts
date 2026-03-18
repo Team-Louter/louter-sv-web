@@ -2,9 +2,11 @@ import styled from "styled-components";
 import * as token from "@/styles/values/token";
 
 export const container = styled.div<{ $isClicked: boolean }>`
-  width: 26.69rem;
+  box-sizing: border-box;
+  width: 100%;
   height: 3.5rem;
-  padding: 15px 20px;
+  max-width: 26.6875rem;
+  padding: 0.9375rem 1.25rem;
   background-color: ${({ $isClicked }) =>
     $isClicked ? token.colors.accent.assistive4 : token.colors.main.white};
   border: solid 1px ${token.colors.main.yellow};
@@ -12,12 +14,11 @@ export const container = styled.div<{ $isClicked: boolean }>`
   ${token.flexRow}
   align-items: center;
   justify-content: space-between;
-  
 `;
 
 export const list = styled.div`
   ${token.flexColumn}
-  gap: 10px;
+  gap: 0.625rem;
 `
 
 export const avatarArea = styled.div`
@@ -35,6 +36,10 @@ export const avatarGroup = styled.div`
 export const userName = styled.span`
   ${token.typography("body", "sm", "semibold")}
   color: ${token.colors.text.normal};
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 
@@ -70,5 +75,6 @@ export const KebabWrapper = styled.div`
 export const profile = styled.div`
   ${token.flexRow}
   align-items: center;
-  gap: 10px;
+  gap: 0.625rem;
+  min-width: 0;
 `
