@@ -17,13 +17,14 @@ const messaging = getMessaging(app);
 export async function requestFCMToken(): Promise<string | null> {
   try {
     const permission = await Notification.requestPermission();
-    if (permission !== "granted") {
-      console.log("알림 권한 거부됨");
-      return null;
-    }
+    if (permission !== "granted") return null;
+
+    await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+    const registration = await navigator.serviceWorker.ready;
 
     const token = await getToken(messaging, {
-      vapidKey: "BJSlPHcAhsoA-nwjuUj__iXO3o6mU0l3Ml8ZpCLraRysMkr4h0IuUzwsoUyr8vEhxIQsXLvvcvL_3JUi-suAThA"
+      vapidKey: "BJSlPHcAhsoA-nwjuUj__iXO3o6mU0l3Ml8ZpCLraRysMkr4h0IuUzwsoUyr8vEhxIQsXLvvcvL_3JUi-suAThA",
+      serviceWorkerRegistration: registration,
     });
     
     return token;
@@ -31,6 +32,13 @@ export async function requestFCMToken(): Promise<string | null> {
   } catch (err) {
     console.error("토큰 발급 실패:", err);
     return null;
+  }
+}
+
+export async function showNotification(title: string, body: string) {
+  const registration = await navigator.serviceWorker.getRegistration('/firebase-messaging-sw.js');
+  if (registration) {
+    registration.showNotification(title, { body });
   }
 }
 
