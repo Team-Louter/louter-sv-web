@@ -7,7 +7,7 @@ import type {
   Comment,
   Question,
   QuestionWithComments,
-} from "@/types/mentoring.type";
+} from "@/types/mentoring";
 import userImg from "@/assets/anonymousProfile.png";
 import QnaInput from "./components/QnaInput/QnaInput";
 import * as S from "./Mentoring.styled";

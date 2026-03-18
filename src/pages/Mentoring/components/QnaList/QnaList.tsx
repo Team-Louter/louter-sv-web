@@ -1,5 +1,5 @@
 import QnaItem from "../QnaItem/QnaItem";
-import type { Comment } from "@/types/mentoring.type";
+import type { Comment } from "@/types/mentoring";
 
 interface QnaListProps {
   comments: Comment[];

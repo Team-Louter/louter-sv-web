@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import * as S from "./MemberList.styled";
-import type { GradeGroup, Member } from "@/types/mentoring.type";
+import type { GradeGroup, Member } from "@/types/mentoring";
 import userImg from "@/assets/anonymousProfile.png";
 import chevronImg from "@/assets/mentoringImg/Arrow.png";
 import checkImg from "@/assets/mentoringImg/check.png";
@@ -31,12 +31,12 @@ export default function MemberList({
 
   useEffect(() => {
     if (groups.length > 0) {
-      setOpenGrades(new Set(groups.map(g => g.grade)));
+      setOpenGrades(new Set(groups.map((g) => g.grade)));
     }
   }, [groups]);
 
   const toggleOpen = (grade: number) => {
-    setOpenGrades(prev => {
+    setOpenGrades((prev) => {
       const next = new Set(prev);
       next.has(grade) ? next.delete(grade) : next.add(grade);
       return next;
@@ -48,11 +48,16 @@ export default function MemberList({
       <S.ProfileImg src={member.profileImg || userImg} />
       <S.MemberInfo>
         <S.MemberName>{member.name}</S.MemberName>
-        <S.MemberSub>{member.grade}학년 {member.class}반 {member.number}번</S.MemberSub>
+        <S.MemberSub>
+          {member.grade}학년 {member.class}반 {member.number}번
+        </S.MemberSub>
       </S.MemberInfo>
       <S.RoleText>{member.role}</S.RoleText>
-      <S.Checkbox checked={member.checked} onClick={() => onToggleMember(member.id)}>
-      {member.checked && <S.CheckIcon src={checkImg} alt="check" />}
+      <S.Checkbox
+        checked={member.checked}
+        onClick={() => onToggleMember(member.id)}
+      >
+        {member.checked && <S.CheckIcon src={checkImg} alt="check" />}
       </S.Checkbox>
     </S.MemberRow>
   );
@@ -64,9 +69,11 @@ export default function MemberList({
       <S.ListArea>
         {flatSearchResults ? (
           // 검색 중 - 폴더 없이 멤버만
-          flatSearchResults.length > 0
-            ? flatSearchResults.map(renderMemberRow)
-            : <S.EmptyText>검색 결과가 없습니다.</S.EmptyText>
+          flatSearchResults.length > 0 ? (
+            flatSearchResults.map(renderMemberRow)
+          ) : (
+            <S.EmptyText>검색 결과가 없습니다.</S.EmptyText>
+          )
         ) : (
           // 기본 - 학년별 폴더
           groups.map(({ grade, members }) => (
@@ -74,12 +81,22 @@ export default function MemberList({
               <S.GradeHeader onClick={() => toggleOpen(grade)}>
                 <S.GradeTitle>{grade}학년</S.GradeTitle>
                 <S.GradeRight>
-                  <S.Checkbox 
-                  checked={checkedGrades.has(grade)} 
-                  onClick={(e) => { e.stopPropagation(); onToggleGrade(grade); }}>
-                  {checkedGrades.has(grade) && <S.CheckIcon src={checkImg} alt="check" />}
+                  <S.Checkbox
+                    checked={checkedGrades.has(grade)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onToggleGrade(grade);
+                    }}
+                  >
+                    {checkedGrades.has(grade) && (
+                      <S.CheckIcon src={checkImg} alt="check" />
+                    )}
                   </S.Checkbox>
-                  <S.ChevronIcon src={chevronImg} isOpen={openGrades.has(grade)} alt="chevron" />
+                  <S.ChevronIcon
+                    src={chevronImg}
+                    isOpen={openGrades.has(grade)}
+                    alt="chevron"
+                  />
                 </S.GradeRight>
               </S.GradeHeader>
               {openGrades.has(grade) && members.map(renderMemberRow)}

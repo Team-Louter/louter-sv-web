@@ -1,6 +1,6 @@
 import { useState } from "react";
 import * as S from "./QnaItem.styled";
-import type { Comment } from "@/types/mentoring.type";
+import type { Comment } from "@/types/mentoring";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -13,10 +13,7 @@ interface QnaItemProps {
   isFirst?: boolean;
 }
 
-export default function QnaItem({
-  comment,
-  isFirst = false,
-}: QnaItemProps) {
+export default function QnaItem({ comment, isFirst = false }: QnaItemProps) {
   const isRoot = isFirst;
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 

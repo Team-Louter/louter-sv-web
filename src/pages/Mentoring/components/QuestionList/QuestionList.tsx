@@ -1,5 +1,5 @@
 import * as S from "./QuestionList.styled";
-import type { Question } from "@/types/mentoring.type";
+import type { Question } from "@/types/mentoring";
 import { useKebab } from "@/hooks/useKebab";
 import KebabMenu from "@/pages/Community/components/KebabMenu/KebabMenu";
 import kebabIcon from "@/assets/mentoringImg/kebab.png";
