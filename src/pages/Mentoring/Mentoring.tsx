@@ -198,6 +198,68 @@ export default function Mentoring() {
     [extractArray],
   );
 
+  const fetchQuestions = useCallback(async () => {
+    if (!selectedRoomId || !me) {
+      setQuestions([]);
+      return;
+    }
+
+    try {
+      const [questionsRes, messagesRes] = await Promise.all([
+        mentoringApi.getQuestions(),
+        mentoringApi.getMessages(),
+      ]);
+      const data = extractArray(questionsRes);
+      const messages = extractArray(messagesRes);
+
+      const mappedQuestions: QuestionWithComments[] = data
+        .filter((q: any) => Number(q.mentoringId) === Number(selectedRoomId))
+        .map((q: any) => {
+          const isMe = Number(q.userId) === Number(me.userId);
+          const info = allMembers.find((m) => Number(m.userId) === Number(q.userId));
+
+          return {
+            id: Number(q.questionId),
+            roomId: Number(q.mentoringId),
+            authorId: Number(q.userId),
+            title: q.title,
+            date: formatDate(q.createdAt),
+            status: getQuestionStatus(
+              q.status,
+              Number(q.questionId),
+              messages,
+              Number(q.userId),
+            ),
+            comments: q.content
+              ? [
+                  {
+                    id: q.questionId,
+                    userName: isMe ? me.userName || "나" : info?.userName || "질문자",
+                    content: q.content,
+                    time: formatDate(q.createdAt),
+                    createdAt: q.createdAt,
+                    profileUrl: isMe
+                      ? me.profileImageUrl || userImg
+                      : info?.profileImageUrl || userImg,
+                    images: q.files?.map((f: any) => f.fileUrl) || [],
+                    replies: [],
+                  },
+                ]
+              : [],
+          };
+        });
+
+      setQuestions((prev) =>
+        mappedQuestions.map((newQ) => {
+          const existing = prev.find((p) => p.id === newQ.id);
+          return existing ? { ...newQ, comments: existing.comments } : newQ;
+        }),
+      );
+    } catch (error) {
+      console.error("질문 목록 로딩 실패:", error);
+    }
+  }, [selectedRoomId, me, extractArray, allMembers]);
+
   // 내 정보 및 전체 멤버 조회
   useEffect(() => {
     const init = async () => {
@@ -220,72 +282,8 @@ export default function Mentoring() {
 
   // 방 선택 시 질문 목록 조회
   useEffect(() => {
-    if (!selectedRoomId || !me) {
-      setQuestions([]);
-      return;
-    }
-    const fetchQuestions = async () => {
-      try {
-        const [questionsRes, messagesRes] = await Promise.all([
-          mentoringApi.getQuestions(),
-          mentoringApi.getMessages(),
-        ]);
-        const data = extractArray(questionsRes);
-        const messages = extractArray(messagesRes);
-
-        const mappedQuestions: QuestionWithComments[] = data
-          .filter((q: any) => Number(q.mentoringId) === Number(selectedRoomId))
-          .map((q: any) => {
-            const isMe = me && Number(q.userId) === Number(me.userId);
-            const info = allMembers.find(
-              (m) => Number(m.userId) === Number(q.userId),
-            );
-
-            return {
-              id: Number(q.questionId),
-              roomId: Number(q.mentoringId),
-              authorId: Number(q.userId),
-              title: q.title,
-              date: formatDate(q.createdAt),
-              status: getQuestionStatus(
-                q.status,
-                Number(q.questionId),
-                messages,
-                Number(q.userId),
-              ),
-              comments: q.content
-                ? [
-                    {
-                      id: q.questionId,
-                      userName: isMe
-                        ? me.userName || "나"
-                        : info?.userName || "질문자",
-                      content: q.content,
-                      time: formatDate(q.createdAt),
-                      createdAt: q.createdAt,
-                      profileUrl: isMe
-                        ? me.profileImageUrl || userImg
-                        : info?.profileImageUrl || userImg,
-                      images: q.files?.map((f: any) => f.fileUrl) || [],
-                      replies: [],
-                    },
-                  ]
-                : [],
-            };
-          });
-
-        setQuestions((prev) => {
-          return mappedQuestions.map((newQ) => {
-            const existing = prev.find((p) => p.id === newQ.id);
-            return existing ? { ...newQ, comments: existing.comments } : newQ;
-          });
-        });
-      } catch (error) {
-        console.error("질문 목록 로딩 실패:", error);
-      }
-    };
     fetchQuestions();
-  }, [selectedRoomId, extractArray, me, allMembers]);
+  }, [fetchQuestions]);
 
   // 질문 선택 시 메시지 조회
   useEffect(() => {
@@ -458,29 +456,8 @@ export default function Mentoring() {
         content,
         validFiles,
       );
-
-      const newQuestion: QuestionWithComments = {
-        id: Number(res.questionId),
-        roomId: Number(res.mentoringId),
-        authorId: Number(me?.userId ?? res.userId ?? 0),
-        title: res.title,
-        date: formatDate(res.createdAt),
-        status: "답변 대기",
-        comments: [
-          {
-            id: res.questionId,
-            userName: me?.userName || "나",
-            content: content,
-            time: formatDate(res.createdAt),
-            createdAt: res.createdAt,
-            profileUrl: me?.profileImageUrl || userImg,
-            images: res.files?.map((f: any) => f.fileUrl) || [],
-            replies: [],
-          },
-        ],
-      };
-      setQuestions((prev) => [newQuestion, ...prev]);
-      setSelectedQuestionId(newQuestion.id);
+      await fetchQuestions();
+      setSelectedQuestionId(Number(res.questionId));
       setIsWritingNew(false);
       toast.success("질문이 등록되었습니다.");
     } catch (error) {
