@@ -654,7 +654,9 @@ export default function Mentoring() {
               )}
             </S.QnaListWrapper>
 
-            {(isWritingNew || selectedQuestionObj) && (
+            {(isWritingNew ||
+              (selectedQuestionObj &&
+                selectedQuestionObj.status !== "답변 완료")) && (
               <QnaInput
                 onSubmit={isWritingNew ? handleFirstSubmit : handleReplySubmit}
               />
