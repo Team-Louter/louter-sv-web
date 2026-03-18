@@ -3,32 +3,40 @@ import * as token from "@/styles/values/token";
 
 export const body = styled.div`
   width: 100%;
-  height: 92vh;
+  min-height: calc(100dvh - 5rem);
   ${token.flexColumn}
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 0.625rem;
+  padding: 1rem;
   background-color: ${token.colors.background.lightGray};
 `
 
 export const container = styled.div`
-  ${token.flexRow}
-  gap: 20px;
-  width: 1400px;
+  display: grid;
+  grid-template-columns: clamp(27rem, 32vw, 29.3125rem) minmax(0, 1fr);
+  gap: 1.25rem;
+  width: min(87.5rem, 100%);
+  min-height: 0;
+
+  @media (max-width: 72rem) {
+    grid-template-columns: 1fr;
+  }
 `
 export const LeftArea = styled.div`
   ${token.flexColumn}
-  gap: 20px;
+  gap: 1.25rem;
+  min-width: 0;
 `
 export const RightContainer = styled.div`
   flex: 1;
-  min-width: 0; 
-  height: 800px;
-  padding: 20px;
+  min-width: 0;
+  height: clamp(45rem, 82dvh, 54rem);
+  padding: 1.25rem;
   border: 1px solid ${token.colors.line.normal};
   border-radius: ${token.shapes.xlarge};
   ${token.flexColumn}
-  gap: 10px;
+  gap: 0.625rem;
   background-color: ${token.colors.background.white};
 `
 
@@ -40,22 +48,22 @@ export const QnaListWrapper = styled.div`
 `
 
 export const AvatarQnaContainer = styled.div`
-  min-width: 469px;
-  width: fit-content;
+  width: 100%;
+  min-width: 0;
   ${token.flexColumn}
   background-color: ${token.colors.fill.white};
   border: 1px solid ${token.colors.line.normal};
   border-radius: ${token.shapes.xlarge};
-  padding: 20px;
-  gap: 10px;
+  padding: 1.25rem;
+  gap: 0.625rem;
   ${token.typography("heading", "sm", "semibold")}
   overflow: hidden;
 `
 export const AvatarContainer = styled(AvatarQnaContainer)`
-  height: 310px;
+  height: clamp(18rem, 32dvh, 21rem);
 `
 export const QnaContainer = styled(AvatarQnaContainer)`
-  height: 470px;
+  height: clamp(26rem, 48dvh, 31rem);
 `
 export const QuestionListScroll = styled.div`
   flex: 1 1 0;
@@ -70,8 +78,8 @@ export const AvatarListScroll = styled.div`
 `
 
 export const AddButton = styled.img`
-  width: 19px;
-  height: 19px;
+  width: 1.1875rem;
+  height: 1.1875rem;
 `
 
 const FlexRow = styled.div`
@@ -93,15 +101,15 @@ export const AddContainer = styled(FlexRow)`
 export const CategoryWrap = styled.div`
   ${token.flexColumnCenter}
   ${token.typography("body", "sm", "medium")}
-  gap: 10px;
+  gap: 0.625rem;
   color: ${token.colors.text.disabled};
 `
 
 export const EndWrap = styled.div`
-  padding: 10px 20px;
+  padding: 0.625rem 1.25rem;
   ${token.flexRow}
   align-items: center;
-  gap: 10px;
+  gap: 0.625rem;
   ${token.typography("body", "sm", "medium")}
   color: ${token.colors.text.disabled};
   border: 1px solid ${token.colors.line.normal};
@@ -113,13 +121,13 @@ export const End = styled.button`
   color: ${token.colors.background.white};
   ${token.typography("caption", "md", "semibold")}
   border-radius: ${token.shapes.xsmall};
-  padding: 8px 15px;
+  padding: 0.5rem 0.9375rem;
 `
 
 export const EmptyText = styled.p`
   color: #aaa;
-  font-size: 14px;
+  font-size: 0.875rem;
   text-align: center;
-  padding: 20px 0;
+  padding: 1.25rem 0;
   ${token.typography("body", "sm", "medium")}
 `;

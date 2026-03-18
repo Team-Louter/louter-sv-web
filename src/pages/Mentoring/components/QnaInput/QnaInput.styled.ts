@@ -11,8 +11,8 @@ export const Wrapper = styled.div`
 
 export const TextareaWrapper = styled.div`
   overflow-y: auto;
-  max-height: calc(3 * 1.5em + 20px);
-  padding: 10px 16px 0;
+  max-height: calc(3 * 1.5em + 1.25rem);
+  padding: 0.625rem 1rem 0;
 `;
 
 export const Input = styled.textarea`
@@ -32,28 +32,29 @@ export const Toolbar = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 12px;
+  padding: 0.5rem 0.75rem;
   flex-shrink: 0;
+  gap: 0.75rem;
 `;
 
 export const ToolLeft = styled.div`
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 0.25rem;
 `;
 
 export const ToolRight = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
 `;
 
 export const IconButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 2rem;
+  height: 2rem;
   border: none;
   background: none;
   cursor: pointer;
@@ -72,14 +73,14 @@ export const CharCount = styled.span<{ $isOver: boolean }>`
 export const ImagePreviewArea = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  padding: 8px 16px 0;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem 0;
 `;
 
 export const ImagePreviewItem = styled.div`
   position: relative;
-  width: 72px;
-  height: 72px;
+  width: clamp(4rem, 9vw, 4.5rem);
+  height: clamp(4rem, 9vw, 4.5rem);
   flex-shrink: 0;
 `;
 
@@ -93,15 +94,15 @@ export const PreviewImg = styled.img`
 
 export const RemoveButton = styled.button`
   position: absolute;
-  top: -3px;
-  right: -3px;
-  width: 22px;
-  height: 22px;
+  top: -0.1875rem;
+  right: -0.1875rem;
+  width: 1.375rem;
+  height: 1.375rem;
   border-radius: 50%;
   border: none;
   background-color: ${token.colors.text.normal};
   color: ${token.colors.background.white};
-  font-size: 12px;
+  font-size: 0.75rem;
   line-height: 1;
   cursor: pointer;
   display: flex;
@@ -111,5 +112,5 @@ export const RemoveButton = styled.button`
 `;
 
 export const TrashIcon = styled.img`
-  width: 11px;
-`
+  width: 0.6875rem;
+`;

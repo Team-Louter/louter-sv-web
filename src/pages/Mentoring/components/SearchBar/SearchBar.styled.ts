@@ -8,7 +8,7 @@ export const SearchInputWrapper = styled.div`
 
 export const SearchInput = styled.input`
   width: 100%;
-  height: 47px;
+  height: clamp(2.75rem, 5vw, 2.9375rem);
   background-color: ${token.colors.fill.assistive};
   color: ${token.colors.text.normal};
   border: none;

@@ -15,6 +15,7 @@ interface QnaItemProps {
 
 export default function QnaItem({ comment, isFirst = false }: QnaItemProps) {
   const isRoot = isFirst;
+  const hasImages = Boolean(comment.images && comment.images.length > 0);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const handleImageClick = (url: string) => {
@@ -54,7 +55,11 @@ export default function QnaItem({ comment, isFirst = false }: QnaItemProps) {
                 remarkPlugins={[remarkGfm]}
                 components={{
                   p({ children }) {
-                    return <S.CommentTextInner>{children}</S.CommentTextInner>;
+                    return (
+                      <S.CommentTextInner $hasImages={hasImages}>
+                        {children}
+                      </S.CommentTextInner>
+                    );
                   },
                   code({ children, className, node }) {
                     const match = /language-(\w+)/.exec(className || "");

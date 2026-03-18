@@ -7,7 +7,8 @@ export const container = styled.div<{
   $status: StatusType;
 }>`
   box-sizing: border-box;
-  width: 26.69rem;
+  width: 100%;
+  max-width: 26.6875rem;
   background-color: ${({ $isClicked }) =>
     $isClicked ? token.colors.accent.assistive4 : token.colors.main.white};
   border: solid 1px
@@ -40,23 +41,29 @@ export const questionItem = styled.div`
 
 export const questionHeader = styled.div`
   ${token.flexRow}
-  gap: 10px;
+  gap: 0.625rem;
+  min-width: 0;
 `;
 
 export const questionTitle = styled.span`
   ${token.typography("body", "sm", "semibold")};
   color: ${({ theme }) => theme.colors.text.black};
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 export const questionDate = styled.span`
   ${token.typography("caption", "lg", "medium")};
   color: ${token.colors.text.disabled};
+  flex-shrink: 0;
 `;
 
 export const status = styled.div`
   ${token.flexRow}
   align-items: center;
-  gap: 5px;
+  gap: 0.3125rem;
 `;
 
 export const statusText = styled.span`
@@ -77,5 +84,5 @@ export const statusBadge = styled.span<{ $status: StatusType }>`
 
 export const ListWrapper = styled.div`
   ${token.flexColumn}
-  gap: 10px;
+  gap: 0.625rem;
 `;
