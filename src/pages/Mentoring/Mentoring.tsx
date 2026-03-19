@@ -359,6 +359,23 @@ export default function Mentoring() {
       )
     : [];
 
+  useEffect(() => {
+    if (isWritingNew) return;
+
+    if (roomQuestions.length === 0) {
+      setSelectedQuestionId(null);
+      return;
+    }
+
+    const hasSelectedQuestion = roomQuestions.some(
+      (question) => question.id === selectedQuestionId,
+    );
+
+    if (!hasSelectedQuestion) {
+      setSelectedQuestionId(roomQuestions[0].id);
+    }
+  }, [roomQuestions, selectedQuestionId, isWritingNew]);
+
   const handleSelectRoom = (item: AvatarItem) => {
     setSelectedRoomId(item.id);
     setSelectedQuestionId(null);
