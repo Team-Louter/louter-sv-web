@@ -20,6 +20,8 @@ import { useAuthStore } from "@/store/authStore";
 import type { User } from "@/types/user";
 import type { Member } from "@/types/member";
 import { toast } from "@/store/toastStore";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const getQuestionStatus = (
   status: string,
@@ -86,8 +88,15 @@ export default function Mentoring() {
   const [isWritingNew, setIsWritingNew] = useState(false);
   const [me, setMe] = useState<User | null>(null);
   const [allMembers, setAllMembers] = useState<Member[]>([]);
+  const [allMessages, setAllMessages] = useState<any[]>([]);
   const [editingRoom, setEditingRoom] = useState<AvatarItem | null>(null);
   const [isRoomsLoading, setIsRoomsLoading] = useState(false);
+  const [isQuestionsLoading, setIsQuestionsLoading] = useState(false);
+  const [isMessagesLoading, setIsMessagesLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [loadedQuestionRoomId, setLoadedQuestionRoomId] = useState<number | null>(
+    null,
+  );
 
   const extractArray = useCallback((data: any): any[] => {
     if (!data) return [];
@@ -201,9 +210,13 @@ export default function Mentoring() {
   const fetchQuestions = useCallback(async () => {
     if (!selectedRoomId || !me) {
       setQuestions([]);
+      setIsQuestionsLoading(false);
+      setLoadedQuestionRoomId(null);
       return;
     }
 
+    setIsQuestionsLoading(true);
+    setLoadedQuestionRoomId(null);
     try {
       const [questionsRes, messagesRes] = await Promise.all([
         mentoringApi.getQuestions(),
@@ -211,6 +224,7 @@ export default function Mentoring() {
       ]);
       const data = extractArray(questionsRes);
       const messages = extractArray(messagesRes);
+      setAllMessages(messages);
 
       const mappedQuestions: QuestionWithComments[] = data
         .filter((q: any) => Number(q.mentoringId) === Number(selectedRoomId))
@@ -257,16 +271,20 @@ export default function Mentoring() {
       );
     } catch (error) {
       console.error("질문 목록 로딩 실패:", error);
+    } finally {
+      setLoadedQuestionRoomId(selectedRoomId);
+      setIsQuestionsLoading(false);
     }
   }, [selectedRoomId, me, extractArray, allMembers]);
 
-  const fetchSelectedQuestionMessages = useCallback(async () => {
-    if (!selectedQuestionId || isWritingNew || !me) return;
+  const applySelectedQuestionMessages = useCallback(
+    (messages: any[]) => {
+      if (!selectedQuestionId || isWritingNew || !me) {
+        setIsMessagesLoading(false);
+        return;
+      }
 
-    try {
-      const res = await mentoringApi.getMessages();
-      const data = extractArray(res);
-      const selectedQuestionMessages = data.filter(
+      const selectedQuestionMessages = messages.filter(
         (message: any) => Number(message.questionId) === Number(selectedQuestionId),
       );
 
@@ -318,14 +336,45 @@ export default function Mentoring() {
           };
         }),
       );
+      setIsMessagesLoading(false);
+    },
+    [selectedQuestionId, isWritingNew, me, allMembers],
+  );
+
+  const fetchSelectedQuestionMessages = useCallback(async () => {
+    if (!selectedQuestionId || isWritingNew || !me) {
+      setIsMessagesLoading(false);
+      return;
+    }
+
+    if (allMessages.length > 0) {
+      applySelectedQuestionMessages(allMessages);
+      return;
+    }
+
+    setIsMessagesLoading(true);
+    try {
+      const res = await mentoringApi.getMessages();
+      const data = extractArray(res);
+      setAllMessages(data);
+      applySelectedQuestionMessages(data);
     } catch (error) {
       console.error("메시지 로딩 실패:", error);
+      setIsMessagesLoading(false);
     }
-  }, [selectedQuestionId, isWritingNew, me, extractArray, allMembers]);
+  }, [
+    selectedQuestionId,
+    isWritingNew,
+    me,
+    allMessages,
+    extractArray,
+    applySelectedQuestionMessages,
+  ]);
 
   // 내 정보 및 전체 멤버 조회
   useEffect(() => {
     const init = async () => {
+      setIsInitialLoading(true);
       try {
         const [userData, membersData] = await Promise.all([
           getUser(),
@@ -338,6 +387,8 @@ export default function Mentoring() {
         fetchMyRooms(userData, membersData);
       } catch (error) {
         console.error("초기 데이터 로딩 실패:", error);
+      } finally {
+        setIsInitialLoading(false);
       }
     };
     init();
@@ -513,7 +564,6 @@ export default function Mentoring() {
         validFiles,
       );
       await fetchQuestions();
-      await fetchSelectedQuestionMessages();
       toast.success("답변이 등록되었습니다.");
     } catch (error) {
       console.error("답변 등록 실패:", error);
@@ -557,6 +607,105 @@ export default function Mentoring() {
   const selectedRoom = avatars.find((avatar) => avatar.id === selectedRoomId) ?? null;
   const canCreateRoom = me?.role !== "MENTEE";
   const canCompleteAnswer = selectedRoom?.myRole === "MENTOR";
+  const hasLoadedCurrentRoomQuestions =
+    selectedRoomId !== null && loadedQuestionRoomId === selectedRoomId;
+  const isWaitingForAutoSelection =
+    !isWritingNew &&
+    hasLoadedCurrentRoomQuestions &&
+    roomQuestions.length > 0 &&
+    selectedQuestionObj === null;
+  const isContentLoading =
+    isInitialLoading ||
+    isRoomsLoading ||
+    isQuestionsLoading ||
+    isMessagesLoading ||
+    isWaitingForAutoSelection;
+
+  const roomSkeletons = Array.from({ length: 4 }, (_, index) => (
+    <div
+      key={`room-skeleton-${index}`}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: "0.75rem",
+        padding: "0.9375rem 1.25rem",
+        border: "1px solid #f1e1b6",
+        borderRadius: "0.75rem",
+        backgroundColor: "#ffffff",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: "0.625rem", flex: 1 }}>
+        <Skeleton circle width={35} height={35} baseColor="#f5f5f5" highlightColor="#ececec" />
+        <Skeleton height={16} width="42%" baseColor="#f5f5f5" highlightColor="#ececec" />
+      </div>
+      <Skeleton width={3} height={15} baseColor="#f0f0f0" highlightColor="#e7e7e7" />
+    </div>
+  ));
+
+  const questionSkeletons = Array.from({ length: 4 }, (_, index) => (
+    <div
+      key={`question-skeleton-${index}`}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: "0.75rem",
+        padding: "0.6rem 1.25rem",
+        border: "1px solid #f1e1b6",
+        borderRadius: "0.75rem",
+        backgroundColor: "#ffffff",
+      }}
+    >
+      <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <Skeleton height={16} width="48%" baseColor="#f5f5f5" highlightColor="#ececec" />
+          <Skeleton height={14} width={72} baseColor="#f5f5f5" highlightColor="#ececec" />
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <Skeleton height={14} width={24} baseColor="#f5f5f5" highlightColor="#ececec" />
+          <Skeleton height={14} width={54} baseColor="#f5f5f5" highlightColor="#ececec" />
+        </div>
+      </div>
+      <Skeleton width={3} height={15} baseColor="#f0f0f0" highlightColor="#e7e7e7" />
+    </div>
+  ));
+
+  const messageSkeletons = Array.from({ length: 3 }, (_, index) => (
+    <div
+      key={`message-skeleton-${index}`}
+      style={{
+        display: "flex",
+        alignItems: "flex-start",
+        gap: "0.875rem",
+        padding: "0.75rem 0",
+      }}
+    >
+      <Skeleton circle width={35} height={35} baseColor="#f5f5f5" highlightColor="#ececec" />
+      <div style={{ flex: 1 }}>
+        <Skeleton height={16} width={68} baseColor="#f5f5f5" highlightColor="#ececec" />
+        <div
+          style={{
+            marginTop: 10,
+            display: "inline-flex",
+            flexDirection: "column",
+            gap: 8,
+            border: `1px solid ${index === 0 ? "#ffd26f" : "#ececec"}`,
+            borderRadius: "0.75rem",
+            padding: "12px 15px",
+            backgroundColor: "#ffffff",
+            minWidth: index === 0 ? "22rem" : "18rem",
+          }}
+        >
+          <Skeleton height={16} width={index === 0 ? 260 : 210} baseColor="#f5f5f5" highlightColor="#ececec" />
+          <Skeleton height={16} width={index === 0 ? 180 : 150} baseColor="#f5f5f5" highlightColor="#ececec" />
+        </div>
+      </div>
+      <div style={{ paddingTop: 58 }}>
+        <Skeleton height={14} width={70} baseColor="#f5f5f5" highlightColor="#ececec" />
+      </div>
+    </div>
+  ));
 
   return (
     <>
@@ -573,9 +722,9 @@ export default function Mentoring() {
                 )}
               </S.TitleAddContainer>
               <S.AvatarListScroll>
-                {isRoomsLoading ? (
-                  <div style={{ padding: "20px", textAlign: "center" }}>
-                    로딩 중...
+                {isInitialLoading || isRoomsLoading ? (
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
+                    {roomSkeletons}
                   </div>
                 ) : (
                   <AvatarList
@@ -592,7 +741,13 @@ export default function Mentoring() {
             <S.QnaContainer>
               질문
               <S.QuestionListScroll>
-                {roomQuestions.length > 0 ? (
+                {isInitialLoading ||
+                isQuestionsLoading ||
+                !hasLoadedCurrentRoomQuestions ? (
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
+                    {questionSkeletons}
+                  </div>
+                ) : roomQuestions.length > 0 ? (
                   <QuestionList
                     questions={roomQuestions}
                     selectedId={selectedQuestionId}
@@ -632,14 +787,16 @@ export default function Mentoring() {
               </S.TopActionRow>
 
             <S.QnaListWrapper>
-              {isWritingNew || selectedQuestionObj ? (
+              {isContentLoading ? (
+                <div>{messageSkeletons}</div>
+              ) : isWritingNew ? (
+                <S.EmptyText>질문을 시작해보세요.</S.EmptyText>
+              ) : selectedQuestionObj ? (
                 <QnaList comments={selectedQuestionObj?.comments ?? []} />
+              ) : hasLoadedCurrentRoomQuestions ? (
+                <S.EmptyText>등록된 질문이 없어요.</S.EmptyText>
               ) : (
-                <S.EmptyText>
-                  {roomQuestions.length > 0
-                    ? "선택된 질문이 없어요."
-                    : "등록된 질문이 없어요."}
-                </S.EmptyText>
+                <div>{messageSkeletons}</div>
               )}
             </S.QnaListWrapper>
 
@@ -648,6 +805,9 @@ export default function Mentoring() {
                 selectedQuestionObj.status !== "답변 완료")) && (
               <QnaInput
                 onSubmit={isWritingNew ? handleFirstSubmit : handleReplySubmit}
+                placeholder={
+                  isWritingNew ? "질문을 남겨보세요." : "답변을 남겨보세요."
+                }
               />
             )}
           </S.RightContainer>

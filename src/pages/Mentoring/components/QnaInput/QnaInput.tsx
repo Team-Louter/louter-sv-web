@@ -10,9 +10,10 @@ const MAX_LENGTH = 700;
 
 interface QnaInputProps {
   onSubmit: (content: string, images: AttachedImage[]) => Promise<void>;
+  placeholder: string;
 }
 
-export default function QnaInput({ onSubmit }: QnaInputProps) {
+export default function QnaInput({ onSubmit, placeholder }: QnaInputProps) {
   const [value, setValue] = useState("");
   const [attachedImages, setAttachedImages] = useState<AttachedImage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -155,7 +156,7 @@ export default function QnaInput({ onSubmit }: QnaInputProps) {
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           onPaste={handlePaste}
-          placeholder={isLoading ? "전송 중..." : "답변을 남겨보세요."}
+          placeholder={isLoading ? "전송 중..." : placeholder}
           rows={1}
           disabled={isLoading}
         />
