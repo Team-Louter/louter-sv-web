@@ -77,10 +77,27 @@ export const AvatarListScroll = styled.div`
   min-height: 0;
 `
 
-export const AddButton = styled.img`
+export const AddButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: ${token.shapes.small};
+  padding: 0;
+
+  &:hover {
+    background-color: ${token.colors.background.lightGray};
+  }
+`;
+
+export const AddIcon = styled.img`
   width: 1.1875rem;
   height: 1.1875rem;
-`
+`;
 
 const FlexRow = styled.div`
   ${token.flexRow}
@@ -91,10 +108,19 @@ export const TitleAddContainer = styled(FlexRow)`
   justify-content: space-between;
 `
 
+export const TopActionRow = styled(FlexRow)`
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: start;
+  gap: 0.75rem;
+`
+
 export const EndContainer = styled(FlexRow)`
+  grid-column: 2;
   justify-content: center;
 `
 export const AddContainer = styled(FlexRow)`
+  grid-column: 3;
   justify-content: flex-end;
 `
 

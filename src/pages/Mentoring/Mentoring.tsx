@@ -537,7 +537,9 @@ export default function Mentoring() {
 
   const selectedQuestionObj =
     questions.find((q) => q.id === selectedQuestionId) ?? null;
+  const selectedRoom = avatars.find((avatar) => avatar.id === selectedRoomId) ?? null;
   const canCreateRoom = me?.role !== "MENTEE";
+  const canCompleteAnswer = selectedRoom?.myRole === "MENTOR";
 
   return (
     <>
@@ -548,10 +550,9 @@ export default function Mentoring() {
               <S.TitleAddContainer>
                 방
                 {canCreateRoom && (
-                  <S.AddButton
-                    src={Add}
-                    onClick={() => setIsModalOpen(true)}
-                  />
+                  <S.AddButton type="button" onClick={() => setIsModalOpen(true)}>
+                    <S.AddIcon src={Add} alt="방 추가" />
+                  </S.AddButton>
                 )}
               </S.TitleAddContainer>
               <S.AvatarListScroll>
@@ -591,22 +592,27 @@ export default function Mentoring() {
             </S.QnaContainer>
           </S.LeftArea>
 
-          <S.RightContainer>
-            <S.AddContainer>
-              <S.AddButton src={Add} onClick={handleAddButtonClick} />
-            </S.AddContainer>
+            <S.RightContainer>
+              <S.TopActionRow>
+                {canCompleteAnswer &&
+                  selectedQuestionObj &&
+                  selectedQuestionObj.status !== "답변 완료" && (
+                    <S.EndContainer>
+                      <S.EndWrap>
+                        질문에 대한 답변이 끝났나요? 답변 완료 버튼을 눌러주세요.
+                        <S.End onClick={() => handleUpdateStatus("DONE")}>
+                          답변완료
+                        </S.End>
+                      </S.EndWrap>
+                    </S.EndContainer>
+                  )}
 
-            {selectedQuestionObj &&
-              selectedQuestionObj.status !== "답변 완료" && (
-                <S.EndContainer>
-                  <S.EndWrap>
-                    질문에 대한 답변이 끝났나요? 답변 완료 버튼을 눌러주세요.
-                    <S.End onClick={() => handleUpdateStatus("DONE")}>
-                      답변완료
-                    </S.End>
-                  </S.EndWrap>
-                </S.EndContainer>
-              )}
+                <S.AddContainer>
+                  <S.AddButton type="button" onClick={handleAddButtonClick}>
+                    <S.AddIcon src={Add} alt="질문 추가" />
+                  </S.AddButton>
+                </S.AddContainer>
+              </S.TopActionRow>
 
             <S.QnaListWrapper>
               {isWritingNew || selectedQuestionObj ? (
