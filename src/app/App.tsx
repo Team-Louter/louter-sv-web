@@ -5,7 +5,7 @@ import { GlobalStyle } from '@/styles/GlobalStyle';
 import Router from './routes';
 import Toast from '@/components/common/Toast/Toast';
 import { useAuthStore } from '@/store/authStore';
-import { requestFCMToken, onForegroundMessage } from '@/firebase';
+import { requestFCMToken, onForegroundMessage, showNotification } from '@/firebase';
 import { fcm } from '@/api/Fcm'; 
 
 function App() {
@@ -30,7 +30,9 @@ function App() {
       initFCM();
 
       onForegroundMessage((payload) => {
-        console.log('포그라운드 메시지:', payload);
+        const title = payload.notification?.title ?? '알림';
+        const body = payload.notification?.body ?? '';
+        showNotification(title, body);
       });
     }
   }, [isLoggedIn]);
