@@ -26,10 +26,10 @@ export const Divider = styled.div`
   background-color: ${token.colors.line.normal};
 `
 
-export const MonthTitle = styled.span<{ isFuture?: boolean }>`
+export const MonthTitle = styled.span<{ $isFuture?: boolean }>`
   ${token.typography("heading", "md", "semibold")}
-  color: ${({ isFuture }) =>
-    isFuture ? token.colors.text.disabled : token.colors.main.alternative};
+  color: ${({ $isFuture }) =>
+    $isFuture ? token.colors.text.disabled : token.colors.main.alternative};
   position: absolute;
   transform: translateY(-215%);
   z-index: 1;

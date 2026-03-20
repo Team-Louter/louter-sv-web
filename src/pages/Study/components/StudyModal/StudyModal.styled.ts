@@ -64,7 +64,7 @@ export const KebabIcon = styled.div`
   }
 `;
 
-export const InputContainer = styled.textarea<{ isReadOnly?: boolean }>`
+export const InputContainer = styled.textarea<{ $isReadOnly?: boolean }>`
   width: 100%;
   flex: 1;
   border-radius: ${token.shapes.medium};
@@ -72,8 +72,8 @@ export const InputContainer = styled.textarea<{ isReadOnly?: boolean }>`
   padding: 12px;
   box-sizing: border-box;
   overflow-y: auto;
-  background-color: ${props => props.isReadOnly ? token.colors.fill.assistive : token.colors.fill.normal};
-  border: ${props => props.isReadOnly ? `1px solid ${token.colors.line.normal}` : 'none'};
+  background-color: ${props => props.$isReadOnly ? token.colors.fill.assistive : token.colors.fill.normal};
+  border: ${props => props.$isReadOnly ? `1px solid ${token.colors.line.normal}` : 'none'};
   ${token.typography("body", "sm", "medium")}
   &:focus {
     outline: none;

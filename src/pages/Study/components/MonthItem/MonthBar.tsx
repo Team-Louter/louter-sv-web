@@ -32,7 +32,7 @@ export default function MonthBar({ month, studies, currentMonth, currentWeek, on
   return (
     <>
       <S.container>
-        <S.MonthTitle isFuture={isFutureMonth}>{month}월</S.MonthTitle>
+        <S.MonthTitle $isFuture={isFutureMonth}>{month}월</S.MonthTitle>
         <S.SortContainer>
           {[1, 2, 3, 4].map((weekNumber) => {
             // 해당 주차의 일지 중 가장 최근 것(id가 큰 것)을 찾음

@@ -138,7 +138,7 @@ export default function StudyModal({
           onChange={(e) => setText(e.target.value)}
           placeholder={isReadOnly ? "작성된 내용이 없습니다." : "내용을 입력해 주세요."}
           readOnly={isReadOnly}
-          isReadOnly={isReadOnly}
+          $isReadOnly={isReadOnly}
         />
         {!isReadOnly && <S.CharCount>{text.length}/{MAX_LENGTH}</S.CharCount>}
         
