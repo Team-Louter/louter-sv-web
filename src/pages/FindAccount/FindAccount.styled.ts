@@ -232,6 +232,12 @@ export const ResultEmail = styled.span`
   ${token.typography('body', 'sm', 'bold')}
   color: ${token.colors.text.dark};
   word-break: break-all;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    opacity: 0.7;
+  }
 `;
 
 export const ResultLabel = styled.span`
