@@ -221,19 +221,22 @@ export const ResultBox = styled.div`
   background-color: ${token.colors.background.white};
   border: 1px solid ${token.colors.line.normal};
   border-radius: 4px;
-  ${token.flexCenter}
+  ${token.flexColumn}
+  align-items: center;
   gap: 0.5rem;
   margin-bottom: 1rem;
+  text-align: center;
 `;
 
 export const ResultEmail = styled.span`
   ${token.typography('body', 'sm', 'bold')}
-  color: ${token.colors.accent.primary};
+  color: ${token.colors.text.dark};
+  word-break: break-all;
 `;
 
 export const ResultLabel = styled.span`
   ${token.typography('body', 'sm', 'medium')}
-  color: ${token.colors.text.coolGray};
+  color: ${token.colors.text.dark};
 `;
 
 export const BackLink = styled.button`
