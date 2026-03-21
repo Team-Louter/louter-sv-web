@@ -5,6 +5,7 @@ import SignupCheck from '@/pages/SignupCheck';
 import Signup from '@/pages/Signup';
 import SignupGoogle from '@/pages/SignupGoogle';
 import Signin from '@/pages/Signin';
+import FindAccount from '@/pages/FindAccount';
 import Main from '@/pages/Main/Main';
 import Profile from '@/pages/Profile';
 import CommunityList from '@/pages/Community/CommunityMain/CommunityMain';
@@ -62,6 +63,7 @@ const Router = () => {
           <Route path={'/auth/signup'} element={<Signup />} />
           <Route path={'/auth/signup/google'} element={<SignupGoogle />} />
           <Route path={'/auth/signin'} element={<Signin />} />
+          <Route path={'/auth/find-account'} element={<FindAccount />} />
         </Route>
 
         {/* 탈퇴 완료 — state 가드로 보호 */}
