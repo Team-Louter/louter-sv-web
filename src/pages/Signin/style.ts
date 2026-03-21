@@ -14,6 +14,7 @@ export const SigninContainer = styled.div`
   justify-content: flex-end;
   width: 991px;
   height: auto;
+  min-height: 600px;
   background-color: ${token.colors.main.white};
   border-radius: ${token.shapes.xlarge};
   ${token.elevation('black_3')}
