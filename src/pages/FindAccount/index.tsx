@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as S from './FindAccount.styled';
+import { findEmail, sendPasswordResetCode } from '@/api/Auth';
+import { toast } from '@/store/toastStore';
 
 type Tab = 'id' | 'password';
 type IdStep = 'form' | 'result';
-type PwStep = 'email' | 'code' | 'newPassword';
+type PwStep = 'email' | 'sent';
 
 function FindAccount() {
   const navigate = useNavigate();
@@ -13,55 +15,60 @@ function FindAccount() {
   // 아이디 찾기 상태
   const [hakbun, setHakbun] = useState('');
   const [userName, setUserName] = useState('');
+  const [foundEmail, setFoundEmail] = useState('');
   const [idStep, setIdStep] = useState<IdStep>('form');
+  const [idLoading, setIdLoading] = useState(false);
 
   // 비밀번호 찾기 상태
   const [pwEmail, setPwEmail] = useState('');
   const [pwStep, setPwStep] = useState<PwStep>('email');
-  const [codes, setCodes] = useState(['', '', '', '', '', '']);
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-
-  const inputCode = codes.join('');
-  const isCodeComplete = inputCode.length === 6;
+  const [pwLoading, setPwLoading] = useState(false);
 
   const handleTabChange = (tab: Tab) => {
     setActiveTab(tab);
     setIdStep('form');
     setHakbun('');
     setUserName('');
+    setFoundEmail('');
     setPwStep('email');
     setPwEmail('');
-    setCodes(['', '', '', '', '', '']);
-    setNewPassword('');
-    setConfirmPassword('');
   };
 
-  const handleFindId = () => {
-    if (!hakbun.trim() || !userName.trim()) return;
-    // TODO: API 호출
+  // ── 아이디 찾기 ──────────────────────────────────────────────────
+  const handleFindId = async () => {
+    const num = Number(hakbun);
+    if (!hakbun.trim() || !userName.trim() || isNaN(num)) return;
+    setIdLoading(true);
+    try {
+      const data = await findEmail(num, userName.trim());
+      console.log('API Response:', data);
+      setFoundEmail(data.email as string);
+      setIdStep('result');
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message ?? '일치하는 계정을 찾을 수 없습니다.';
+      toast.error(msg);
+    } finally {
+      setIdLoading(false);
+    }
   };
 
-  const handleSendCode = () => {
+  // ── 비밀번호 찾기 ─────────────────────────────────────────────────
+  const handleSendCode = async () => {
     if (!pwEmail.trim()) return;
-    // TODO: API 호출
-  };
-
-  const handleVerifyCode = () => {
-    if (!isCodeComplete) return;
-    setPwStep('newPassword');
-  };
-
-  const handleResetPassword = () => {
-    if (!newPassword.trim() || !confirmPassword.trim()) return;
-    // TODO: API 호출
-  };
-
-  const handleCodeChange = (index: number, value: string) => {
-    if (!/^\d*$/.test(value)) return;
-    const next = [...codes];
-    next[index] = value.slice(-1);
-    setCodes(next);
+    setPwLoading(true);
+    try {
+      await sendPasswordResetCode(pwEmail.trim());
+      setPwStep('sent');
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message ?? '비밀번호 재설정 링크 전송에 실패했습니다.';
+      toast.error(msg);
+    } finally {
+      setPwLoading(false);
+    }
   };
 
   return (
@@ -92,7 +99,7 @@ function FindAccount() {
                   <S.FormContent>
                     <S.Title>아이디 찾기</S.Title>
                     <S.Subtitle>
-                      가입 시 사용한 학번과 이름을 입력해 주세요.
+                      가입 시 사용한 학번과 이름을 입력해 주세요
                     </S.Subtitle>
                     <S.Form>
                       <S.Input
@@ -111,21 +118,21 @@ function FindAccount() {
                     </S.Form>
                   </S.FormContent>
                   <S.SubmitButton
-                    $disabled={!hakbun.trim() || !userName.trim()}
-                    disabled={!hakbun.trim() || !userName.trim()}
+                    $disabled={!hakbun.trim() || !userName.trim() || idLoading}
+                    disabled={!hakbun.trim() || !userName.trim() || idLoading}
                     onClick={handleFindId}
                   >
-                    아이디 찾기
+                    {idLoading ? <S.ButtonSpinner /> : '아이디 찾기'}
                   </S.SubmitButton>
                 </>
               ) : (
                 <>
                   <S.FormContent>
                     <S.Title>아이디 찾기</S.Title>
-                    <S.Subtitle>가입된 이메일 주소를 확인해 주세요.</S.Subtitle>
+                    <S.Subtitle>가입된 이메일 주소를 확인해 주세요</S.Subtitle>
                     <S.ResultBox>
                       <S.ResultLabel>가입된 이메일</S.ResultLabel>
-                      <S.ResultEmail>user@example.com</S.ResultEmail>
+                      <S.ResultEmail>{foundEmail}</S.ResultEmail>
                     </S.ResultBox>
                   </S.FormContent>
                   <S.SubmitButton onClick={() => navigate('/auth/signin')}>
@@ -144,7 +151,7 @@ function FindAccount() {
                   <S.FormContent>
                     <S.Title>비밀번호 찾기</S.Title>
                     <S.Subtitle>
-                      가입 시 사용한 이메일을 입력해주세요.
+                      가입 시 사용한 이메일을 입력해주세요
                     </S.Subtitle>
                     <S.Form>
                       <S.Input
@@ -152,85 +159,44 @@ function FindAccount() {
                         placeholder="이메일"
                         value={pwEmail}
                         onChange={(e) => setPwEmail(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && pwEmail.trim())
+                            handleSendCode();
+                        }}
                       />
                     </S.Form>
                   </S.FormContent>
                   <S.SubmitButton
-                    $disabled={!pwEmail.trim()}
-                    disabled={!pwEmail.trim()}
+                    $disabled={!pwEmail.trim() || pwLoading}
+                    disabled={!pwEmail.trim() || pwLoading}
                     onClick={handleSendCode}
                   >
-                    비밀번호 찾기
+                    {pwLoading ? <S.ButtonSpinner /> : '비밀번호 찾기'}
                   </S.SubmitButton>
                 </>
               )}
 
-              {pwStep === 'code' && (
+              {pwStep === 'sent' && (
                 <>
                   <S.FormContent>
-                    <S.Title>코드를 입력하세요</S.Title>
+                    <S.Title>비밀번호 찾기</S.Title>
+                    <S.ResultBox>
+                      <S.ResultLabel>다음 단계</S.ResultLabel>
+                      <S.ResultEmail>
+                        메일을 확인하고 재설정 링크를 클릭해주세요
+                      </S.ResultEmail>
+                    </S.ResultBox>
                     <S.Subtitle>
-                      이메일로 전송된 6자리 코드를 입력하세요.
+                      재설정 링크는 발송 후 30분간 유효합니다
                     </S.Subtitle>
-                    <S.CodeInputRow>
-                      {codes.map((val, i) => (
-                        <S.CodeBox
-                          key={i}
-                          type="text"
-                          inputMode="numeric"
-                          maxLength={1}
-                          value={val}
-                          $filled={val !== ''}
-                          onChange={(e) => handleCodeChange(i, e.target.value)}
-                        />
-                      ))}
-                    </S.CodeInputRow>
                   </S.FormContent>
-                  <S.SubmitButton
-                    $disabled={!isCodeComplete}
-                    disabled={!isCodeComplete}
-                    onClick={handleVerifyCode}
-                  >
-                    다음
-                  </S.SubmitButton>
-                </>
-              )}
-
-              {pwStep === 'newPassword' && (
-                <>
-                  <S.FormContent>
-                    <S.Title>새 비밀번호 설정</S.Title>
-                    <S.Subtitle>사용할 새 비밀번호를 입력해 주세요.</S.Subtitle>
-                    <S.Form>
-                      <S.Input
-                        type="password"
-                        placeholder="새 비밀번호"
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                      />
-                      <S.Input
-                        type="password"
-                        placeholder="새 비밀번호 확인"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                      />
-                    </S.Form>
-                  </S.FormContent>
-                  <S.SubmitButton
-                    $disabled={!newPassword.trim() || !confirmPassword.trim()}
-                    disabled={!newPassword.trim() || !confirmPassword.trim()}
-                    onClick={handleResetPassword}
-                  >
-                    비밀번호 변경
+                  <S.SubmitButton onClick={() => navigate('/auth/signin')}>
+                    돌아가기
                   </S.SubmitButton>
                 </>
               )}
             </S.TabContent>
           )}
-
-          <S.BackLink onClick={() => navigate('/auth/signin')}>
-            로그인으로 돌아가기
-          </S.BackLink>
         </S.Content>
       </S.Card>
     </S.Container>
