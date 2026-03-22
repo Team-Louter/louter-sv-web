@@ -25,6 +25,8 @@ export interface CreateStudyRequest {
 export interface UpdateStudyRequest {
   title: string;
   content: string;
+  month: number;
+  weekNumber: number;
 }
 
 

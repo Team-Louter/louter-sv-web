@@ -31,6 +31,8 @@ export default function StudyModal({
   const [isLoading, setIsLoading] = useState(false);
   const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab();
   const MAX_LENGTH = 1000;
+  const resolvedMonth = Number(study?.month ?? study?.month_number ?? month);
+  const resolvedWeekNumber = Number(study?.weekNumber ?? study?.week_number ?? weekNumber);
 
   useEffect(() => {
     // 데이터가 없으면 무조건 작성 모드, 데이터가 있을 때만 요청받은 ReadOnly 상태 적용
@@ -45,7 +47,12 @@ export default function StudyModal({
     try {
       if (study) {
         const id = study.studyId ?? (study as any).study_id;
-        await updateStudy(id, { title, content: text });
+        await updateStudy(id, {
+          title,
+          content: text,
+          month: resolvedMonth,
+          weekNumber: resolvedWeekNumber,
+        });
       } else {
         await createStudy({ title, content: text, month, weekNumber });
       }
