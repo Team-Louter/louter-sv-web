@@ -18,12 +18,12 @@ function FindAccount() {
   const [userName, setUserName] = useState('');
   const [foundEmail, setFoundEmail] = useState('');
   const [idStep, setIdStep] = useState<IdStep>('form');
-  const [idLoading, setIdLoading] = useState(false);
+  const [isIdLoading, setIsIdLoading] = useState(false);
 
   // 비밀번호 찾기 상태
   const [pwEmail, setPwEmail] = useState('');
   const [pwStep, setPwStep] = useState<PwStep>('email');
-  const [pwLoading, setPwLoading] = useState(false);
+  const [isPwLoading, setIsPwLoading] = useState(false);
 
   const handleTabChange = (tab: Tab) => {
     setActiveTab(tab);
@@ -39,7 +39,7 @@ function FindAccount() {
   const handleFindId = async () => {
     const num = Number(hakbun);
     if (!hakbun.trim() || !userName.trim() || isNaN(num)) return;
-    setIdLoading(true);
+    setIsIdLoading(true);
     try {
       const data = await findEmail(num, userName.trim());
       console.log('API Response:', data);
@@ -51,7 +51,7 @@ function FindAccount() {
           ?.message ?? '일치하는 계정을 찾을 수 없습니다.';
       toast.error(msg);
     } finally {
-      setIdLoading(false);
+      setIsIdLoading(false);
     }
   };
 
@@ -68,7 +68,7 @@ function FindAccount() {
   // ── 비밀번호 찾기 ─────────────────────────────────────────────────
   const handleSendCode = async () => {
     if (!pwEmail.trim()) return;
-    setPwLoading(true);
+    setIsPwLoading(true);
     try {
       await sendPasswordResetCode(pwEmail.trim());
       setPwStep('sent');
@@ -78,7 +78,7 @@ function FindAccount() {
           ?.message ?? '비밀번호 재설정 링크 전송에 실패했습니다.';
       toast.error(msg);
     } finally {
-      setPwLoading(false);
+      setIsPwLoading(false);
     }
   };
 
@@ -129,11 +129,13 @@ function FindAccount() {
                     </S.Form>
                   </S.FormContent>
                   <S.SubmitButton
-                    $disabled={!hakbun.trim() || !userName.trim() || idLoading}
-                    disabled={!hakbun.trim() || !userName.trim() || idLoading}
+                    $disabled={
+                      !hakbun.trim() || !userName.trim() || isIdLoading
+                    }
+                    disabled={!hakbun.trim() || !userName.trim() || isIdLoading}
                     onClick={handleFindId}
                   >
-                    {idLoading ? <S.ButtonSpinner /> : '아이디 찾기'}
+                    {isIdLoading ? <S.ButtonSpinner /> : '아이디 찾기'}
                   </S.SubmitButton>
                 </>
               ) : (
@@ -188,11 +190,11 @@ function FindAccount() {
                     </S.Form>
                   </S.FormContent>
                   <S.SubmitButton
-                    $disabled={!pwEmail.trim() || pwLoading}
-                    disabled={!pwEmail.trim() || pwLoading}
+                    $disabled={!pwEmail.trim() || isPwLoading}
+                    disabled={!pwEmail.trim() || isPwLoading}
                     onClick={handleSendCode}
                   >
-                    {pwLoading ? <S.ButtonSpinner /> : '비밀번호 찾기'}
+                    {isPwLoading ? <S.ButtonSpinner /> : '비밀번호 찾기'}
                   </S.SubmitButton>
                 </>
               )}
