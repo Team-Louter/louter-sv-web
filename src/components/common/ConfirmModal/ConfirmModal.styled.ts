@@ -42,7 +42,10 @@ export const CancelButton = styled.button`
   cursor: pointer;
 `;
 
-export const ConfirmButton = styled.button<{ $color?: string, $labelColor?: string}>`
+export const ConfirmButton = styled.button<{
+  $color?: string;
+  $labelColor?: string;
+}>`
   padding: 10px 45px;
   border-radius: ${token.shapes.xsmall};
   border: 1px solid ${({ $color }) => $color ?? token.colors.line.highlight};

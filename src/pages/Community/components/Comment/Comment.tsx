@@ -3,8 +3,7 @@ import type { Comment } from "@/types/post";
 import * as S from "./Comment.styled";
 import { formatDateTime } from "@/utils/FormatDate";
 import CommentWrite from "../CommentWrite/CommentWrite";
-import KebabMenu from "../KebabMenu/KebabMenu";
-import { useKebab } from "@/hooks/useKebab";
+import KebabMenu from "@/components/common/KebabMenu/KebabMenu";
 import { deleteComment } from "@/api/Comment";
 import { IoIosArrowBack } from "react-icons/io";
 import { useAuthStore } from "@/store/authStore";
@@ -23,7 +22,6 @@ export default function Comment({ comment, postId, onSuccess }: commentProps) {
     const [showReplyWrite, setShowReplyWrite] = useState(false);
     const [showReplies, setShowReplies] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-    const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab();
     const userInfo = useAuthStore((state) => state.user);
     const { comments: replies, getCommentsInfo } = useComments(postId!, comment?.commentId!);
 
@@ -42,13 +40,11 @@ export default function Comment({ comment, postId, onSuccess }: commentProps) {
             label: "수정하기",
             onClick: () => {
                 setIsEditing(true);
-                setIsKebabOpen(false);
             },
         }] : []),
         ...(comment?.userId === userInfo?.userId || userInfo?.role === 'MENTOR' || userInfo?.role === 'LEADER' ? [{
             label: "삭제하기",
             onClick: () => {
-                setIsKebabOpen(false);
                 deleteCommentInfo();
             },
         }] : []),
@@ -104,9 +100,11 @@ export default function Comment({ comment, postId, onSuccess }: commentProps) {
                     </S.ForColumn>
                 </S.Div>
                 {comment && kebabItems.length > 0 &&
-                    <S.KebabWrapper ref={kebabRef}>
-                        <S.KebabIcon onClick={() => setIsKebabOpen(prev => !prev)} />
-                        {isKebabOpen && <KebabMenu items={kebabItems} />}
+                    <S.KebabWrapper>
+                        <KebabMenu
+                            items={kebabItems}
+                            trigger={<S.KebabIcon />}
+                        />
                     </S.KebabWrapper>
                 }
             </S.ForRow>

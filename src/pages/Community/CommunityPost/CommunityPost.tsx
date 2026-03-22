@@ -5,7 +5,7 @@ import { useRef, useState } from "react";
 import { CATEGORIES, CATEGORY_REVERSED, CATEGORY_TAGS, CATEGORY_TAGS_REVERSED } from "@/constants/Community";
 import CategoryDropdown from "../components/CategoryDropdown/CategoryDropdown";
 import Markdown from "../components/Markdown/Markdown";
-import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
+import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 import { renderMarkdown } from "@/utils/Markdown/MarkdownConfig";
 import { MAX_LENGTH, processListEnter } from "@/utils/Markdown/Editor";
 import { uploadFile } from "@/api/Post";

@@ -6,11 +6,11 @@ export const Wrapper = styled.div`
 `;
 
 export const Trigger = styled.div`
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1rem;
-  height: 1rem;
+  width: fit-content;
+  height: fit-content;
   cursor: pointer;
 `;
 

@@ -9,12 +9,11 @@ import { useCallback, useMemo, useState, memo } from "react";
 import { formatDateTime } from "@/utils/FormatDate";
 import Comment from "../components/Comment/Comment";
 import CommentWrite from "../components/CommentWrite/CommentWrite";
-import KebabMenu from "../components/KebabMenu/KebabMenu";
-import { useKebab } from "@/hooks/useKebab";
+import KebabMenu from "@/components/common/KebabMenu/KebabMenu";
 import { MdPushPin } from "react-icons/md";
 import { CATEGORY_REVERSED, CATEGORY_TAGS_REVERSED } from "@/constants/Community";
 import { renderMarkdown } from "@/utils/Markdown/MarkdownConfig";
-import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
+import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 import ImagePreview from "../components/ImagePreview/ImagePreview";
 import { useAuthStore } from "@/store/authStore";
 import { usePostDetail } from "@/hooks/usePostDetail";
@@ -45,7 +44,6 @@ export default function CommunityDetail() {
     const navigate = useNavigate();
     const { postId } = useParams();
     const userInfo = useAuthStore((state) => state.user);
-    const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab(); // 케밥 메뉴 관련 커스텀 훅
     const [isCancelModalOpen, setIsCancelModalOpen] = useState<boolean>(false); // 게시글 삭제 확인 모달 열림 여부
     const [previewIndex, setPreviewIndex] = useState<number>(0); // 이미지 미리보기 인덱스
     const [isPreviewOpen, setIsPreviewOpen] = useState<boolean>(false); // 이미지 미리보기 열림 여부
@@ -94,21 +92,18 @@ export default function CommunityDetail() {
                 const newPinned = !isPinned;
                 setIsPinned(newPinned);
                 handleTogglePin(newPinned);
-                setIsKebabOpen(false);
             },
         }] : []),
         ...(post?.userId === userInfo?.userId ? [{
             label: "수정하기",
             onClick: () => {
                 navigate("/community/write", { state: { post } });
-                setIsKebabOpen(false);
             },
         }] : []),
         ...(post?.userId === userInfo?.userId || userInfo?.role === 'MENTOR' || userInfo?.role === 'LEADER' ? [{
             label: "삭제하기",
             onClick: () => {
                 setIsCancelModalOpen(true);
-                setIsKebabOpen(false);
             },
         }] : []),
     ];
@@ -150,13 +145,16 @@ export default function CommunityDetail() {
                                 </S.Div>
                             </S.Div>
                             {kebabItems.length > 0 &&
-                                <S.KebabWrapper ref={kebabRef}>
-                                    <S.KebabIcon
-                                        size={23}
-                                        color={colors.fill.slate}
-                                        onClick={() => setIsKebabOpen(prev => !prev)}
+                                <S.KebabWrapper>
+                                    <KebabMenu
+                                        items={kebabItems}
+                                        trigger={
+                                            <S.KebabIcon
+                                                size={23}
+                                                color={colors.fill.slate}
+                                            />
+                                        }
                                     />
-                                    {isKebabOpen && <KebabMenu items={kebabItems} />}
                                 </S.KebabWrapper>
                             }
                         </S.ForRow>

@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import * as S from "./StudyModal.styled";
 import cancelImg from "@/assets/cancel.png";
 import { createStudy, updateStudy, deleteStudy, type StudyResponse } from "@/api/Study";
-import KebabMenu from "@/pages/Community/components/KebabMenu/KebabMenu";
-import { useKebab } from "@/hooks/useKebab";
+import KebabMenu from "@/components/common/KebabMenu/KebabMenu";
 
 interface StudyModalProps {
   month: number;
@@ -29,7 +28,6 @@ export default function StudyModal({
   const [title, setTitle] = useState(study?.title ?? "");
   const [text, setText] = useState(study?.content ?? "");
   const [isLoading, setIsLoading] = useState(false);
-  const { isKebabOpen, setIsKebabOpen, kebabRef } = useKebab();
   const MAX_LENGTH = 1000;
 
   useEffect(() => {
@@ -90,14 +88,12 @@ export default function StudyModal({
       label: "수정",
       onClick: () => {
         setIsReadOnly(false);
-        setIsKebabOpen(false);
       },
     },
     {
       label: "삭제",
       onClick: () => {
         handleDelete();
-        setIsKebabOpen(false);
       },
     },
   ];
@@ -107,11 +103,15 @@ export default function StudyModal({
       <S.Container onClick={(e) => e.stopPropagation()}>
         <S.TitleCancelContainer>
           {isReadOnly && study && isMentee ? (
-            <S.KebabWrapper ref={kebabRef}>
-              <S.KebabIcon onClick={() => setIsKebabOpen(!isKebabOpen)}>
-                <div /><div /><div />
-              </S.KebabIcon>
-              {isKebabOpen && <KebabMenu items={kebabItems} />}
+            <S.KebabWrapper>
+              <KebabMenu
+                items={kebabItems}
+                trigger={
+                  <S.KebabIcon>
+                    <div /><div /><div />
+                  </S.KebabIcon>
+                }
+              />
             </S.KebabWrapper>
           ) : (
             <S.Wrapper />

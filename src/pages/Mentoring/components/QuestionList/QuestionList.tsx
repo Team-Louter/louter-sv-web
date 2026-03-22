@@ -1,6 +1,8 @@
+import { useState } from "react";
 import * as S from "./QuestionList.styled";
 import type { Question } from "@/types/mentoring";
 import KebabMenu from "@/components/common/KebabMenu/KebabMenu";
+import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 import kebabIcon from "@/assets/mentoringImg/kebab.png";
 
 interface QuestionListProps {
@@ -62,17 +64,36 @@ export default function QuestionList({
   onSelect,
   onDelete,
 }: QuestionListProps) {
+  const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
+
   return (
-    <S.ListWrapper>
-      {questions.map((question) => (
-        <QuestionListItem
-          key={question.id}
-          question={question}
-          isClicked={selectedId === question.id}
-          onSelect={onSelect}
-          onDelete={onDelete}
-        />
-      ))}
-    </S.ListWrapper>
+    <>
+      <S.ListWrapper>
+        {questions.map((question) => (
+          <QuestionListItem
+            key={question.id}
+            question={question}
+            isClicked={selectedId === question.id}
+            onSelect={onSelect}
+            onDelete={setDeleteTargetId}
+          />
+        ))}
+      </S.ListWrapper>
+
+      <ConfirmModal
+        open={deleteTargetId !== null}
+        message="이 질문을 삭제하시겠습니까?"
+        cancelLabel="취소"
+        confirmLabel="삭제"
+        confirmColor="#e05c5c"
+        confirmLabelColor="white"
+        onCancel={() => setDeleteTargetId(null)}
+        onConfirm={() => {
+          if (deleteTargetId === null) return;
+          onDelete?.(deleteTargetId);
+          setDeleteTargetId(null);
+        }}
+      />
+    </>
   );
 }

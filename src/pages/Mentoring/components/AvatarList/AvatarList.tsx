@@ -1,7 +1,9 @@
+import { useState } from "react";
 import * as S from "./AvatarList.styled";
 import type { AvatarItem } from "@/types/mentoring";
 import kebabMenu from "@/assets/mentoringImg/kebab.png";
 import KebabMenu from "@/components/common/KebabMenu/KebabMenu";
+import ConfirmModal from "@/components/common/ConfirmModal/ConfirmModal";
 
 interface AvatarListItemProps {
   item: AvatarItem;
@@ -32,9 +34,7 @@ function AvatarListItem({
     {
       label: "삭제",
       onClick: () => {
-        if (window.confirm("이 멘토링 방을 삭제하시겠습니까?")) {
-          onDelete(item.id);
-        }
+        onDelete(item.id);
       },
     },
   ];
@@ -80,19 +80,38 @@ export default function AvatarList({
   onEdit,
   onDelete,
 }: AvatarListProps) {
+  const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
+
   return (
-    <S.list>
-      {data.map((item) => (
-        <AvatarListItem
-          key={item.id}
-          item={item}
-          isClicked={selectedId === item.id}
-          showKebab={showKebab}
-          onClick={() => onSelect(item)}
-          onEdit={onEdit}
-          onDelete={onDelete}
-        />
-      ))}
-    </S.list>
+    <>
+      <S.list>
+        {data.map((item) => (
+          <AvatarListItem
+            key={item.id}
+            item={item}
+            isClicked={selectedId === item.id}
+            showKebab={showKebab}
+            onClick={() => onSelect(item)}
+            onEdit={onEdit}
+            onDelete={setDeleteTargetId}
+          />
+        ))}
+      </S.list>
+
+      <ConfirmModal
+        open={deleteTargetId !== null}
+        message="이 멘토링 방을 삭제하시겠습니까?"
+        cancelLabel="취소"
+        confirmLabel="삭제"
+        confirmColor="#e05c5c"
+        confirmLabelColor="white"
+        onCancel={() => setDeleteTargetId(null)}
+        onConfirm={() => {
+          if (deleteTargetId === null) return;
+          onDelete(deleteTargetId);
+          setDeleteTargetId(null);
+        }}
+      />
+    </>
   );
 }
