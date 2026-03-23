@@ -26,6 +26,7 @@ export default function CommunityPost() {
     const [isCancelModalOpen, setIsCancelModalOpen] = useState<boolean>(false);
     const [isAnonymous, setIsAnonymous] = useState<boolean>(editPost?.isAnonymous ?? false);
     const [attachedFiles, setAttachedFiles] = useState<ServerFile[]>(editPost?.files ?? []);
+    const [uploadingCount, setUploadingCount] = useState(0); // 업로드 중인 파일 수
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const isComposingRef = useRef(false);
     const imageInputRef = useRef<HTMLInputElement>(null);
@@ -34,7 +35,8 @@ export default function CommunityPost() {
     const tags = Object.keys(CATEGORY_TAGS[selectedCategory] ?? {});
     const rendered = renderMarkdown(content);
     const isOverLimit = content.length >= MAX_LENGTH;
-    const isPostValid = !!title.trim() && !!selectedCategory && !!content.trim();
+    const isUploading = uploadingCount > 0;
+    const isPostValid = !!title.trim() && !!selectedCategory && !!content.trim() && !isUploading;
     const hasContent = !!content.trim();
 
     const { insert } = useMarkdownEditor(content, setContent, textareaRef);
@@ -46,17 +48,24 @@ export default function CommunityPost() {
         const file = e.target.files?.[0];
         if (!file) return;
 
+        // 업로드 전 blob URL로 먼저 미리보기 삽입
         const blobUrl = URL.createObjectURL(file);
         insert(`![${file.name}](${blobUrl})`);
 
-        const { url } = await uploadFile(file);
-        setContent((prev: string) => prev.replace(blobUrl, url));
-        setAttachedFiles(prev => [...prev, {
-            fileUrl: url,
-            fileName: file.name,
-            fileType: file.type,
-            fileSize: file.size,
-        }]);
+        setUploadingCount(prev => prev + 1); // 업로드 시작
+        try {
+            const { url } = await uploadFile(file);
+            // 업로드 완료 후 blob URL을 실제 URL로 교체
+            setContent((prev: string) => prev.replace(blobUrl, url));
+            setAttachedFiles(prev => [...prev, {
+                fileUrl: url,
+                fileName: file.name,
+                fileType: file.type,
+                fileSize: file.size,
+            }]);
+        } finally {
+            setUploadingCount(prev => prev - 1); // 업로드 완료
+        }
 
         e.target.value = "";
     };
@@ -65,6 +74,7 @@ export default function CommunityPost() {
         const file = e.target.files?.[0];
         if (!file) return;
 
+        // 업로드 전 blob URL로 먼저 링크 삽입
         const blobUrl = URL.createObjectURL(file);
         insert(
             file.type.startsWith("video/")
@@ -72,21 +82,27 @@ export default function CommunityPost() {
                 : `[${file.name}](${blobUrl})`
         );
 
-        const { url } = await uploadFile(file);
-        setContent((prev: string) => prev.replace(blobUrl, url));
-        setAttachedFiles(prev => [...prev, {
-            fileUrl: url,
-            fileName: file.name,
-            fileType: file.type || (() => {
-                const ext = file.name.split(".").pop()?.toLowerCase();
-                const mimeMap: Record<string, string> = {
-                    hwp: "application/x-hwp",
-                    hwpx: "application/x-hwpx",
-                };
-                return mimeMap[ext ?? ""] ?? "application/octet-stream";
-            })(),
-            fileSize: file.size,
-        }]);
+        setUploadingCount(prev => prev + 1); // 업로드 시작
+        try {
+            const { url } = await uploadFile(file);
+            // 업로드 완료 후 blob URL을 실제 URL로 교체
+            setContent((prev: string) => prev.replace(blobUrl, url));
+            setAttachedFiles(prev => [...prev, {
+                fileUrl: url,
+                fileName: file.name,
+                fileType: file.type || (() => {
+                    const ext = file.name.split(".").pop()?.toLowerCase();
+                    const mimeMap: Record<string, string> = {
+                        hwp: "application/x-hwp",
+                        hwpx: "application/x-hwpx",
+                    };
+                    return mimeMap[ext ?? ""] ?? "application/octet-stream";
+                })(),
+                fileSize: file.size,
+            }]);
+        } finally {
+            setUploadingCount(prev => prev - 1); // 업로드 완료
+        }
 
         e.target.value = "";
     };
@@ -148,7 +164,9 @@ export default function CommunityPost() {
                         <IoIosArrowBack size={30} color={'#FFBB00'} />
                         <S.TitleLabel>{editPost ? "게시글 수정" : "게시글 작성"}</S.TitleLabel>
                     </S.Div>
-                    <S.Confirm onClick={() => setIsModalOpen(true)}>게시</S.Confirm>
+                    <S.Confirm onClick={() => setIsModalOpen(true)} disabled={isUploading}>
+                        게시
+                    </S.Confirm>
                 </S.ForRow>
 
                 <S.ForRow style={{ gap: 50 }}>
