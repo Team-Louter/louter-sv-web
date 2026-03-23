@@ -34,7 +34,6 @@ export const getPostDetail = async (postId: number): Promise<Post> => {
 
 // 게시글 생성하기
 export const createPostInfo = async (event: ServerPost): Promise<void> => {
-    console.log(event);
     await instance.post<void>("/posts", event);
 }
 
