@@ -9,6 +9,7 @@ export const CATEGORIES: Record<string, string> = {
     "공지사항": "NOTICE",
     "자유게시판": "FREE",
     "정보 공유": "INFORMATION",
+    "과제": "ASSIGNMENT",
     "로드맵": "ROADMAP",
     "대회": "CONTEST",
     "Q&A": "QNA",
@@ -31,6 +32,7 @@ export const CATEGORY_TAGS: Record<string, Record<string, string>> = {
       "기타": "INFO_ETC",
       "학교 생활": "INFO_SCHOOL",
     },
+    ASSIGNMENT: {},
     ROADMAP: {
       "백엔드": "ROADMAP_BACKEND",
       "프론트엔드": "ROADMAP_FRONTEND",
