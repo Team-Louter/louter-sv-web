@@ -12,6 +12,13 @@ export const Container = styled.div`
     padding: 35px;
     gap: 10px;
     flex-shrink: 0;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        flex-direction: row;
+        overflow-x: scroll;
+        padding: 10px;
+    }
 `
 
 export const Title = styled.h4`
@@ -19,6 +26,10 @@ export const Title = styled.h4`
     color: #15181B;
     border-bottom: 1px solid ${token.colors.line.normal};
     padding-bottom: 35px;
+
+    @media (max-width: 768px) {
+        display: none;
+    }
 `
 
 export const Category = styled.button<{ $isSelected: boolean }>`
@@ -33,5 +44,13 @@ export const Category = styled.button<{ $isSelected: boolean }>`
 
     &:hover {
         background-color: ${token.colors.accent.assistive4}
+    }
+
+    @media (max-width: 768px) {
+        white-space: nowrap;
+        ${token.flexCenter};
+        min-width: 100px;
+        flex-shrink: 0;
+        width: auto;
     }
 `

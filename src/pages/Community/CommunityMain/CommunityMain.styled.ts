@@ -15,6 +15,10 @@ export const ForCenter = styled.div`
     width: 90%;
     height: 85%;
     min-height: 0;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
 `
 
 export const ForColumn = styled.div`
@@ -23,6 +27,10 @@ export const ForColumn = styled.div`
     height: 100%;
     gap: 20px;
     min-height: 0;
+
+    @media (max-width: 768px) {
+        width: 100%;
+    }
 `
 
 export const PostContainer = styled.div`
