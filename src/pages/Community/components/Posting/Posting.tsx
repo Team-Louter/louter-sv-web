@@ -17,6 +17,26 @@ export type postProps = {
   isLoading?: boolean;
 };
 
+const stripMarkdown = (text: string): string => {
+  return text
+    .replace(/#{1,6}\s+/g, '')
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/\*(.+?)\*/g, '$1')
+    .replace(/__(.+?)__/g, '$1')
+    .replace(/_(.+?)_/g, '$1')
+    .replace(/~~(.+?)~~/g, '$1')
+    .replace(/`{3}[\s\S]*?`{3}/g, '')
+    .replace(/`(.+?)`/g, '$1')
+    .replace(/\[(.+?)\]\(.+?\)/g, '$1')
+    .replace(/!\[.*?\]\(.+?\)/g, '')
+    .replace(/^\s*[-*+]\s+/gm, '')
+    .replace(/^\s*\d+\.\s+/gm, '')
+    .replace(/^\s*>\s+/gm, '')
+    .replace(/---+|===+/g, '')
+    .replace(/\n+/g, ' ')
+    .trim();
+};
+
 export default function Posting({ post, selectedCategory, isLoading }: postProps) {
     const [isLiked, setIsLiked] = useState<boolean>(post.isHearted || false);
     const [likeCount, setLikeCount] = useState<number>(post.likeCount ?? 0);
@@ -27,19 +47,16 @@ export default function Posting({ post, selectedCategory, isLoading }: postProps
     ) ?? [];
 
     const toggleLikePost = async () => {
-        // 롤백용 상태 저장
         const prevIsLiked = isLiked;
         const prevLikeCount = likeCount;
-    
-        // 상태 변경
+
         const nextLiked = !isLiked;
         setIsLiked(nextLiked);
         setLikeCount(prev => nextLiked ? prev + 1 : prev - 1);
-    
+
         try {
             await toggleLike(post.postId);
         } catch (err) {
-            // 실패 시 롤백
             setIsLiked(prevIsLiked);
             setLikeCount(prevLikeCount);
         }
@@ -75,10 +92,10 @@ export default function Posting({ post, selectedCategory, isLoading }: postProps
                 </S.ForRow>
 
                 <S.ForRow>
-                {isLoading 
-                    ? <div style={{ width: '100%' }}><Skeleton height={20} /></div> 
-                    : <S.Content>{post.postContent}</S.Content>
-                }
+                    {isLoading
+                        ? <div style={{ width: '100%' }}><Skeleton height={20} /></div>
+                        : <S.Content>{stripMarkdown(post.postContent)}</S.Content>
+                    }
                 </S.ForRow>
 
                 <S.ForRow>
