@@ -2,7 +2,7 @@ import { CardContainer, DetailRow, DetailLabel, DetailValue } from './EventDetai
 import { getDateRange } from '@/utils/FormatDate';
 import { formatAssignees } from '@/utils/FormatAssignee';
 import type { EventInput } from '@fullcalendar/core';
-import { useClickOutside } from '@/hooks/useClickOutside';
+import { useState, useRef, useEffect } from 'react';
 
 interface EventDetailCardProps {
   event: EventInput | null;
@@ -11,17 +11,62 @@ interface EventDetailCardProps {
 }
 
 const EventDetailCard: React.FC<EventDetailCardProps> = ({ event, position, onClose }) => {
-  const cardRef = useClickOutside(onClose);
+  const [pos, setPos] = useState({ x: position.x, y: position.y });
+  const cardRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const dragOffset = useRef({ x: 0, y: 0 });
+
+  useEffect(() => {
+    setPos({ x: position.x, y: position.y });
+  }, [position]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (isDragging.current) return;
+      if (cardRef.current && !cardRef.current.contains(e.target as Node)) {
+        onClose();
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [onClose]);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    isDragging.current = true;
+    dragOffset.current = {
+      x: e.clientX - pos.x,
+      y: e.clientY - pos.y,
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      setPos({
+        x: e.clientX - dragOffset.current.x,
+        y: e.clientY - dragOffset.current.y,
+      });
+    };
+
+    const handleMouseUp = () => {
+      isDragging.current = false;
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+  };
 
   if (!event) return null;
 
   return (
-    <CardContainer 
+    <CardContainer
       ref={cardRef}
-      style={{ 
-        top: `${position.y}px`, 
-        left: `${position.x}px` 
+      style={{
+        top: `${pos.y}px`,
+        left: `${pos.x}px`,
+        cursor: 'grab',
+        userSelect: 'none',
       }}
+      onMouseDown={handleMouseDown}
     >
       <DetailRow>
         <DetailLabel>제목</DetailLabel>
