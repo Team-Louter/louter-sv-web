@@ -41,6 +41,7 @@ export const Name = styled.span`
     color: ${token.colors.fill.slate};
     padding-top: 6px;
     white-space: nowrap;
+    width: 90px;
 `
 
 export const ForColumn = styled.div`
