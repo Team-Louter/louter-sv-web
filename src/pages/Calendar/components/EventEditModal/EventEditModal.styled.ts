@@ -2,15 +2,11 @@ import styled from "styled-components";
 import * as token from "@/styles/values/token";
 
 export const Background = styled.div`
-    height: calc(100vh - 60px);
-    width: 100vw;
-    background-color: rgba(0, 0, 0, 0.5);
     position: fixed;
-    top: 0px;
-    left: 0px;
-    z-index: 1;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
     ${token.flexCenter};
-    margin-top: 60px;
+    z-index: 1100;
 `
 
 export const Container = styled.div`
