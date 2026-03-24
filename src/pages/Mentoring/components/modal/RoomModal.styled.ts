@@ -75,5 +75,14 @@ export const DoneButton = styled.button`
   ${token.typography("body", "sm", "semibold")}
   color: ${token.colors.fill.assistive};
   background-color: ${token.colors.main.alternative};
+  border: none;
   border-radius: ${token.shapes.medium};
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+  cursor: pointer;
+
+  &:disabled {
+    background-color: ${token.colors.text.disabled};
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
 `;

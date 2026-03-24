@@ -1,9 +1,13 @@
+import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import * as S from './style';
-import LogoSvg from '@/assets/Logo/Logo.svg';
+import * as S from './Topbar.styled.ts';
+import LogoSvg from '@/assets/Logo/SwitchLogo.svg';
+import SearchIcon from '@/assets/Topbar/search.svg';
+import DarkModeIcon from '@/assets/Topbar/darkmode.svg';
 import { useAuthStore } from '@/store/authStore';
 import { logout } from '@/api/Auth';
 import { toast } from '@/store/toastStore';
+import { FiMenu, FiX } from 'react-icons/fi';
 
 const NAV_ITEMS = [
   { label: '커뮤니티', path: '/community' },
@@ -17,6 +21,7 @@ function Topbar({ hidden }: { hidden: boolean }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { isLoggedIn, clearAuth } = useAuthStore();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -30,10 +35,15 @@ function Topbar({ hidden }: { hidden: boolean }) {
     }
   };
 
+  const handleNavClick = (path: string) => {
+    navigate(path);
+    setIsMobileMenuOpen(false);
+  };
+
   return (
-    <S.Container $hidden={hidden}>
-      <S.LogoWrapper onClick={() => navigate('/')}>
-        <S.Logo src={LogoSvg} alt="Louter Logo" />
+    <S.Container $hidden={hidden} $isLoggedIn={isLoggedIn}>
+      <S.LogoWrapper>
+        <S.Logo src={LogoSvg} alt="Switch Logo" onClick={() => navigate('/')} />
       </S.LogoWrapper>
 
       {isLoggedIn ? (
@@ -56,39 +66,42 @@ function Topbar({ hidden }: { hidden: boolean }) {
           <S.RightGroup>
             {/* 검색 */}
             <S.IconButton aria-label="검색">
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
+              <img src={SearchIcon} alt="검색" />
             </S.IconButton>
 
             {/* 다크모드 */}
             <S.IconButton aria-label="다크모드">
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-              </svg>
+              <img src={DarkModeIcon} alt="다크모드" />
             </S.IconButton>
 
             <S.LogoutButton onClick={handleLogout}>로그아웃</S.LogoutButton>
           </S.RightGroup>
+
+          {/* 모바일 햄버거 버튼 */}
+          <S.MobileMenuButton
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="메뉴"
+          >
+            {isMobileMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+          </S.MobileMenuButton>
+
+          {/* 모바일 네비게이션 메뉴 */}
+          <S.MobileNavContainer $isOpen={isMobileMenuOpen}>
+            {NAV_ITEMS.map(({ label, path }) => (
+              <S.MobileNavItem
+                key={path}
+                $active={
+                  location.pathname === path ||
+                  location.pathname.startsWith(path + '/')
+                }
+                onClick={() => handleNavClick(path)}
+              >
+                {label}
+              </S.MobileNavItem>
+            ))}
+            <S.MobileNavDivider />
+            <S.MobileNavItem onClick={handleLogout}>로그아웃</S.MobileNavItem>
+          </S.MobileNavContainer>
         </>
       ) : (
         <S.ButtonGroup>

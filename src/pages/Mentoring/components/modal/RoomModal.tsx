@@ -117,6 +117,8 @@ export default function RoomModal({
     .flatMap((g) => g.members)
     .filter((m) => m.checked);
   const selectedCount = selectedMembers.length;
+  const isRoomNameValid = roomName.trim() !== "";
+  const isFormValid = isRoomNameValid && selectedCount > 0;
 
   const handleToggleMember = (id: number) => {
     setGroups((prev) =>
@@ -153,12 +155,13 @@ export default function RoomModal({
   };
 
   const handleCreate = () => {
-    if (!roomName.trim()) return;
+    if (!isFormValid) return;
+    const trimmedRoomName = roomName.trim();
     const memberIds = selectedMembers.map((m) => m.id);
     if (isEditMode && initialData && onUpdate) {
-      onUpdate(initialData.id, roomName, memberIds);
+      onUpdate(initialData.id, trimmedRoomName, memberIds);
     } else {
-      onCreate(roomName, memberIds);
+      onCreate(trimmedRoomName, memberIds);
     }
     setRoomName("");
     onClose();
@@ -196,7 +199,7 @@ export default function RoomModal({
           )}
         </S.AddMemberContainer>
 
-        <S.DoneButton onClick={handleCreate}>
+        <S.DoneButton onClick={handleCreate} disabled={!isFormValid}>
           {isEditMode ? "수정 완료" : "생성"}
         </S.DoneButton>
       </S.container>
