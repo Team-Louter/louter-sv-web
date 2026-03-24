@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import * as S from './style';
-import LogoSvg from '@/assets/Logo/Logo.svg';
+import LogoSvg from '@/assets/Logo/SwitchLogo.svg';
 import SearchIcon from '@/assets/topbar/search.svg';
 import DarkModeIcon from '@/assets/topbar/darkmode.svg';
 import { useAuthStore } from '@/store/authStore';
@@ -43,7 +43,7 @@ function Topbar({ hidden }: { hidden: boolean }) {
   return (
     <S.Container $hidden={hidden} $isLoggedIn={isLoggedIn}>
       <S.LogoWrapper onClick={() => navigate('/')}>
-        <S.Logo src={LogoSvg} alt="Louter Logo" />
+        <S.Logo src={LogoSvg} alt="Switch Logo" />
       </S.LogoWrapper>
 
       {isLoggedIn ? (
