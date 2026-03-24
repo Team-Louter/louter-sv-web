@@ -11,9 +11,35 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-messaging.onBackgroundMessage((payload) => {
-  self.registration.showNotification(payload.data.title, {
-    body: payload.data.body,
-    icon: "https://switch.louter.site/switchLogo.png"
-  });
+self.addEventListener('push', (event) => {
+  let data;
+  try {
+    data = event.data?.json();
+  } catch {
+    return;
+  }
+
+  if (!data) return;
+
+  const title = data.notification?.title ?? data.data?.title ?? '알림';
+  const body = data.notification?.body ?? data.data?.body ?? '';
+
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
+      const isForeground = clients.some((client) => client.visibilityState === 'visible');
+
+      if (isForeground) {
+        clients.forEach((client) => {
+          if (client.visibilityState === 'visible') {
+            client.postMessage({ type: 'PUSH_RECEIVED', title, body });
+          }
+        });
+        return;
+      }
+
+      return self.registration.showNotification(title, {
+        body,
+      });
+    })
+  );
 });

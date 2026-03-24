@@ -1,6 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getMessaging, getToken, onMessage } from "firebase/messaging";
-import type { MessagePayload } from "firebase/messaging";
+import { getMessaging, getToken } from "firebase/messaging";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBXLP6tA97f8VconJ43KzM_AAvxKa5GUKg",
@@ -26,22 +25,32 @@ export async function requestFCMToken(): Promise<string | null> {
       vapidKey: "BJSlPHcAhsoA-nwjuUj__iXO3o6mU0l3Ml8ZpCLraRysMkr4h0IuUzwsoUyr8vEhxIQsXLvvcvL_3JUi-suAThA",
       serviceWorkerRegistration: registration,
     });
-    
-    return token;
 
+    return token;
   } catch (err) {
     console.error("토큰 발급 실패:", err);
     return null;
   }
 }
 
-export async function showNotification(title: string, body: string) {
-  const registration = await navigator.serviceWorker.getRegistration('/firebase-messaging-sw.js');
-  if (registration) {
-    registration.showNotification(title, { body });
+export function showNotification(title: string, body: string): void {
+  if (Notification.permission === "granted") {
+    new Notification(title, {
+      body,
+    });
   }
 }
 
-export function onForegroundMessage(callback: (payload: MessagePayload) => void): void {
-  onMessage(messaging, callback);
+export function onForegroundPushMessage(
+  callback: (title: string, body: string) => void
+): () => void {
+  const handler = (event: MessageEvent) => {
+    if (event.data?.type === 'PUSH_RECEIVED') {
+      callback(event.data.title, event.data.body);
+    }
+  };
+
+  navigator.serviceWorker.addEventListener('message', handler);
+
+  return () => navigator.serviceWorker.removeEventListener('message', handler);
 }
