@@ -4,6 +4,10 @@ import * as token from "@/styles/values/token";
 export const DropdownWrapper = styled.div`
     position: relative;
     width: 250px;
+
+    @media (max-width: 768px) {
+        margin-top: 5px;
+    }
 `
 
 export const DropdownSelected = styled.div<{ $isDisabled: boolean }>`
@@ -21,6 +25,7 @@ export const DropdownSelected = styled.div<{ $isDisabled: boolean }>`
 export const SelectedText = styled.span<{ $isDisabled: boolean }>`
     color: ${({ $isDisabled }) =>
         $isDisabled ? token.colors.text.disabled : token.colors.text.normal};
+    white-space: nowrap;
 `
 
 export const ArrowIcon = styled.span<{ $isOpen: boolean }>`

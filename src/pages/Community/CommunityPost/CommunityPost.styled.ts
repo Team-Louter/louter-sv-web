@@ -14,7 +14,7 @@ export const Container = styled.div`
 
 export const Top = styled.div`
     width: 90%;
-    height: 230px;
+    min-height: 230px;
     background-color: ${token.colors.background.white};
     border: 1px solid ${token.colors.line.normal};
     border-radius: ${token.shapes.xlarge};
@@ -24,12 +24,21 @@ export const Top = styled.div`
     flex-shrink: 0;
 `
 
-export const ForRow = styled.div`
+export const ForRow = styled.div<{ $wrap?: boolean }>`
     ${token.flexRow};
     align-items: center;
-    gap: 13px;
+    column-gap: 13px;
     width: 100%;
-`
+
+    ${({ $wrap }) => $wrap && `
+        column-gap: 50px;
+
+        @media (max-width: 768px) {
+            flex-wrap: wrap;
+            column-gap: 20px;
+        }
+    `}
+`;
 
 export const TitleLabel = styled.span`
     color: ${token.colors.text.gold};
@@ -86,11 +95,16 @@ export const CheckboxLabel = styled.label`
     &:has(input:checked)::after {
         border-color: white;
     }
+
+    @media (max-width: 768px) {
+        margin: 13px 0px;
+    }
 `
 
 export const Label = styled.span`
     ${token.typography('body', 'sm', 'medium')};
     color: ${token.colors.text.normal};
+    white-space: nowrap;
 `
 
 export const Title = styled.input`
@@ -106,6 +120,10 @@ export const Title = styled.input`
 
     &::placeholder {
         color: ${token.colors.text.neutral};
+    }
+
+    @media (max-width: 768px) {
+        margin-top: 10px;
     }
 `
 

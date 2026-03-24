@@ -169,7 +169,7 @@ export default function CommunityPost() {
                     </S.Confirm>
                 </S.ForRow>
 
-                <S.ForRow style={{ gap: 50 }}>
+                <S.ForRow $wrap>
                     <CategoryDropdown
                         options={Object.keys(CATEGORIES).filter((c) => c !== "전체")}
                         selected={CATEGORY_REVERSED[selectedCategory]}
