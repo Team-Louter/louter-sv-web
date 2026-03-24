@@ -109,6 +109,7 @@ export const Name = styled.span`
 export const UploadTime = styled.span`
     ${token.typography('body', 'sm', 'medium')};
     color: ${token.colors.text.disabled};
+    white-space: nowrap;
 `
 
 export const LikeCount = styled.span`

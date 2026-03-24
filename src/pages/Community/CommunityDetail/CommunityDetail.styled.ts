@@ -15,6 +15,10 @@ export const ForCenter = styled.div`
     width: 90%;
     padding: 55px 0px;
     margin: 0 auto;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
 `
 
 export const PostContainer = styled.div`
@@ -27,13 +31,19 @@ export const PostContainer = styled.div`
     ${token.flexColumn};
     padding: 50px;
     gap: 20px;
+
+    @media (max-width: 768px) {
+        width: 100%;
+    }
 `
 
 export const TopContainer = styled.div`
     width: 100%;
-    height: 130px;
+    min-height: 130px;
+    height: content-fit;
     ${token.flexColumn};
     justify-content: space-between;
+    
 `
 
 export const ForRow = styled.div`
@@ -51,6 +61,8 @@ export const Category = styled.span`
 export const Title = styled.h5`
     ${token.typography('heading', 'xl', 'semibold')};
     color: ${token.colors.text.strong};
+    display: inline;
+    margin-right: 8px;
 `
 
 export const Div = styled.div`
@@ -274,4 +286,3 @@ export const CheckboxLabel = styled.label`
         border-color: white;
     }
 `
-

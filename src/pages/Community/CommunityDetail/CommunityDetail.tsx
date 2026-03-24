@@ -40,33 +40,29 @@ const PostContent = memo(function PostContent({
 
 export default function CommunityDetail() {
     const location = useLocation();
-    const selectedCategory = location.state?.selectedCategory ?? "전체"; // 선택된 카테고리
+    const selectedCategory = location.state?.selectedCategory ?? "전체";
     const navigate = useNavigate();
     const { postId } = useParams();
     const userInfo = useAuthStore((state) => state.user);
-    const [isCancelModalOpen, setIsCancelModalOpen] = useState<boolean>(false); // 게시글 삭제 확인 모달 열림 여부
-    const [previewIndex, setPreviewIndex] = useState<number>(0); // 이미지 미리보기 인덱스
-    const [isPreviewOpen, setIsPreviewOpen] = useState<boolean>(false); // 이미지 미리보기 열림 여부
+    const [isCancelModalOpen, setIsCancelModalOpen] = useState<boolean>(false);
+    const [previewIndex, setPreviewIndex] = useState<number>(0);
+    const [isPreviewOpen, setIsPreviewOpen] = useState<boolean>(false);
     const { post, isLiked, isPinned, setIsPinned, handleToggleLike, handleTogglePin, handleDelete, isPostLoading } = usePostDetail(Number(postId));
     const { comments, getCommentsInfo, isCommentLoading } = useComments(Number(postId));
 
-    // 마크다운 렌더링 결과 캐싱
     const renderedContent = useMemo(
         () => (post ? renderMarkdown(post.postContent) : ""),
         [post?.postContent]
     );
 
-    // 렌더된 HTML에서 이미지 src 목록 추출
     const imageList = useMemo(() => {
         if (!renderedContent) return [];
         const matches = renderedContent.matchAll(/<img[^>]+src="([^"]+)"/g);
         return Array.from(matches, (m) => m[1]);
     }, [renderedContent]);
 
-    // 이미지 미리보기 닫기 (안정적인 참조 유지)
     const closePreview = useCallback(() => setIsPreviewOpen(false), []);
 
-    // 게시글 콘텐츠 내 이미지 클릭 시 미리보기 열기
     const handleContentClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
         const target = e.target as HTMLElement;
         if (target.tagName === "IMG") {
@@ -79,12 +75,10 @@ export default function CommunityDetail() {
         }
     }, [imageList]);
 
-    // 게시글 세부 페이지에서 사이드바의 카테고리 클릭 시 이동
     const handleCategoryChange = (category: string) => {
         navigate("/community", { state: { selectedCategory: category } });
     };
 
-    // 케밥 아이콘 내용물
     const kebabItems = [
         ...(userInfo?.role === 'MENTOR' || userInfo?.role === 'LEADER' ? [{
             label: isPinned ? "고정 해제" : "고정하기",
@@ -131,18 +125,17 @@ export default function CommunityDetail() {
                                 {post?.pinned && <MdPushPin size={30} color={colors.fill.yellow} />}
                                 {isPostLoading
                                     ? <Skeleton height={45} width={400} />
-                                    : <S.Title>
-                                        {post?.tag && post?.category && `[${CATEGORY_TAGS_REVERSED[post.category][post.tag]}] `}
-                                        {post?.postTitle}
-                                    </S.Title>
+                                    : <span>
+                                        <S.Title>
+                                            {post?.tag && post?.category && `[${CATEGORY_TAGS_REVERSED[post.category][post.tag]}] `}
+                                            {post?.postTitle}
+                                        </S.Title>
+                                        <S.Div style={{ display: 'inline-flex', verticalAlign: 'middle', marginBottom: 13 }}>
+                                            <MdRemoveRedEye size={22} color={colors.fill.yellow} />
+                                            <S.ViewCount>{post?.viewers}</S.ViewCount>
+                                        </S.Div>
+                                    </span>
                                 }
-                                <S.Div>
-                                    <MdRemoveRedEye size={22} color={isPostLoading ? '#e0e0e0' : colors.fill.yellow} />
-                                    {isPostLoading
-                                        ? <Skeleton height={20} width={40} />
-                                        : <S.ViewCount>{post?.viewers}</S.ViewCount>
-                                    }
-                                </S.Div>
                             </S.Div>
                             {kebabItems.length > 0 &&
                                 <S.KebabWrapper>
@@ -215,7 +208,7 @@ export default function CommunityDetail() {
                     <S.CommentContainer>
                         <CommentWrite onSuccess={getCommentsInfo} />
                         {isCommentLoading
-                            ? <Comment /> 
+                            ? <Comment />
                             : comments.length > 0
                                 ? comments.map((comment) => (
                                     <Comment comment={comment} key={comment.commentId} postId={Number(postId)} onSuccess={getCommentsInfo} />
