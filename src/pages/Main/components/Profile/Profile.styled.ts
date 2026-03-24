@@ -13,6 +13,10 @@ export const ProfileContainer = styled.div`
     border: 1px solid ${token.colors.line.light};
     border-radius: ${token.shapes.xsmall};
     ${token.elevation("black_2")};
+
+    @media (max-width: 768px) {
+        height: 200px;
+    }
 `
 export const ProfileInfoIn = styled.div`
     ${token.flexRow};

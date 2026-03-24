@@ -15,17 +15,38 @@ export const Scroll = styled.div`
     justify-content: center;
     padding-top: 2%;
     flex-shrink: 0;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: center;
+        height: auto;      
+        overflow-y: auto;
+        padding: 2% 4%;
+        gap: 20px;
+    }
 `
 
 export const CalendarDiv = styled.div`
     height: 88%;
     width: 60%;
+
+    @media (max-width: 768px) {
+        order: 2;
+        width: 100%;
+        height: auto;
+        min-height: 700px; 
+    }
 `
 
 export const ForColumn = styled.div`
     ${token.flexColumn};
     width: 25%;
-    gap: 4%
+    gap: 4%;
+
+    @media (max-width: 768px) {
+        order: 1;
+        width: 100%;
+    }
 `
 
 export const Line = styled.div`

@@ -10,14 +10,24 @@ export const PostContainer = styled.div`
     border-radius: ${token.shapes.xsmall};
     align-self: center;
     justify-content: space-evenly;
-    padding-left: 20px;
+    padding: 0px 20px;
     margin-bottom: 10px;
     cursor: pointer;
+
+    @media (max-width: 768px) {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        height: 50px;
+    }
 `
 
 export const Title = styled.h3`
     ${token.typography("body", "md", "medium")};
     color: ${token.colors.text.dark};
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 `
 
 export const ViewsCount = styled.div`
