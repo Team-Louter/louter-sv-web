@@ -5,9 +5,8 @@ export const Container = styled.header<{
   $hidden?: boolean;
   $isLoggedIn?: boolean;
 }>`
-  display: flex;
+  ${token.flexBetween}
   align-items: center;
-  justify-content: space-between;
   position: fixed;
   top: 0;
   padding: 1rem 5rem;
@@ -41,13 +40,12 @@ export const Container = styled.header<{
 
 export const LogoWrapper = styled.div`
   ${token.flexLeft}
-  cursor: pointer;
-  /* grid에서 이 요소의 위치를 좌측 정렬 */
   justify-content: flex-start;
 `;
 
 export const Logo = styled.img`
   height: 36px;
+  cursor: pointer;
   width: auto;
 `;
 

@@ -42,8 +42,8 @@ function Topbar({ hidden }: { hidden: boolean }) {
 
   return (
     <S.Container $hidden={hidden} $isLoggedIn={isLoggedIn}>
-      <S.LogoWrapper onClick={() => navigate('/')}>
-        <S.Logo src={LogoSvg} alt="Switch Logo" />
+      <S.LogoWrapper>
+        <S.Logo src={LogoSvg} alt="Switch Logo" onClick={() => navigate('/')} />
       </S.LogoWrapper>
 
       {isLoggedIn ? (
