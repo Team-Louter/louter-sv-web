@@ -157,3 +157,21 @@ export const SkeletonImg = styled.div`
     background-color: #e0e0e0;
     animation: ${pulse} 1.5s ease-in-out infinite;
 `
+
+export const TitleSkeleton = styled.div`
+    height: 45px;
+    width: 80%;
+    border-radius: ${token.shapes.xsmall};
+    background-color: #e0e0e0;
+    animation: ${pulse} 1.5s ease-in-out infinite;
+`
+
+export const HideOnMobile = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    @media (max-width: 650px) {
+        display: none;
+    }
+`

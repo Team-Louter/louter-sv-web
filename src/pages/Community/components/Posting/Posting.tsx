@@ -73,13 +73,13 @@ export default function Posting({ post, selectedCategory, isLoading }: postProps
             onClick={() => { if (!isLoading) navigate(`/community/${post.postId}`, { state: { selectedCategory } }) }}
         >
             <S.ForColumn>
-                <S.ForRow>
+                <S.ForRow style={{flex: 1}}>
                     {isLoading
                         ? <Skeleton height={25} borderRadius={100} width={70}/>
                         : <S.Category>{CATEGORY_REVERSED[post.category]}</S.Category>
                     }
                     {isLoading
-                        ? <Skeleton height={35} width={300}/>
+                        ? <S.TitleSkeleton/>
                         : <S.TitleWithView>
                             <S.Title>
                                 {post.tag && <span>[{CATEGORY_TAGS_REVERSED[post.category][post.tag]}] </span>}
@@ -114,7 +114,7 @@ export default function Posting({ post, selectedCategory, isLoading }: postProps
                         : <S.UploadTime>{formatDateTime(post.createdAt)}</S.UploadTime>
                     }
 
-                    <S.Div>
+                    <S.HideOnMobile>
                         {isLiked
                             ? <FaHeart
                                 color={isLoading ? '#e0e0e0' : '#FF3535'}
@@ -126,12 +126,12 @@ export default function Posting({ post, selectedCategory, isLoading }: postProps
                                 style={{ cursor: isLoading ? "default" : "pointer" }} />
                         }
                         {isLoading ? <Skeleton width={40} height={20}/> : <S.LikeCount>{likeCount}</S.LikeCount>}
-                    </S.Div>
+                    </S.HideOnMobile>
 
-                    <S.Div>
+                    <S.HideOnMobile>
                         <FaRegComment color={isLoading ? '#e0e0e0' : colors.fill.yellow} />
                         {isLoading ? <Skeleton width={40} height={20}/> : <S.CommentCount>{post.commentCount}</S.CommentCount>}
-                    </S.Div>
+                    </S.HideOnMobile>
                 </S.ForRow>
             </S.ForColumn>
 
