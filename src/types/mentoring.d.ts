@@ -116,6 +116,7 @@ export interface Question {
   roomId: number;
   title: string;
   date: string;
+  createdAt: string;
   status: StatusType;
 }
 

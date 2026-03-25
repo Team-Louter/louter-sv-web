@@ -51,16 +51,27 @@ const getLatestActivityTime = (question: QuestionWithComments) => {
   );
 };
 
+const getQuestionCreatedTime = (question: QuestionWithComments) =>
+  new Date(question.createdAt).getTime();
+
 const sortQuestionsByStatusAndActivity = (
   questionList: QuestionWithComments[],
 ) => {
   const activeQuestions = questionList
     .filter((question) => question.status !== "답변 완료")
-    .sort((a, b) => getLatestActivityTime(b) - getLatestActivityTime(a));
+    .sort(
+      (a, b) =>
+        getLatestActivityTime(b) - getLatestActivityTime(a) ||
+        getQuestionCreatedTime(b) - getQuestionCreatedTime(a) ||
+        b.id - a.id,
+    );
 
   const completedQuestions = questionList
     .filter((question) => question.status === "답변 완료")
-    .sort((a, b) => getLatestActivityTime(b) - getLatestActivityTime(a));
+    .sort(
+      (a, b) =>
+        getQuestionCreatedTime(b) - getQuestionCreatedTime(a) || b.id - a.id,
+    );
 
   return [...activeQuestions, ...completedQuestions];
 };
@@ -238,6 +249,7 @@ export default function Mentoring() {
             authorId: Number(q.userId),
             title: q.title,
             date: formatDate(q.createdAt),
+            createdAt: q.createdAt,
             status: getQuestionStatus(
               q.status,
               Number(q.questionId),
