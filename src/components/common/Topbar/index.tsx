@@ -65,12 +65,18 @@ function Topbar({ hidden }: { hidden: boolean }) {
 
           <S.RightGroup>
             {/* 검색 */}
-            <S.IconButton aria-label="검색">
+            <S.IconButton
+              aria-label="검색"
+              onClick={() => toast.warning('개발 중인 기능입니다.')}
+            >
               <img src={SearchIcon} alt="검색" />
             </S.IconButton>
 
             {/* 다크모드 */}
-            <S.IconButton aria-label="다크모드">
+            <S.IconButton
+              aria-label="다크모드"
+              onClick={() => toast.warning('개발 중인 기능입니다.')}
+            >
               <img src={DarkModeIcon} alt="다크모드" />
             </S.IconButton>
 
