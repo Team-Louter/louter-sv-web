@@ -263,12 +263,7 @@ export default function Mentoring() {
           };
         });
 
-      setQuestions((prev) =>
-        mappedQuestions.map((newQ) => {
-          const existing = prev.find((p) => p.id === newQ.id);
-          return existing ? { ...newQ, comments: existing.comments } : newQ;
-        }),
-      );
+      setQuestions(mappedQuestions);
     } catch (error) {
       console.error("질문 목록 로딩 실패:", error);
     } finally {
@@ -607,19 +602,33 @@ export default function Mentoring() {
   const selectedRoom = avatars.find((avatar) => avatar.id === selectedRoomId) ?? null;
   const canCreateRoom = me?.role !== "MENTEE";
   const canCompleteAnswer = selectedRoom?.myRole === "MENTOR";
+  const hasSelectedRoom = selectedRoomId !== null && selectedRoom !== null;
+  const hasNoRooms =
+    !isInitialLoading && !isRoomsLoading && avatars.length === 0;
   const hasLoadedCurrentRoomQuestions =
-    selectedRoomId !== null && loadedQuestionRoomId === selectedRoomId;
+    hasSelectedRoom && loadedQuestionRoomId === selectedRoomId;
   const isWaitingForAutoSelection =
     !isWritingNew &&
     hasLoadedCurrentRoomQuestions &&
     roomQuestions.length > 0 &&
     selectedQuestionObj === null;
-  const isContentLoading =
-    isInitialLoading ||
-    isRoomsLoading ||
-    isQuestionsLoading ||
-    isMessagesLoading ||
-    isWaitingForAutoSelection;
+  const isRoomSectionLoading = isInitialLoading || isRoomsLoading;
+  const isQuestionSectionLoading =
+    !hasNoRooms &&
+    hasSelectedRoom &&
+    (isInitialLoading ||
+      isQuestionsLoading ||
+      !hasLoadedCurrentRoomQuestions);
+  const isDetailSectionLoading =
+    !hasNoRooms &&
+    hasSelectedRoom &&
+    (isInitialLoading ||
+      isQuestionsLoading ||
+      !hasLoadedCurrentRoomQuestions ||
+      isMessagesLoading ||
+      isWaitingForAutoSelection);
+  const shouldShowQuestionEmpty = hasNoRooms || !hasSelectedRoom || roomQuestions.length === 0;
+  const shouldShowDetailEmpty = hasNoRooms || !hasSelectedRoom || !selectedQuestionObj;
 
   const roomSkeletons = Array.from({ length: 4 }, (_, index) => (
     <div
@@ -722,10 +731,14 @@ export default function Mentoring() {
                 )}
               </S.TitleAddContainer>
               <S.AvatarListScroll>
-                {isInitialLoading || isRoomsLoading ? (
+                {isRoomSectionLoading ? (
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
                     {roomSkeletons}
                   </div>
+                ) : hasNoRooms ? (
+                  <S.EmptyState>
+                    <S.EmptyText>방이 없어요.</S.EmptyText>
+                  </S.EmptyState>
                 ) : (
                   <AvatarList
                     data={avatars}
@@ -741,13 +754,11 @@ export default function Mentoring() {
             <S.QnaContainer>
               질문
               <S.QuestionListScroll>
-                {isInitialLoading ||
-                isQuestionsLoading ||
-                !hasLoadedCurrentRoomQuestions ? (
+                {isQuestionSectionLoading ? (
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.625rem" }}>
                     {questionSkeletons}
                   </div>
-                ) : roomQuestions.length > 0 ? (
+                ) : !shouldShowQuestionEmpty ? (
                   <QuestionList
                     questions={roomQuestions}
                     selectedId={selectedQuestionId}
@@ -758,7 +769,9 @@ export default function Mentoring() {
                     onDelete={handleDeleteQuestion}
                   />
                 ) : (
-                  <S.EmptyText>등록된 질문이 없어요.</S.EmptyText>
+                  <S.EmptyState>
+                    <S.EmptyText>등록된 질문이 없어요.</S.EmptyText>
+                  </S.EmptyState>
                 )}
               </S.QuestionListScroll>
             </S.QnaContainer>
@@ -787,16 +800,21 @@ export default function Mentoring() {
               </S.TopActionRow>
 
             <S.QnaListWrapper>
-              {isContentLoading ? (
+              {isDetailSectionLoading ? (
                 <div>{messageSkeletons}</div>
               ) : isWritingNew ? (
-                <S.EmptyText>질문을 시작해보세요.</S.EmptyText>
-              ) : selectedQuestionObj ? (
-                <QnaList comments={selectedQuestionObj?.comments ?? []} />
-              ) : hasLoadedCurrentRoomQuestions ? (
-                <S.EmptyText>등록된 질문이 없어요.</S.EmptyText>
+                <S.EmptyState>
+                  <S.EmptyText>질문을 시작해보세요.</S.EmptyText>
+                </S.EmptyState>
+              ) : !shouldShowDetailEmpty ? (
+                <QnaList
+                  key={selectedQuestionId ?? "empty-question"}
+                  comments={selectedQuestionObj?.comments ?? []}
+                />
               ) : (
-                <div>{messageSkeletons}</div>
+                <S.EmptyState>
+                  <S.EmptyText>선택된 질문이 없어요.</S.EmptyText>
+                </S.EmptyState>
               )}
             </S.QnaListWrapper>
 
