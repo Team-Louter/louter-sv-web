@@ -749,7 +749,7 @@ export default function Mentoring() {
                   </div>
                 ) : hasNoRooms ? (
                   <S.EmptyState>
-                    <S.EmptyText>방이 없어요.</S.EmptyText>
+                    <S.EmptyText>방이 없습니다.</S.EmptyText>
                   </S.EmptyState>
                 ) : (
                   <AvatarList
@@ -782,7 +782,7 @@ export default function Mentoring() {
                   />
                 ) : (
                   <S.EmptyState>
-                    <S.EmptyText>등록된 질문이 없어요.</S.EmptyText>
+                    <S.EmptyText>등록된 질문이 없습니다.</S.EmptyText>
                   </S.EmptyState>
                 )}
               </S.QuestionListScroll>
@@ -825,7 +825,7 @@ export default function Mentoring() {
                 />
               ) : (
                 <S.EmptyState>
-                  <S.EmptyText>선택된 질문이 없어요.</S.EmptyText>
+                  <S.EmptyText>선택된 질문이 없습니다.</S.EmptyText>
                 </S.EmptyState>
               )}
             </S.QnaListWrapper>
