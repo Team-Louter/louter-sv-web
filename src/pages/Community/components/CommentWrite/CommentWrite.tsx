@@ -13,6 +13,8 @@ interface CommentWriteProps {
     onSuccess?: () => void;
 }
 
+const CommentMaxLength = 255;
+
 export default function CommentWrite({ comment, onClose, isEditing = false, parentId = null, onSuccess }: CommentWriteProps) {
     const [content, setContent] = useState(comment?.content || ""); // 댓글 내용
     const [isAnonymous, setIsAnonymous] = useState<boolean>(comment?.isAnonymous || false); // 댓글 익명 게시 여부
@@ -29,6 +31,7 @@ export default function CommentWrite({ comment, onClose, isEditing = false, pare
                 placeholder="댓글을 남겨보세요."
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
+                maxLength={CommentMaxLength}
             />
             <S.ForRow>
                 <S.Div style={{ gap: 10 }}>
@@ -59,13 +62,16 @@ export default function CommentWrite({ comment, onClose, isEditing = false, pare
                     )}
                 </S.Div>
                 <S.Div>
-                    {onClose && <S.Cancel onClick={onClose}>취소</S.Cancel>}
-                    <S.Confirm 
-                        onClick={handleSubmit} 
-                        disabled={!isValid || isSubmitting}  
-                    >
-                        {isSubmitting ? '게시 중...' : '게시'}  
-                    </S.Confirm>
+                    <S.ContentLength $over={content.length === CommentMaxLength}>{content.length}/{CommentMaxLength}</S.ContentLength>
+                    <S.Div>
+                        {onClose && <S.Cancel onClick={onClose}>취소</S.Cancel>}
+                        <S.Confirm 
+                            onClick={handleSubmit} 
+                            disabled={!isValid || isSubmitting}  
+                        >
+                            {isSubmitting ? '게시 중...' : '게시'}  
+                        </S.Confirm>
+                    </S.Div>
                 </S.Div>
             </S.ForRow>
         </S.CommentWrite>

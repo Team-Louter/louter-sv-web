@@ -11,6 +11,7 @@ import { useComments } from "@/hooks/useComments";
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { toast } from "@/store/toastStore";
+import { linkify } from "@/utils/linkify";
 
 export interface commentProps {
     comment?: Comment;
@@ -77,7 +78,9 @@ export default function Comment({ comment, postId, onSuccess }: commentProps) {
                             : <Skeleton width={50} height={20}/>
                         }
                         {comment
-                            ? <S.CommentContent>{comment.content}</S.CommentContent>
+                            ? <S.CommentContent
+                                dangerouslySetInnerHTML={{ __html: linkify(comment.content) }}
+                            />
                             : <Skeleton width={200} height={20}/>
                         }
                         <S.Div>
