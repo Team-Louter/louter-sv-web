@@ -29,6 +29,7 @@ export default function CommentWrite({ comment, onClose, isEditing = false, pare
                 placeholder="댓글을 남겨보세요."
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
+                maxLength={255}
             />
             <S.ForRow>
                 <S.Div style={{ gap: 10 }}>
@@ -59,13 +60,16 @@ export default function CommentWrite({ comment, onClose, isEditing = false, pare
                     )}
                 </S.Div>
                 <S.Div>
-                    {onClose && <S.Cancel onClick={onClose}>취소</S.Cancel>}
-                    <S.Confirm 
-                        onClick={handleSubmit} 
-                        disabled={!isValid || isSubmitting}  
-                    >
-                        {isSubmitting ? '게시 중...' : '게시'}  
-                    </S.Confirm>
+                    <S.ContentLength $over={content.length === 255}>{content.length}/255</S.ContentLength>
+                    <S.Div>
+                        {onClose && <S.Cancel onClick={onClose}>취소</S.Cancel>}
+                        <S.Confirm 
+                            onClick={handleSubmit} 
+                            disabled={!isValid || isSubmitting}  
+                        >
+                            {isSubmitting ? '게시 중...' : '게시'}  
+                        </S.Confirm>
+                    </S.Div>
                 </S.Div>
             </S.ForRow>
         </S.CommentWrite>

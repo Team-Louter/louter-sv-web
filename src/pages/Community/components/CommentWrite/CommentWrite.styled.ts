@@ -104,6 +104,12 @@ export const Cancel = styled.button`
     margin-right: 3px;
 `
 
+export const ContentLength = styled.span<{$over: boolean}>`
+    ${token.typography('caption', 'md', 'regular')};
+    margin-right: 10px;
+    color: ${({$over}) => $over ? token.colors.state.error : token.colors.text.coolGray};
+`
+
 export const Confirm = styled.button`
     color: ${token.colors.text.normal};
     ${token.typography('body', 'sm', 'semibold')};
